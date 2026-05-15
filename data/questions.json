@@ -1,0 +1,192 @@
+[
+  {
+    "id": "ce_2023_01",
+    "question": "A simply supported beam of span 6 m carries a uniformly distributed load of 20 kN/m. The maximum bending moment at mid-span is:",
+    "type": "mcq",
+    "options": [
+      "60 kN·m",
+      "90 kN·m",
+      "120 kN·m",
+      "180 kN·m"
+    ],
+    "correct": 1,
+    "solution": "For a simply supported beam with UDL w over span L:\nM_max = wL²/8 = (20 × 6²)/8 = 720/8 = 90 kN·m",
+    "subject": "Structural Engineering",
+    "topic": "Bending Moment",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_02",
+    "question": "The void ratio of a soil sample is 0.75 and specific gravity of solids is 2.65. The dry unit weight (kN/m³) of the soil is:",
+    "type": "nat",
+    "options": [],
+    "correct": "14.9",
+    "solution": "γ_d = (G × γ_w) / (1 + e) = (2.65 × 9.81) / (1 + 0.75) ≈ 14.9 kN/m³",
+    "subject": "Geotechnical Engineering",
+    "topic": "Index Properties",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Medium",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_03",
+    "question": "Water flows through a pipe of diameter 0.3 m at velocity 2 m/s. The discharge (m³/s) is:",
+    "type": "nat",
+    "options": [],
+    "correct": "0.141",
+    "solution": "Q = A × v = (π/4) × 0.3² × 2 = 0.1414 m³/s ≈ 0.141",
+    "subject": "Fluid Mechanics & Hydraulics",
+    "topic": "Pipe Flow",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_04",
+    "question": "BOD₅ of a wastewater sample is 200 mg/L. This indicates:",
+    "type": "mcq",
+    "options": [
+      "Low organic pollution",
+      "Moderate organic pollution",
+      "High organic pollution",
+      "No organic pollution"
+    ],
+    "correct": 2,
+    "solution": "BOD₅ > 150 mg/L indicates highly polluted wastewater with high organic content.",
+    "subject": "Environmental Engineering",
+    "topic": "Water Quality",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_05",
+    "question": "The design speed for a NH in plain terrain as per IRC is typically:",
+    "type": "mcq",
+    "options": [
+      "60 km/h",
+      "80 km/h",
+      "100 km/h",
+      "120 km/h"
+    ],
+    "correct": 2,
+    "solution": "IRC recommends 100 km/h design speed for National Highways in plain terrain.",
+    "subject": "Transportation Engineering",
+    "topic": "Highway Design",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Medium",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_06",
+    "question": "In a closed traverse ABCDA, the sum of interior angles should be:",
+    "type": "mcq",
+    "options": [
+      "180°",
+      "360°",
+      "540°",
+      "720°"
+    ],
+    "correct": 1,
+    "solution": "For a closed traverse with n sides, sum of interior angles = (n-2) × 180°. For quadrilateral: 360°.",
+    "subject": "Surveying",
+    "topic": "Traverse",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_07",
+    "question": "If A is a 3×3 matrix with |A| = 4, then |2A| equals:",
+    "type": "mcq",
+    "options": [
+      "8",
+      "16",
+      "24",
+      "32"
+    ],
+    "correct": 3,
+    "solution": "|kA| = k^n |A| for n×n matrix. |2A| = 2³ × 4 = 8 × 4 = 32.",
+    "subject": "Engineering Mathematics",
+    "topic": "Matrices",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Medium",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2023_08",
+    "question": "Choose the word that is closest in meaning to PRAGMATIC:",
+    "type": "mcq",
+    "options": [
+      "Idealistic",
+      "Practical",
+      "Theoretical",
+      "Abstract"
+    ],
+    "correct": 1,
+    "solution": "Pragmatic means dealing with things sensibly and realistically — practical.",
+    "subject": "General Aptitude",
+    "topic": "Vocabulary",
+    "marks": 1,
+    "year": 2023,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2022_01",
+    "question": "The effective length of a column fixed at both ends and length L is:",
+    "type": "mcq",
+    "options": [
+      "0.5L",
+      "0.7L",
+      "L",
+      "2L"
+    ],
+    "correct": 0,
+    "solution": "For both ends fixed, effective length Le = 0.5L.",
+    "subject": "Structural Engineering",
+    "topic": "Columns",
+    "marks": 1,
+    "year": 2022,
+    "difficulty": "Easy",
+    "exam": "GATE",
+    "paper": null
+  },
+  {
+    "id": "ce_2022_02",
+    "question": "Consolidation settlement depends on:",
+    "type": "mcq",
+    "options": [
+      "Only permeability",
+      "Only compressibility",
+      "Both permeability and compressibility",
+      "Neither"
+    ],
+    "correct": 2,
+    "solution": "Consolidation involves expulsion of pore water (permeability) and compression of soil skeleton (compressibility).",
+    "subject": "Geotechnical Engineering",
+    "topic": "Consolidation",
+    "marks": 2,
+    "year": 2022,
+    "difficulty": "Medium",
+    "exam": "GATE",
+    "paper": null
+  }
+]
