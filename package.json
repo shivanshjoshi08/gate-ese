@@ -1,0 +1,39 @@
+{
+  "name": "gate-ce-practice",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "extract": "node scripts/runExtraction.js"
+  },
+  "dependencies": {
+    "next": "14.2.18",
+    "@napi-rs/canvas": "^0.1.67",
+    "canvas": "npm:@napi-rs/canvas@^0.1.67",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^4.4.168",
+    "tesseract.js": "^5.1.1",
+    "pdf-to-png-converter": "^4.0.0",
+    "pdf2json": "^4.0.3",
+    "pdfjs-dist": "^4.4.168",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.13.3",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.6",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.18",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3"
+  }
+}
