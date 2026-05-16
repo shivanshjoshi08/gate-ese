@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Question } from "@/lib/types";
+import { buildGroqQuestionContextString } from "@/lib/groq-question-context";
 import { checkAnswer } from "@/lib/questions";
 import { EXAM_COLORS } from "@/lib/exam";
+import ImageBlock from "@/components/question/ImageBlock";
+import QuestionRenderer from "@/components/question/QuestionRenderer";
+import RichContentRenderer from "@/components/question/RichContentRenderer";
+import OptionRenderer from "@/components/question/OptionRenderer";
+import "@/components/question/question-renderer.css";
 import {
   recordAttempt,
   toggleBookmark,
   isBookmarked,
 } from "@/lib/storage";
+import { shouldShowAnsweredSolutionPanel } from "@/lib/learner-solution";
 
 const LABELS = ["A", "B", "C", "D"];
 
@@ -33,11 +40,45 @@ export default function QuestionCard({
   const [shake, setShake] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const hasAnswerKey = question.hasAnswerKey !== false;
+  const figureUrls =
+    question.images && question.images.length > 0
+      ? question.images
+      : question.image
+        ? [question.image]
+        : [];
+  const figureMedia = figureUrls.map((url, i) => ({
+    id: `fig-${i}`,
+    url,
+    alt: `Figure ${i + 1}`,
+  }));
   const correctIndex =
-    question.type === "mcq" ? (question.correct as number) : -1;
+    question.type === "mcq" && hasAnswerKey
+      ? (question.correct as number)
+      : -1;
 
   const handleMcqClick = (index: number) => {
     if (answered) return;
+    if (!hasAnswerKey) {
+      setSelected(index);
+      setAnswered(true);
+      setIsCorrect(true);
+      recordAttempt({
+        questionId: question.id,
+        userAnswer: index,
+        correct: true,
+        timestamp: Date.now(),
+        subject: question.subject,
+        topic: question.topic,
+        exam: question.exam,
+      });
+      onAnswered(true);
+      return;
+    }
     const correct = index === correctIndex;
     setSelected(index);
     setIsCorrect(correct);
@@ -105,14 +146,20 @@ export default function QuestionCard({
 
   const getOptionClass = (index: number) => {
     const base =
-      "w-full rounded-xl border-2 px-4 py-3 text-left text-base font-medium transition-all duration-150 ";
+      "w-full rounded-2xl border-2 px-4 py-3.5 text-left text-base font-medium transition-all duration-200 ";
     if (!answered) {
       return (
         base +
-        "border-gray-200 bg-white hover:border-blue-400 hover:bg-blue-50 cursor-pointer"
+        "border-study-border bg-study-raised/60 text-study-ink hover:border-sky-400/50 hover:bg-sky-500/[0.08] hover:shadow-[0_0_0_1px_rgba(56,189,248,0.18)] cursor-pointer"
       );
     }
-    if (question.type === "mcq") {
+    if (!hasAnswerKey && selected === index) {
+      return (
+        base +
+        "border-sky-500/80 bg-sky-500/15 cursor-default text-study-ink shadow-[0_0_0_1px_rgba(56,189,248,0.25)]"
+      );
+    }
+    if (question.type === "mcq" && hasAnswerKey) {
       if (index === correctIndex) {
         return base + "border-correct bg-correct text-white cursor-default animate-pulse-correct";
       }
@@ -120,46 +167,206 @@ export default function QuestionCard({
         return base + "border-wrong bg-wrong text-white cursor-default animate-shake";
       }
     }
-    return base + "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-60";
+    return base + "border-study-border/60 bg-study-surface/40 text-study-muted cursor-not-allowed opacity-65";
   };
+
+  useEffect(() => {
+    setAiSummary(null);
+    setAiError(null);
+    setAiLoading(false);
+  }, [question.id]);
+
+  useEffect(() => {
+    if (!answered) return;
+
+    let cancelled = false;
+    setAiLoading(true);
+    setAiError(null);
+
+    const context = buildGroqQuestionContextString(question);
+
+    void (async () => {
+      try {
+        const res = await fetch("/api/ai/question-summary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            questionId: question.id,
+            context,
+          }),
+        });
+        const data = (await res.json()) as {
+          summary?: string;
+          error?: string;
+        };
+        if (cancelled) return;
+        if (!res.ok) {
+          setAiError(data.error || "Could not load AI summary.");
+          return;
+        }
+        if (data.summary) setAiSummary(data.summary);
+        else setAiError("No summary returned.");
+      } catch {
+        if (!cancelled) setAiError("Network error while loading AI summary.");
+      } finally {
+        if (!cancelled) setAiLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [answered, question]);
 
   return (
     <div
       className={`mx-auto w-full max-w-2xl px-4 py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
       onAnimationEnd={() => setShake(false)}
     >
-      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-        <span
-          className="rounded px-2 py-0.5 font-semibold text-white"
-          style={{ backgroundColor: EXAM_COLORS[question.exam].accent }}
-        >
-          {question.exam}
-        </span>
-        {question.paper && (
-          <span className="rounded bg-violet-400 px-2 py-0.5 font-medium text-white">
-            {question.paper}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 gap-y-2 text-xs text-study-muted sm:text-sm">
+        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 leading-relaxed">
+          {question.questionBank === "pyq" ? (
+            <span
+              title="Previous-year question (official paper track)"
+              className="shrink-0 rounded-md border border-emerald-400/45 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-200"
+            >
+              PYQ
+            </span>
+          ) : question.questionBank === "ai" ? (
+            <span
+              title="Practice bank question"
+              className="shrink-0 rounded-md border border-sky-400/45 bg-sky-500/12 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-sky-200"
+            >
+              Practice
+            </span>
+          ) : null}
+          <span
+            className="inline-block rounded px-2 py-0.5 font-semibold text-white"
+            style={{ backgroundColor: EXAM_COLORS[question.exam].accent }}
+          >
+            {question.exam}
           </span>
-        )}
-        <span className="rounded bg-gray-100 px-2 py-0.5">{question.subject}</span>
-        <span className="rounded bg-gray-100 px-2 py-0.5">{question.topic}</span>
-        <span className="rounded bg-gray-100 px-2 py-0.5">{question.year}</span>
-        <span className="rounded bg-gray-100 px-2 py-0.5">{question.marks} mark</span>
-        <span className="rounded bg-gray-100 px-2 py-0.5">{question.difficulty}</span>
+          {question.paper && (
+            <>
+              <span className="font-medium text-study-soft">
+                Paper {question.paper}
+              </span>
+              <span aria-hidden className="mx-1.5 text-study-border">
+                ·
+              </span>
+            </>
+          )}
+          <span className="font-medium text-study-ink">{question.subject}</span>
+          <span aria-hidden className="mx-1.5 text-study-border">
+            ·
+          </span>
+          <span>{question.topic}</span>
+          <span aria-hidden className="mx-1.5 text-study-border">
+            ·
+          </span>
+          <span>{question.year}</span>
+          <span aria-hidden className="mx-1.5 text-study-border">
+            ·
+          </span>
+          <span>
+            {question.marks} mark{question.marks !== 1 ? "s" : ""}
+          </span>
+          <span aria-hidden className="mx-1.5 text-study-border">
+            ·
+          </span>
+          <span>{question.difficulty}</span>
+        </p>
         <button
           type="button"
           onClick={handleBookmark}
-          className="ml-auto text-lg"
+          className="shrink-0 text-xl text-study-muted transition hover:text-amber-400/95"
           aria-label="Bookmark"
         >
           {bookmarked || isBookmarked(question.id) ? "⭐" : "☆"}
         </button>
       </div>
 
-      <p className="mb-6 text-lg leading-relaxed text-gray-900 whitespace-pre-wrap">
-        {question.question}
-      </p>
+      {question.richStem ? (
+        <div className="mb-6">
+          <QuestionRenderer
+            question={{
+              stem: question.richStem,
+              media: figureMedia,
+              type: question.type === "nat" ? "numerical" : question.type,
+            }}
+            showMedia={figureMedia.length > 0}
+          />
+        </div>
+      ) : (
+        <>
+          {figureUrls.length > 0 && (
+            <div className="mb-6 space-y-4">
+              {figureUrls.map((src, i) => (
+                <ImageBlock
+                  key={`${question.id}-fig-${i}`}
+                  src={src}
+                  alt={`Figure for ${question.topic || "question"} ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+          <p className="mb-6 text-lg leading-relaxed text-study-ink whitespace-pre-wrap">
+            {question.question}
+          </p>
+        </>
+      )}
 
-      {question.type === "mcq" && (
+      {question.type === "mcq" &&
+        question.options.length === 0 &&
+        !question.richOptions?.length && (
+          <p className="mb-4 text-sm text-study-muted">
+            Open-ended — see solution when ready.
+          </p>
+        )}
+
+      {question.type === "mcq" && question.richOptions?.length ? (
+        <div className="space-y-3">
+          {question.richOptions.map((opt, i) => (
+            <OptionRenderer
+              key={opt.id}
+              option={opt}
+              index={i}
+              selected={selected === i}
+              correct={answered && hasAnswerKey && i === correctIndex}
+              wrong={
+                answered && hasAnswerKey && i === selected && i !== correctIndex
+              }
+              disabled={answered}
+              showResult={answered}
+              onClick={() => handleMcqClick(i)}
+            />
+          ))}
+        </div>
+      ) : question.type === "mcq" ? (
+        question.options.length === 0 && !question.richOptions?.length ? (
+          !answered ? (
+            <button
+              type="button"
+              onClick={() => {
+                setAnswered(true);
+                setIsCorrect(true);
+                recordAttempt({
+                  questionId: question.id,
+                  userAnswer: "open",
+                  correct: true,
+                  timestamp: Date.now(),
+                  subject: question.subject,
+                  topic: question.topic,
+                  exam: question.exam,
+                });
+                onAnswered(true);
+              }}
+              className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105"
+            >
+              Show solution
+            </button>
+          ) : null
+        ) : (
         <div className="space-y-3">
           {question.options.map((opt, i) => (
             <button
@@ -171,16 +378,23 @@ export default function QuestionCard({
             >
               <span className="mr-2 font-bold">{LABELS[i]}.</span>
               {opt}
-              {answered && i === correctIndex && (
+              {answered && hasAnswerKey && i === correctIndex && (
                 <span className="float-right">✓</span>
               )}
-              {answered && i === selected && i !== correctIndex && (
-                <span className="float-right">✗</span>
+              {answered &&
+                hasAnswerKey &&
+                i === selected &&
+                i !== correctIndex && (
+                  <span className="float-right">✗</span>
+                )}
+              {answered && !hasAnswerKey && i === selected && (
+                <span className="float-right text-sky-300">●</span>
               )}
             </button>
           ))}
         </div>
-      )}
+        )
+      ) : null}
 
       {question.type === "nat" && (
         <div className="space-y-3">
@@ -191,14 +405,14 @@ export default function QuestionCard({
             onChange={(e) => setNatInput(e.target.value)}
             disabled={answered}
             placeholder="Enter your answer"
-            className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-lg focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+            className="w-full rounded-2xl border-2 border-study-border bg-study-raised/80 px-4 py-3 text-lg text-study-ink placeholder:text-study-muted focus:border-sky-500 focus:outline-none disabled:bg-study-surface/60 disabled:opacity-60"
           />
           {!answered && (
             <button
               type="button"
               onClick={handleNatCheck}
               disabled={!natInput.trim()}
-              className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50"
             >
               Check
             </button>
@@ -219,17 +433,17 @@ export default function QuestionCard({
             const correctArr = (question.correct as number[]) ?? [];
             const isCorrectOpt = correctArr.includes(i);
             let cls =
-              "w-full rounded-xl border-2 px-4 py-3 text-left transition-all ";
+              "w-full rounded-2xl border-2 px-4 py-3.5 text-left transition-all duration-150 ";
             if (!answered) {
               cls += selectedMsq
-                ? "border-blue-500 bg-blue-50 cursor-pointer"
-                : "border-gray-200 hover:border-blue-400 cursor-pointer";
+                ? "border-sky-500/80 bg-sky-500/12 text-study-ink cursor-pointer shadow-[0_0_0_1px_rgba(56,189,248,0.2)]"
+                : "border-study-border bg-study-raised/60 text-study-ink hover:border-sky-400/45 cursor-pointer";
             } else if (isCorrectOpt) {
               cls += "border-correct bg-correct text-white";
             } else if (selectedMsq && !isCorrectOpt) {
               cls += "border-wrong bg-wrong text-white";
             } else {
-              cls += "border-gray-200 bg-gray-100 opacity-60";
+              cls += "border-study-border/60 bg-study-surface/35 text-study-muted opacity-65";
             }
             return (
               <button
@@ -249,7 +463,7 @@ export default function QuestionCard({
               type="button"
               onClick={handleMsqSubmit}
               disabled={msqSelected.length === 0}
-              className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50"
             >
               Submit
             </button>
@@ -258,11 +472,42 @@ export default function QuestionCard({
       )}
 
       {answered && (
-        <div className="mt-6 animate-slide-up rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <h3 className="mb-2 font-semibold text-gray-800">Solution</h3>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-            {question.solution}
-          </p>
+        <div
+          className="mt-6 animate-slide-up rounded-2xl border border-teal-400/35 bg-teal-500/[0.07] px-4 py-3.5 shadow-inner shadow-black/[0.06]"
+          aria-live="polite"
+          aria-busy={aiLoading}
+        >
+          <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-teal-200/95">
+            AI brief recap
+          </h3>
+          {aiLoading && (
+            <p className="text-sm italic text-teal-100/80">Generating takeaway…</p>
+          )}
+          {!aiLoading && aiError && (
+            <p className="text-sm text-amber-300/95">{aiError}</p>
+          )}
+          {!aiLoading && aiSummary && (
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
+              {aiSummary}
+            </p>
+          )}
+        </div>
+      )}
+
+      {answered && shouldShowAnsweredSolutionPanel(question) && (
+        <div className="mt-6 animate-slide-up rounded-2xl border border-study-border/80 bg-study-surface/90 p-5 shadow-inner shadow-black/10">
+          <h3 className="mb-2 font-semibold text-study-soft">
+            {hasAnswerKey ? "Solution" : "Your selection"}
+          </h3>
+          {question.richSolution && hasAnswerKey ? (
+            <RichContentRenderer content={question.richSolution} />
+          ) : (
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
+              {hasAnswerKey
+                ? question.solution
+                : `Your choice: ${selected != null ? LABELS[selected] : "—"}.`}
+            </p>
+          )}
         </div>
       )}
 
@@ -270,7 +515,7 @@ export default function QuestionCard({
         <button
           type="button"
           onClick={onNext}
-          className="mt-6 w-full rounded-xl bg-gray-900 py-3 font-semibold text-white hover:bg-gray-800"
+          className="mt-6 w-full rounded-2xl bg-study-soft py-3.5 font-semibold text-study-page shadow-md shadow-black/15 transition hover:bg-white"
         >
           Next Question →
         </button>
@@ -278,3 +523,4 @@ export default function QuestionCard({
     </div>
   );
 }
+

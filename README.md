@@ -1,70 +1,30 @@
 # GATE & ESE CE Practice
 
-A Next.js 14 practice web app for **GATE** and **ESE** Civil Engineering, with automatic question extraction from PYQ PDF files using the Groq API.
+Practice **GATE** and **ESE** Civil Engineering previous-year questions in your browser. No login required.
 
 ## Features
 
-- **Dual exam support** — GATE (blue) and ESE (purple) with separate progress tracking
-- **PDF extraction** — Parse GATE & ESE PYQ PDFs into structured JSON via Groq (Llama)
-- **Practice mode** — Instant feedback, solutions, filters by paper/subject/year
-- **Mock tests** — GATE (65 Q / 3 hr), ESE Prelims (120 Q / 2 hr), ESE Paper 2 (~150 marks / 3 hr)
-- **Bookmarks & analysis** — Per-exam stats, ESE paper-wise accuracy charts
+- **GATE & ESE** exam switcher with separate progress
+- **Previous year PYQs** — practice by year (2018–2024) in-app
+- **Official paper links** — open full papers on GATE / UPSC websites
+- **Practice mode** — instant feedback and solutions
+- **Mock tests** — GATE, ESE Prelims, ESE Paper 2 patterns
+- **Bookmarks & analysis** — track accuracy per subject
 
-## Setup
-
-### 1. Install dependencies
+## Quick start
 
 ```bash
 npm install
-```
-
-### 2. Add PDFs
-
-Place PDFs in `/pdfs/`:
-
-**GATE:** `GATE_CE_YYYY.pdf`  
-**ESE:** `ESE_CE_YYYY_PRE.pdf`, `ESE_CE_YYYY_P1.pdf`, `ESE_CE_YYYY_P2.pdf`
-
-See `/pdfs/README.txt` for details.
-
-### 3. Configure Groq API key
-
-```bash
-cp .env.local.example .env.local
-```
-
-Edit `.env.local`:
-
-```
-GROQ_API_KEY=your_groq_api_key_here
-GROQ_MODEL=llama-3.3-70b-versatile
-```
-
-### 4. Extract questions
-
-```bash
-npm run extract
-```
-
-**Notes:**
-- Scanned/image PDFs are processed with **OCR** (slower, ~1–2 min per 16 pages).
-- Large papers are sent to Groq in **chunks** to stay within API token limits.
-- Optional `.env.local` tuning: `GROQ_CHUNK_CHARS`, `GROQ_REQUEST_DELAY_MS`, `OCR_ENABLED=false` to skip OCR.
-
-### 5. Start the app
-
-```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## Exam switcher
+## Out of scope (not using)
 
-Use the **GATE** / **ESE** tabs at the top of every page. Progress is stored separately:
-
-- `progress_gate` — GATE attempts & bookmarks
-- `progress_ese` — ESE attempts & bookmarks
+- **Separate Express backend** — API is Next.js Route Handlers only
+- **Prisma**
+- **PostgreSQL**
 
 ## Scripts
 
@@ -72,15 +32,55 @@ Use the **GATE** / **ESE** tabs at the top of every page. Progress is stored sep
 |---------|-------------|
 | `npm run dev` | Development server |
 | `npm run build` | Production build |
-| `npm run extract` | Extract questions from PDFs (Groq) |
-| `npm start` | Production server |
+| `npm start` | Run production build |
 
-## Deploy to Vercel
+> PDF upload & auto-extraction can be added later. Questions are bundled in `data/questions.json`.
 
-Commit `/data/questions.json` after extraction. Add `GROQ_API_KEY` only if running extraction in CI.
+## Folder structure (Vercel-ready)
 
-## Tech stack
+Repo root = Vercel project root. **Do not** put the app inside a subfolder.
 
-- Next.js 14 (App Router) · Tailwind CSS
-- pdf-parse · Groq API (extraction)
-- Recharts · localStorage (per-exam progress)
+```
+GATE/                    ← connect this folder to Vercel (or repo root)
+├── app/                 ← Next.js App Router (pages + API)
+│   ├── (user)/          ← Home, practice, PYQ, login, me, attempts
+│   ├── (admin)/         ← Admin CMS
+│   └── api/             ← Serverless routes (Mongo, NextAuth, AI)
+├── public/              ← Static assets (URLs start with /)
+│   └── images/          ← Diagram PNGs (/images/fig9.png)
+├── components/          ← React UI
+├── lib/                 ← Shared helpers
+├── backend/             ← Services/mappers (imported by app/api — not a separate server)
+├── data/                ← Bundled JSON banks
+├── hooks/
+├── package.json
+├── next.config.js
+└── vercel.json
+```
+
+**Not deployed** (see `.vercelignore`): `scripts/`, `pdfs/`, root `images/` duplicate, OCR data.
+
+## Deploy on Vercel
+
+1. Push the repo to **GitHub** (root = this project, not a parent folder).
+2. [vercel.com](https://vercel.com) → **Add New Project** → import the repo.
+3. Framework: **Next.js** (auto-detected). Root directory: **`.`** (leave default).
+4. **Environment variables** (Project → Settings → Environment Variables):
+
+| Variable | Required | Example |
+|----------|----------|---------|
+| `MONGODB_URI` | Yes (for DB PYQ/practice) | `mongodb+srv://...` |
+| `NEXTAUTH_SECRET` | Yes (production) | long random string |
+| `NEXTAUTH_URL` | Yes | `https://your-app.vercel.app` |
+| `ADMIN_EMAIL` | For admin CMS | your email |
+| `ADMIN_PASSWORD` | For admin CMS | strong password |
+| `GROQ_API_KEY` | Optional | AI recap after answer |
+| `CLOUDINARY_*` | Optional | image uploads in admin |
+
+Copy names from `.env.local.example`. **Do not** commit `.env.local`.
+
+5. Deploy → visit `https://<project>.vercel.app`.
+
+**MongoDB:** Use [Atlas](https://www.mongodb.com/atlas); allow `0.0.0.0/0` or Vercel IPs for serverless. Import PYQ with `sourceType: pyq` and status **approved**.
+
+**After first deploy:** set `NEXTAUTH_URL` to your live URL and redeploy if login breaks.
