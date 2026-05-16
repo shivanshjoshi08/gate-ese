@@ -23,6 +23,8 @@ type Row = {
   attempt?: AttemptRecord;
 };
 
+const PAGE_SIZE = 10;
+
 export default function MyAttemptsPage() {
   const { exam } = useExam();
   const accent = EXAM_COLORS[exam];
@@ -35,6 +37,7 @@ export default function MyAttemptsPage() {
   const statusFilter = "all" as StatusFilter;
   const [filters, setFilters] = useState(defaultPracticeFilters);
   const [epoch, setEpoch] = useState(0);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const onSave = () => setEpoch((e) => e + 1);
@@ -75,6 +78,24 @@ export default function MyAttemptsPage() {
     }
     return out;
   }, [sourceBank, sanitized, statusFilter, attemptsMap]);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage(1);
+  }, [sanitized, statusFilter, bankFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const paginatedRows = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return rows.slice(start, start + PAGE_SIZE);
+  }, [rows, page]);
+
+  const rangeStart = rows.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
+  const rangeEnd = Math.min(page * PAGE_SIZE, rows.length);
 
   const summary = useMemo(() => {
     const pool = filterQuestions(sourceBank, { ...sanitized, type: "MCQ" });
@@ -163,7 +184,9 @@ export default function MyAttemptsPage() {
       </div>
 
       <p className="mb-3 text-sm text-study-muted">
-        Showing {rows.length} question{rows.length === 1 ? "" : "s"}
+        {rows.length === 0
+          ? "No questions to show"
+          : `Showing ${rangeStart}–${rangeEnd} of ${rows.length} question${rows.length === 1 ? "" : "s"}`}
       </p>
 
       {rows.length === 0 ? (
@@ -173,7 +196,7 @@ export default function MyAttemptsPage() {
         </p>
       ) : (
         <ul className="space-y-3">
-          {rows.map(({ question, attempt }) => (
+          {paginatedRows.map(({ question, attempt }) => (
             <li
               key={question.id}
               className="rounded-xl border border-study-border/70 bg-study-surface/90 p-4"
@@ -208,6 +231,33 @@ export default function MyAttemptsPage() {
             </li>
           ))}
         </ul>
+      )}
+
+      {rows.length > PAGE_SIZE && (
+        <nav
+          className="mt-6 flex items-center justify-between gap-3"
+          aria-label="Attempts pagination"
+        >
+          <button
+            type="button"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="rounded-lg border border-study-border px-4 py-2 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-study-muted">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            type="button"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            className="rounded-lg border border-study-border px-4 py-2 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Next
+          </button>
+        </nav>
       )}
 
       <button
