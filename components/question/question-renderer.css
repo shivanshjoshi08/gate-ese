@@ -1,0 +1,88 @@
+/* Softer learner theme — aligns with Tailwind study.* palette */
+.qb-content {
+  @apply text-[15px] leading-[1.7] text-study-ink;
+}
+
+.qb-content p {
+  @apply mb-3 last:mb-0;
+}
+
+.qb-content h1 {
+  @apply mb-3 text-xl font-bold text-white;
+}
+.qb-content h2 {
+  @apply mb-2 text-lg font-semibold text-study-ink;
+}
+.qb-content h3 {
+  @apply mb-2 text-base font-semibold text-study-soft;
+}
+
+.qb-content ul {
+  @apply mb-3 list-disc pl-6;
+}
+.qb-content ol {
+  @apply mb-3 list-decimal pl-6;
+}
+.qb-content li {
+  @apply mb-1;
+}
+
+.qb-content blockquote {
+  @apply my-3 rounded-r-lg border-l-4 border-violet-400/50 bg-violet-500/[0.07] py-2.5 pl-4 text-study-soft;
+}
+
+.qb-content pre {
+  @apply my-3 overflow-x-auto rounded-xl bg-study-raised p-4 text-sm text-study-ink ring-1 ring-study-border/80;
+}
+
+.qb-content code {
+  @apply rounded-md bg-study-raised px-1.5 py-0.5 font-mono text-sm text-sky-200/90;
+}
+
+.qb-content pre code {
+  @apply bg-transparent p-0 text-inherit ring-0;
+}
+
+.qb-table-wrap {
+  @apply my-4 overflow-x-auto rounded-xl border border-study-border/90;
+}
+
+.qb-content table {
+  @apply w-full min-w-[280px] border-collapse text-sm text-study-ink;
+}
+
+.qb-content th {
+  @apply border border-study-border bg-study-raised px-3 py-2 text-left font-semibold text-study-soft;
+}
+
+.qb-content td {
+  @apply border border-study-border/70 px-3 py-2 text-study-soft;
+}
+
+.qb-equation {
+  @apply my-3 overflow-x-auto text-study-ink;
+}
+
+.qb-equation--inline {
+  @apply my-0 inline-block align-middle;
+}
+
+.qb-image {
+  @apply my-4;
+}
+
+.qb-image img {
+  @apply h-auto max-w-full rounded-xl border border-study-border/80 shadow-lg shadow-black/10;
+}
+
+.qb-image figcaption {
+  @apply mt-2 text-center text-xs text-study-muted;
+}
+
+.option-renderer {
+  @apply text-[15px] leading-snug text-study-ink;
+}
+
+.solution-renderer {
+  @apply border-t border-study-border/70 pt-4;
+}
