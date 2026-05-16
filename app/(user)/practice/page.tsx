@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import StatsBar from "@/components/StatsBar";
@@ -337,25 +344,21 @@ function PracticeContent() {
       );
 
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <p className="text-2xl font-bold text-study-ink">
-          {allDone ? "All new questions done" : "No questions for this level"}
-        </p>
-        <p className="mt-2 text-sm text-study-muted">
-          {allDone
-            ? "You have attempted every question in this set with the current filters. Try different filters or review past attempts."
-            : "No new questions match these filters. Try broader filters above."}
-        </p>
-        <Link
-          href="/attempts"
-          className="mt-4 inline-block text-sm font-medium text-sky-400 hover:underline"
-        >
-          View my attempts
-        </Link>
-        <Link href="/" className="mt-4 block text-sm text-study-muted hover:text-study-soft">
-          Home
-        </Link>
-      </div>
+      <PracticeCompleteCard
+        title={allDone ? "All new questions done" : "No questions for this level"}
+        description={
+          allDone
+            ? "You have attempted every question in this set with the current filters."
+            : "No new questions match these filters."
+        }
+        showFilterReset
+        onClearFilters={() => {
+          const bank = questionsForBank(pb, aiQuestions, pyqQuestions);
+          handleFilterChange(
+            sanitizePracticeFilters(bank, defaultPracticeFilters()),
+          );
+        }}
+      />
     );
   }
 
@@ -373,75 +376,72 @@ function PracticeContent() {
       attemptedIds,
     );
 
+    const finishLevel = () => {
+      if (bookmarksMode) {
+        const { bookmarks } = loadProgress(exam);
+        setQuestions(
+          shuffle(
+            getQuestionsByIds(mergedBank, bookmarks).filter(
+              (q) => q.exam === exam,
+            ),
+          ),
+        );
+        setIndex(0);
+        return;
+      }
+      if (practiceBankFromUrl && questions.length > 0) {
+        applyPracticeLevelComplete(
+          exam,
+          practiceBankFromUrl,
+          questions.map((q) => q.id),
+        );
+        if (hasNext) loadLevel(practiceBankFromUrl, nextLevel, filters);
+      }
+    };
+
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <p className="text-2xl font-bold text-study-ink">
-          {isLevelMode ? <>Level {levelFinished} complete</> : <>Done</>}
-        </p>
-        <p className="mt-2 text-study-muted">
-          You finished {questions.length} question
-          {questions.length !== 1 ? "s" : ""}
-          {questions.length < PRACTICE_MCQ_BATCH_SIZE && isLevelMode && (
-            <span className="block pt-1 text-xs text-amber-400/90">
-              This level has {questions.length} questions in the set.
-            </span>
-          )}
-        </p>
-        {isLevelMode && hasNext && (
-          <p className="mt-3 text-sm font-medium text-study-soft">
-            Up next: Level {nextLevel}
-          </p>
-        )}
-        {isLevelMode && !hasNext && (
-          <p className="mt-3 text-sm text-study-muted">
-            No more new questions in this set with current filters.
-          </p>
-        )}
-        <button
-          type="button"
-          onClick={() => {
-            if (bookmarksMode) {
-              const { bookmarks } = loadProgress(exam);
-              setQuestions(
-                shuffle(
-                  getQuestionsByIds(mergedBank, bookmarks).filter(
-                    (q) => q.exam === exam,
-                  ),
-                ),
-              );
-              setIndex(0);
-              return;
-            }
-            if (practiceBankFromUrl && questions.length > 0) {
-              applyPracticeLevelComplete(
-                exam,
-                practiceBankFromUrl,
-                questions.map((q) => q.id),
-              );
-              if (hasNext) loadLevel(practiceBankFromUrl, nextLevel, filters);
-            }
-          }}
-          disabled={
-            bookmarksMode ? false : !practiceBankFromUrl || (!hasNext && isLevelMode)
-          }
-          className="mt-6 min-h-[48px] w-full max-w-xs rounded-xl px-6 py-3 font-semibold text-white shadow-lg shadow-black/15 transition active:brightness-105 disabled:opacity-40 sm:w-auto sm:min-h-0 sm:py-2.5 sm:hover:brightness-105"
-          style={{ backgroundColor: accent.accent }}
-        >
-          {bookmarksMode
-            ? "Again"
+      <PracticeCompleteCard
+        title={
+          isLevelMode ? `Level ${levelFinished} complete` : "Set complete"
+        }
+        description={
+          <>
+            You finished {questions.length} question
+            {questions.length !== 1 ? "s" : ""}
+            {questions.length < PRACTICE_MCQ_BATCH_SIZE && isLevelMode && (
+              <span className="mt-2 block text-sm text-amber-300/95">
+                This level has {questions.length} questions in the set.
+              </span>
+            )}
+          </>
+        }
+        hint={
+          isLevelMode && hasNext
+            ? `Up next: Level ${nextLevel}`
+            : isLevelMode && !hasNext
+              ? "No more new questions with these filters."
+              : undefined
+        }
+        primaryLabel={
+          bookmarksMode
+            ? "Practice again"
             : hasNext
-              ? `Start Level ${nextLevel} →`
-              : "All levels done"}
-        </button>
-        {!hasNext && isLevelMode && (
-          <Link
-            href="/"
-            className="mt-4 inline-block text-sm text-study-muted hover:text-study-soft"
-          >
-            Home
-          </Link>
-        )}
-      </div>
+              ? `Start Level ${nextLevel}`
+              : undefined
+        }
+        onPrimary={finishLevel}
+        showFilterReset={
+          !bookmarksMode && isLevelMode && !hasNext && !!practiceBankFromUrl
+        }
+        onClearFilters={() => {
+          if (!practiceBankFromUrl) return;
+          const bank =
+            practiceBankFromUrl === "pyq" ? pyqQuestions : aiQuestions;
+          handleFilterChange(
+            sanitizePracticeFilters(bank, defaultPracticeFilters()),
+          );
+        }}
+      />
     );
   }
 
@@ -492,6 +492,83 @@ function PracticeContent() {
           focusMode={focusMode}
         />
       )}
+    </div>
+  );
+}
+
+function PracticeCompleteCard({
+  title,
+  description,
+  hint,
+  primaryLabel,
+  onPrimary,
+  showFilterReset,
+  onClearFilters,
+}: {
+  title: string;
+  description: ReactNode;
+  hint?: string;
+  primaryLabel?: string;
+  onPrimary?: () => void;
+  showFilterReset?: boolean;
+  onClearFilters?: () => void;
+}) {
+  return (
+    <div className="mx-auto flex min-h-[min(70vh,520px)] max-w-md flex-col justify-center px-4 py-10">
+      <div className="rounded-2xl border border-study-border/70 bg-study-surface/95 p-6 text-center shadow-xl shadow-black/25">
+        <div
+          className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-500/15 text-2xl text-emerald-300"
+          aria-hidden
+        >
+          ✓
+        </div>
+        <h2 className="text-2xl font-bold tracking-tight text-study-ink">
+          {title}
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-study-muted">
+          {description}
+        </p>
+        {hint ? (
+          <p className="mt-3 text-sm font-medium text-study-soft">{hint}</p>
+        ) : null}
+
+        <div className="mt-6 flex w-full flex-col gap-3">
+          {primaryLabel && onPrimary ? (
+            <button
+              type="button"
+              onClick={onPrimary}
+              className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-900/30 transition hover:brightness-110 active:scale-[0.99]"
+            >
+              {primaryLabel}
+              <span aria-hidden>→</span>
+            </button>
+          ) : null}
+
+          {showFilterReset && onClearFilters ? (
+            <button
+              type="button"
+              onClick={onClearFilters}
+              className="flex min-h-[48px] w-full items-center justify-center rounded-xl border border-sky-400/45 bg-sky-500/12 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20 active:scale-[0.99]"
+            >
+              Try different filters
+            </button>
+          ) : null}
+
+          <Link
+            href="/attempts"
+            className="flex min-h-[48px] w-full items-center justify-center rounded-xl border border-study-border/90 bg-study-raised/50 px-5 py-3 text-sm font-semibold text-study-ink transition hover:bg-study-raised active:scale-[0.99]"
+          >
+            My attempts
+          </Link>
+
+          <Link
+            href="/"
+            className="flex min-h-[44px] w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-study-muted transition hover:text-study-soft"
+          >
+            Home
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
