@@ -1,5 +1,5 @@
 /**
- * Practice filter subjects (10 rounds). Question `subject` in DB may vary;
+ * Practice filter subjects (10 buckets). Question `subject` in DB may vary;
  * {@link resolvePracticeSubject} maps rows into these buckets.
  */
 export const PRACTICE_FILTER_SUBJECTS = [
@@ -16,19 +16,6 @@ export const PRACTICE_FILTER_SUBJECTS = [
 ] as const;
 
 export type PracticeFilterSubject = (typeof PRACTICE_FILTER_SUBJECTS)[number];
-
-const ROUND_LABELS: Record<PracticeFilterSubject, string> = {
-  "Soil Mechanics": "Round 1 — Soil Mechanics",
-  "Structural Analysis": "Round 2 — Structural Analysis",
-  "RCC + Steel Design": "Round 3 — RCC + Steel Design",
-  "Fluid Mechanics + Hydraulics": "Round 4 — Fluid + Hydraulics",
-  "Environmental Engineering": "Round 5 — Environmental",
-  "Transportation Engineering": "Round 6 — Transportation",
-  Surveying: "Round 7 — Surveying",
-  "Geotechnical (Foundation Design)": "Round 8 — Geotechnical",
-  "SOM (Strength of Materials)": "Round 9 — SOM",
-  "Engineering Mathematics": "Round 10 — Engg Maths",
-};
 
 /** Map bundled / Mongo subject strings → practice filter bucket. */
 const SUBJECT_ALIASES: Record<string, PracticeFilterSubject> = {
@@ -206,6 +193,10 @@ export function buildMongoSubjectFilter(
   return or.length === 1 ? or[0]! : { $or: or };
 }
 
+function subjectFilterLabel(value: PracticeFilterSubject): string {
+  return value;
+}
+
 export function getPracticeSubjectFilterOptions(): {
   value: string;
   label: string;
@@ -214,7 +205,7 @@ export function getPracticeSubjectFilterOptions(): {
     { value: "All", label: "All subjects" },
     ...PRACTICE_FILTER_SUBJECTS.map((value) => ({
       value,
-      label: ROUND_LABELS[value],
+      label: subjectFilterLabel(value),
     })),
   ];
 }
@@ -234,7 +225,7 @@ export function getPracticeSubjectFilterOptionsForPool(
     return [
       {
         value: subjects[0]!,
-        label: ROUND_LABELS[subjects[0]!],
+        label: subjectFilterLabel(subjects[0]!),
       },
     ];
   }
@@ -242,7 +233,13 @@ export function getPracticeSubjectFilterOptionsForPool(
     { value: "All", label: "All subjects" },
     ...subjects.map((value) => ({
       value,
-      label: ROUND_LABELS[value],
+      label: subjectFilterLabel(value),
     })),
   ];
+}
+
+export function isPracticeSubjectFilterActive(filters: {
+  subject?: string;
+}): boolean {
+  return !!filters.subject && filters.subject !== "All";
 }

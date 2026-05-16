@@ -336,8 +336,8 @@ export default function QuestionCard({
         </div>
       )}
 
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-y-2 text-xs text-study-muted sm:text-sm">
-        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 leading-relaxed max-sm:line-clamp-3">
+      <div className="mb-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-y-2 text-xs text-study-muted sm:text-sm">
+        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-2 leading-relaxed sm:gap-x-2 sm:gap-y-1">
           {question.questionBank === "pyq" ? (
             <span
               title="Previous-year question (official paper track)"
@@ -354,7 +354,7 @@ export default function QuestionCard({
             </span>
           ) : null}
           <span
-            className="inline-block rounded px-2 py-0.5 font-semibold text-white"
+            className="inline-flex shrink-0 items-center rounded px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white sm:text-[11px]"
             style={{ backgroundColor: EXAM_COLORS[question.exam].accent }}
           >
             {question.exam}

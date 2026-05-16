@@ -8,6 +8,7 @@ import {
 } from "@/lib/questions";
 import { isDefaultPracticeFilters } from "@/lib/available-filters";
 import { isTheoryQuestion } from "@/lib/question-numerical";
+import { isPracticeSubjectFilterActive } from "@/lib/practice-subjects";
 
 export type PracticeLevelsManifest = {
   version: number;
@@ -84,7 +85,9 @@ export function getFilteredPracticeLevelCount(
   filters: Filters,
   excludeAttemptedIds?: Set<string>,
 ): number {
-  const n = sortedMcqsForFilters(bank, filters, excludeAttemptedIds).length;
+  const n = isPracticeSubjectFilterActive(filters)
+    ? sortedMcqsForFilters(bank, filters).length
+    : sortedMcqsForFilters(bank, filters, excludeAttemptedIds).length;
   return Math.max(0, Math.ceil(n / PRACTICE_LEVEL_BATCH_SIZE));
 }
 
@@ -94,6 +97,15 @@ export function resolveFilteredPracticeLevel(
   levelNumber: number,
   excludeAttemptedIds?: Set<string>,
 ): Question[] {
+  const batch = PRACTICE_MCQ_BATCH_SIZE;
+  const level = Math.max(1, levelNumber);
+
+  if (isPracticeSubjectFilterActive(filters)) {
+    const sorted = sortedMcqsForFilters(bank, filters);
+    const start = (level - 1) * batch;
+    return sorted.slice(start, start + batch);
+  }
+
   const sorted = sortedMcqsForFilters(bank, filters, excludeAttemptedIds);
   return slicePracticeQuestionsForLevel(sorted, levelNumber);
 }
@@ -208,13 +220,15 @@ export function findFirstPracticeLevelWithQuestions(
     getPracticeLevelCountForFilters(bank, filters, bankKind, excludeAttemptedIds),
     startLevel,
   );
+  const skipAttemptedExclude = isPracticeSubjectFilterActive(filters);
+
   for (let level = Math.max(1, startLevel); level <= max; level++) {
     const questions = resolvePracticeLevelForFilters(
       bank,
       filters,
       level,
       bankKind,
-      excludeAttemptedIds,
+      skipAttemptedExclude ? undefined : excludeAttemptedIds,
     );
     if (questions.length > 0) {
       return { level, questions };
