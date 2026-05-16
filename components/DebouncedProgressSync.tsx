@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import type { ExamType } from "@/lib/types";
 import { loadProgress } from "@/lib/storage";
@@ -9,12 +9,13 @@ const DEBOUNCE_MS = 2500;
 
 export default function DebouncedProgressSync() {
   const { data: session, status } = useSession();
-  const timers = useRef<Partial<Record<ExamType, number>>>({});
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (status !== "authenticated" || !session?.user?.id) return;
     if (session.user.id === "admin") return;
+
+    const timers: Partial<Record<ExamType, number>> = {};
 
     const flush = async (exam: ExamType) => {
       const progress = loadProgress(exam);
@@ -33,9 +34,9 @@ export default function DebouncedProgressSync() {
       const ce = ev as CustomEvent<{ exam?: ExamType }>;
       const exam = ce.detail?.exam;
       if (exam !== "ESE" && exam !== "GATE") return;
-      const prev = timers.current[exam];
+      const prev = timers[exam];
       if (prev !== undefined) window.clearTimeout(prev);
-      timers.current[exam] = window.setTimeout(() => {
+      timers[exam] = window.setTimeout(() => {
         void flush(exam);
       }, DEBOUNCE_MS);
     };
@@ -49,9 +50,8 @@ export default function DebouncedProgressSync() {
         "gate-progress-saved",
         onSaved as EventListener,
       );
-      const pending = timers.current;
       (["ESE", "GATE"] as const).forEach((exam) => {
-        const t = pending[exam];
+        const t = timers[exam];
         if (t !== undefined) window.clearTimeout(t);
       });
     };

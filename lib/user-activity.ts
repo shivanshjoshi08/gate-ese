@@ -23,7 +23,7 @@ export function summarizeProgressSnapshot(
       aiPracticeLevels: 0,
       pyqPracticeLevels: 0,
       lastAttemptAt: null,
-      lastVisited: snapshot?.lastVisited ?? null,
+      lastVisited: null,
     };
   }
 
