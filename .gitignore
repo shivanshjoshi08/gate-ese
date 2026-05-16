@@ -36,8 +36,9 @@ yarn-error.log*
 # tesseract / OCR artifacts
 *.traineddata
 
-# large PDF uploads (keep README)
-/pdfs/*.pdf
+# Admin-uploaded images (local dev)
+/public/uploads/
 
-# local data from extraction (optional - commit sample only)
-# /data/questions.json
+# Duplicate diagram folder — use public/images/ only (served at /images/…)
+/images/
+

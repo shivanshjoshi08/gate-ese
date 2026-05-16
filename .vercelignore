@@ -1,0 +1,12 @@
+# Local / dev-only — not needed on Vercel
+scripts/
+pdfs/
+docs/
+packages/
+eng.traineddata
+*.traineddata
+tsconfig.tsbuildinfo
+.next/
+
+# Duplicate of public/images (Next.js only serves public/)
+images/
