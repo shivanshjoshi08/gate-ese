@@ -14,6 +14,7 @@ import {
 } from "@/lib/storage";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 export default function MyProgressPage() {
   const { exam } = useExam();
@@ -26,8 +27,14 @@ export default function MyProgressPage() {
   const canCloudSync =
     status === "authenticated" && !!userId && userId !== "admin";
 
-  const progress = useMemo(() => loadProgress(exam), [exam, epoch]);
-  const stats = useMemo(() => getStats(exam), [exam, epoch]);
+  const progress = useMemo(() => {
+    void epoch;
+    return loadProgress(exam);
+  }, [exam, epoch]);
+  const stats = useMemo(() => {
+    void epoch;
+    return getStats(exam);
+  }, [exam, epoch]);
 
   const practiceLevel = getActivePracticeLevel(
     progress.aiPracticeSetsCompleted ?? 0,
@@ -176,7 +183,7 @@ export default function MyProgressPage() {
         </p>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={USER_PYQ_ENABLED ? "grid gap-4 sm:grid-cols-2" : ""}>
         <LevelCard
           label="Practice"
           level={practiceLevel}
@@ -184,13 +191,15 @@ export default function MyProgressPage() {
           href="/practice?bank=ai"
           buttonStyle={{ backgroundColor: accent.accent }}
         />
-        <LevelCard
-          label="PYQ"
-          level={pyqLevel}
-          accentClass="border-emerald-400/40 bg-emerald-500/[0.08]"
-          href="/practice?bank=pyq"
-          buttonClass="bg-emerald-600 hover:bg-emerald-500"
-        />
+        {USER_PYQ_ENABLED && (
+          <LevelCard
+            label="PYQ"
+            level={pyqLevel}
+            accentClass="border-emerald-400/40 bg-emerald-500/[0.08]"
+            href="/practice?bank=pyq"
+            buttonClass="bg-emerald-600 hover:bg-emerald-500"
+          />
+        )}
       </div>
 
       <div
@@ -243,12 +252,14 @@ export default function MyProgressPage() {
         >
           Continue Practice
         </Link>
-        <Link
-          href="/practice?bank=pyq"
-          className="flex w-full items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/20 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-600/30"
-        >
-          Continue PYQ
-        </Link>
+        {USER_PYQ_ENABLED && (
+          <Link
+            href="/practice?bank=pyq"
+            className="flex w-full items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/20 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-600/30"
+          >
+            Continue PYQ
+          </Link>
+        )}
         <Link
           href="/attempts"
           className="flex w-full items-center justify-center rounded-xl border border-study-border bg-study-raised/40 py-3 text-sm font-semibold text-study-soft transition hover:bg-study-raised/70"

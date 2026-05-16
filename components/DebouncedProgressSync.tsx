@@ -49,8 +49,9 @@ export default function DebouncedProgressSync() {
         "gate-progress-saved",
         onSaved as EventListener,
       );
+      const pending = timers.current;
       (["ESE", "GATE"] as const).forEach((exam) => {
-        const t = timers.current[exam];
+        const t = pending[exam];
         if (t !== undefined) window.clearTimeout(t);
       });
     };
