@@ -63,11 +63,13 @@ export default function OptionRenderer({
     "option-renderer w-full rounded-2xl border-2 px-4 py-3.5 text-left text-study-ink transition-all duration-150 ";
 
   if (!disabled && !showResult) {
-
-    cls +=
-
-      "border-study-border bg-study-raised/60 hover:border-sky-400/45 hover:bg-sky-500/[0.07] hover:shadow-[0_0_0_1px_rgba(56,189,248,0.15)] cursor-pointer";
-
+    if (selected) {
+      cls +=
+        "border-sky-500/80 bg-sky-500/12 cursor-pointer shadow-[0_0_0_1px_rgba(56,189,248,0.2)]";
+    } else {
+      cls +=
+        "border-study-border bg-study-raised/60 hover:border-sky-400/45 hover:bg-sky-500/[0.07] hover:shadow-[0_0_0_1px_rgba(56,189,248,0.15)] cursor-pointer";
+    }
   } else if (correct) {
 
     cls +=

@@ -65,15 +65,20 @@ export default function QuestionCard({
       ? (question.correct as number)
       : -1;
 
-  const handleMcqClick = (index: number) => {
+  const handleMcqSelect = (index: number) => {
     if (answered) return;
+    setSelected(index);
+  };
+
+  const handleMcqSubmit = () => {
+    if (answered || selected === null) return;
+
     if (!hasAnswerKey) {
-      setSelected(index);
       setAnswered(true);
       setIsCorrect(true);
       recordAttempt({
         questionId: question.id,
-        userAnswer: index,
+        userAnswer: selected,
         correct: true,
         timestamp: Date.now(),
         subject: question.subject,
@@ -83,14 +88,14 @@ export default function QuestionCard({
       onAnswered(true);
       return;
     }
-    const correct = index === correctIndex;
-    setSelected(index);
+
+    const correct = selected === correctIndex;
     setIsCorrect(correct);
     setAnswered(true);
     if (!correct) setShake(true);
     recordAttempt({
       questionId: question.id,
-      userAnswer: index,
+      userAnswer: selected,
       correct,
       timestamp: Date.now(),
       subject: question.subject,
@@ -99,6 +104,9 @@ export default function QuestionCard({
     });
     onAnswered(correct);
   };
+
+  const submitBtnClass =
+    "w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50";
 
   const handleNatCheck = () => {
     if (answered || !natInput.trim()) return;
@@ -152,6 +160,12 @@ export default function QuestionCard({
     const base =
       "w-full rounded-2xl border-2 px-4 py-3.5 text-left text-base font-medium transition-all duration-200 ";
     if (!answered) {
+      if (selected === index) {
+        return (
+          base +
+          "border-sky-500/80 bg-sky-500/12 text-study-ink shadow-[0_0_0_1px_rgba(56,189,248,0.2)] cursor-pointer"
+        );
+      }
       return (
         base +
         "border-study-border bg-study-raised/60 text-study-ink hover:border-sky-400/50 hover:bg-sky-500/[0.08] hover:shadow-[0_0_0_1px_rgba(56,189,248,0.18)] cursor-pointer"
@@ -366,9 +380,19 @@ export default function QuestionCard({
               }
               disabled={answered}
               showResult={answered}
-              onClick={() => handleMcqClick(i)}
+              onClick={() => handleMcqSelect(i)}
             />
           ))}
+          {!answered && (
+            <button
+              type="button"
+              onClick={handleMcqSubmit}
+              disabled={selected === null}
+              className={submitBtnClass}
+            >
+              Submit answer
+            </button>
+          )}
         </div>
       ) : question.type === "mcq" ? (
         question.options.length === 0 && !question.richOptions?.length ? (
@@ -401,7 +425,7 @@ export default function QuestionCard({
               key={i}
               type="button"
               disabled={answered}
-              onClick={() => handleMcqClick(i)}
+              onClick={() => handleMcqSelect(i)}
               className={getOptionClass(i)}
             >
               <span className="mr-2 font-bold">{LABELS[i]}.</span>
@@ -420,6 +444,16 @@ export default function QuestionCard({
               )}
             </button>
           ))}
+          {!answered && (
+            <button
+              type="button"
+              onClick={handleMcqSubmit}
+              disabled={selected === null}
+              className={submitBtnClass}
+            >
+              Submit answer
+            </button>
+          )}
         </div>
         )
       ) : null}
@@ -442,7 +476,7 @@ export default function QuestionCard({
               disabled={!natInput.trim()}
               className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50"
             >
-              Check
+              Submit answer
             </button>
           )}
           {answered && (
