@@ -1,0 +1,152 @@
+{
+  "id": "q_gate_bm_sample_001",
+  "version": 1,
+  "status": "published",
+  "type": "mcq",
+  "stem": {
+    "format": "tiptap-v1",
+    "plainText": "The fineness modulus of fine aggregate is 2.8. Which statement is correct?",
+    "doc": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "The fineness modulus of fine aggregate is "
+            },
+            { "type": "inlineMath", "attrs": { "latex": "2.8" } },
+            {
+              "type": "text",
+              "text": ". Which statement is correct?"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "attrs": {
+            "src": "/images/fig9.png",
+            "alt": "Gradation curve"
+          }
+        }
+      ]
+    }
+  },
+  "options": [
+    {
+      "id": "opt_a",
+      "label": "A",
+      "body": {
+        "format": "tiptap-v1",
+        "plainText": "FM > 3.2 indicates fine sand",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [{ "type": "text", "text": "FM > 3.2 indicates fine sand" }]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "opt_b",
+      "label": "B",
+      "body": {
+        "format": "tiptap-v1",
+        "plainText": "FM 2.2–2.6 is medium sand",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [{ "type": "text", "text": "FM 2.2–2.6 is medium sand" }]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "opt_c",
+      "label": "C",
+      "body": {
+        "format": "tiptap-v1",
+        "plainText": "Higher FM means finer aggregate",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [{ "type": "text", "text": "Higher FM means finer aggregate" }]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "opt_d",
+      "label": "D",
+      "body": {
+        "format": "tiptap-v1",
+        "plainText": "FM is dimensionless",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [{ "type": "text", "text": "FM is dimensionless" }]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "solution": {
+    "format": "tiptap-v1",
+    "plainText": "Fineness modulus is dimensionless. Option D is correct.",
+    "doc": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Fineness modulus is "
+            },
+            { "type": "text", "text": "dimensionless", "marks": [{ "type": "bold" }] },
+            { "type": "text", "text": ". Option D is correct." }
+          ]
+        },
+        {
+          "type": "blockMath",
+          "attrs": { "latex": "FM = \\frac{\\sum C_i}{100}" }
+        }
+      ]
+    }
+  },
+  "correctAnswer": "D",
+  "subjectId": "building-materials",
+  "subject": "Building Materials",
+  "topic": "Aggregates",
+  "tags": ["GATE", "2024", "Aggregates", "PYQ"],
+  "difficulty": "Medium",
+  "marks": 1,
+  "exam": "GATE",
+  "paper": null,
+  "pyq": { "year": 2024, "questionNumber": 9 },
+  "media": [
+    {
+      "id": "media_fig9",
+      "url": "/images/fig9.png",
+      "alt": "Gradation curve"
+    }
+  ],
+  "hasAnswerKey": true,
+  "source": "manual",
+  "createdAt": "2026-05-15T00:00:00.000Z",
+  "updatedAt": "2026-05-15T00:00:00.000Z",
+  "publishedAt": "2026-05-15T00:00:00.000Z"
+}

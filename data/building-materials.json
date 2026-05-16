@@ -1,0 +1,417 @@
+{
+  "title": "Building Materials & Solid Mechanics",
+  "description": "PYQ set with diagrams — add images to public/images as fig1.png, fig16.png, etc.",
+  "subject": "Building Materials",
+  "exam": "GATE",
+  "year": 2024,
+  "questions": [
+    {
+      "question_number": 1,
+      "question_text": "Consider the following statements:\n1. IS 3583 refers to Burnt Clay Paving Bricks.\n2. IS 5779 refers to Burnt Clay Soling Bricks.\n3. IS 3952 refers to Burnt Clay Hollow Bricks.\n4. IS 2222 refers to Burnt Clay Lay Bricks.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1, 2 and 3 only",
+        "b": "1, 2 and 4 only",
+        "c": "3 and 4 only",
+        "d": "1, 2, 3 and 4"
+      }
+    },
+    {
+      "question_number": 2,
+      "question_text": "Consider the following statements:\n1. A high aggregate impact value indicates strong aggregates.\n2. A low aggregate crushing value indicates high crushing strength of aggregates.\n3. Aggregates having elongation index values greater than 15% are generally considered suitable for pavement construction.\n4. Flakiness index of aggregates should not be less than 25% for use in road construction.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "2 and 3 only",
+        "b": "2 and 4 only",
+        "c": "1 and 3 only",
+        "d": "1 and 4 only"
+      }
+    },
+    {
+      "question_number": 3,
+      "question_text": "Consider the following statements regarding refractory bricks in furnaces:\n1. The furnace is fired at temperatures more than 1700°C.\n2. Silica content in the soil should be less than 40%.\n3. Water absorption of bricks should not exceed 10%.\n4. Chrome bricks are known as basic bricks.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1 and 2 only",
+        "b": "2 and 4 only",
+        "c": "1 and 3 only",
+        "d": "3 and 4 only"
+      }
+    },
+    {
+      "question_number": 4,
+      "question_text": "Consider the following statements about lime:\n1. Calcination of limestone results in quick lime.\n2. Lime produced from pure variety of chalk is hydraulic lime.\n3. Hydrated lime is obtained by treating quick lime with water.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1, 2 and 3",
+        "b": "1 and 2 only",
+        "c": "2 and 3 only",
+        "d": "1 and 3 only"
+      }
+    },
+    {
+      "question_number": 5,
+      "question_text": "Consider the following statements:\n1. If more water is added to concrete for increasing its workability, it results into concrete of low strength.\n2. No slump is an indication of a good workable concrete.\n3. Higher the slump of concrete, lower will be its workability.\n4. Workability of concrete is affected by water content as well as water-cement ratio.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1 and 3 only",
+        "b": "2 and 3 only",
+        "c": "1 and 4 only",
+        "d": "2 and 4 only"
+      }
+    },
+    {
+      "question_number": 6,
+      "question_text": "Pozzolana used as an admixture in concrete has the following advantages:\n1. It improves workability with lesser amount of water.\n2. It increases the heat of hydration and so lets the concrete set quickly.\n3. It increases the resistance of concrete to attack by salts and sulphates.\n4. It leaches out calcium hydroxide.\nSelect the correct answer using the codes given below:",
+      "options": {
+        "a": "1, 2 and 3 only",
+        "b": "1, 2 and 4 only",
+        "c": "1, 3 and 4 only",
+        "d": "2, 3 and 4 only"
+      }
+    },
+    {
+      "question_number": 7,
+      "question_text": "Consider the following particulars in respect of a concrete mix design:\n\n| | Weight | Specific Gravity |\n|---|---|---|\n| Cement | 400 kg/m³ | 3.2 |\n| Fine aggregates | | 2.5 |\n| Coarse aggregates | 1040 kg/m³ | 2.6 |\n| Water | 200 kg/m³ | 1.0 |\n\nWhat shall be the weight of the Fine aggregates?",
+      "options": {
+        "a": "520 kg/m³",
+        "b": "570 kg/m³",
+        "c": "690 kg/m³",
+        "d": "1000 kg/m³"
+      }
+    },
+    {
+      "question_number": 8,
+      "question_text": "Consider the following statements regarding Cyclopean Concrete:\n1. Size of aggregate is more than 150 mm.\n2. Size of aggregate is less than 150 mm.\n3. High slump.\n4. High temperature rise due to heat of hydration.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1 and 3 only",
+        "b": "1 and 4 only",
+        "c": "2 and 3 only",
+        "d": "2 and 4 only"
+      }
+    },
+    {
+      "question_number": 9,
+      "question_text": "What is the stress at the section x-x for the bar ABCD with uniform cross-section 1000 mm²? (Subjected to forces: 60 kN tensile at A, 20 kN compressive at B, 30 kN tensile at C, 110 kN tensile at D)",
+      "options": {
+        "a": "20 N/mm² (Tensile)",
+        "b": "30 N/mm² (Compressive)",
+        "c": "80 N/mm² (Tensile)",
+        "d": "50 N/mm² (Compressive)"
+      },
+      "image": "fig9"
+    },
+    {
+      "question_number": 10,
+      "question_text": "The total elongation of the structural element (fixed at one end, free at the other end, and of varying cross-section) as shown in the figure, when subjected to load 2P at the free end is (Segments: Area A length l, Area 3A length l, Area A/2 length l):",
+      "options": {
+        "a": "6.66 (P l) / (AE)",
+        "b": "5.55 (P l) / (AE)",
+        "c": "4.44 (P l) / (AE)",
+        "d": "3.33 (P l) / (AE)"
+      },
+      "image": "fig10"
+    },
+    {
+      "question_number": 11,
+      "question_text": "A chain, working a crane, has sectional area of 625 mm² and transmits a load of 10 kN. When the load is being lowered at a uniform rate of 40 m/min, the chain gets jammed suddenly at which time the length of the chain unwound is 10 m. Assuming E = 200 GPa, the stress induced in the chain due to this sudden jamming is",
+      "options": {
+        "a": "100.6 N/mm²",
+        "b": "120.4 N/mm²",
+        "c": "140.2 N/mm²",
+        "d": "160.0 N/mm²"
+      }
+    },
+    {
+      "question_number": 12,
+      "question_text": "A simply supported beam of span l and flexural rigidity EI carries a unit load at its mid-span. The strain energy at this condition in the beam due to bending is",
+      "options": {
+        "a": "l³ / (48 EI)",
+        "b": "l³ / (96 EI)",
+        "c": "l³ / (192 EI)",
+        "d": "l³ / (16 EI)"
+      }
+    },
+    {
+      "question_number": 13,
+      "question_text": "In mild steel specimens subjected to tensile test cycle, the elastic limit in tension is raised and the elastic limit in compression is lowered. This is called",
+      "options": {
+        "a": "Annealing effect",
+        "b": "Bauschinger effect",
+        "c": "Strain rate effect",
+        "d": "Fatigue effect"
+      }
+    },
+    {
+      "question_number": 14,
+      "question_text": "A solid uniform metal bar of diameter D mm and length l mm hangs vertically from its upper end. The density of the material is ρ N/mm³ and its modulus of elasticity is E N/mm². The total extension of the rod due to its own weight would be",
+      "options": {
+        "a": "(ρ l²) / (2 E)",
+        "b": "(ρ l) / (2 E)",
+        "c": "(ρ l) / (4 E)",
+        "d": "(ρ l²) / (4 E)"
+      }
+    },
+    {
+      "question_number": 15,
+      "question_text": "The state of stress at a certain point in a stressed body is as shown in the figure. Normal stress in x-direction is 80 MPa (Tensile) and in y-direction is 40 MPa (Compressive). The radius of the Mohr's circle for this state of stress will be",
+      "options": {
+        "a": "60 MPa",
+        "b": "40 MPa",
+        "c": "20 MPa",
+        "d": "10 MPa"
+      },
+      "image": "fig15"
+    },
+    {
+      "question_number": 16,
+      "question_text": "For the state of stress shown in the figure (90 MPa Tensile in x-direction, 30 MPa Compressive in y-direction, and 25 MPa Shear Stress), the maximum and minimum principal stresses (taking tensile stress as +, and compressive stress as -) will be",
+      "options": {
+        "a": "95 MPa and (-35) MPa",
+        "b": "60 MPa and 30 MPa",
+        "c": "95 MPa and (-30) MPa",
+        "d": "60 MPa and 35 MPa"
+      },
+      "image": "fig16"
+    },
+    {
+      "question_number": 17,
+      "question_text": "Consider the following statements:\n1. The shear stress distribution across the section of a circular shaft subjected to twisting varies parabolically.\n2. The shear stress at the centre of a circular shaft under twisting moment is zero.\n3. The shear stress at the extreme fibres of a circular shaft under twisting moment is maximum.\nWhich of the above statements is/are correct?",
+      "options": {
+        "a": "1, 2 and 3",
+        "b": "1 only",
+        "c": "2 only",
+        "d": "3 only"
+      }
+    },
+    {
+      "question_number": 18,
+      "question_text": "A uniform T-shaped arm of weight W, pinned about a horizontal point C, is supported by a vertical spring of stiffness K. The extension of the spring is",
+      "options": {
+        "a": "(3 W) / (4 K)",
+        "b": "(4 W) / (3 K)",
+        "c": "(3 K) / (4 W)",
+        "d": "(4 K) / (3 W)"
+      }
+    },
+    {
+      "question_number": 19,
+      "question_text": "The span of a cantilever beam is 2 m. The cross-section of the beam is a hollow square with external sides 100 mm; and its I = 4 × 10⁵ mm⁴. The safe bending stress for the beam material is 100 N/mm². The safe concentrated load at the free end would be",
+      "options": {
+        "a": "100 N",
+        "b": "200 N",
+        "c": "300 N",
+        "d": "400 N"
+      }
+    },
+    {
+      "question_number": 20,
+      "question_text": "A stepped steel shaft is subjected to a clockwise torque of 10 Nm at its free end. Shear modulus of steel is 80 GPa. The strain energy stored in the shaft is",
+      "options": {
+        "a": "1.73 Nmm",
+        "b": "2.52 Nmm",
+        "c": "3.46 Nmm",
+        "d": "4.12 Nmm"
+      }
+    },
+    {
+      "question_number": 21,
+      "question_text": "An overhanging beam of uniform EI is loaded as shown below. The deflection at the free end is (Span between supports A and B is l, overhang from B to free end C is l/2, and a point load W is applied at C)",
+      "options": {
+        "a": "W l³ / (81 EI)",
+        "b": "W l³ / (8 EI)",
+        "c": "W l³ / (27 EI)",
+        "d": "2 W l³ / (27 EI)"
+      },
+      "image": "fig21"
+    },
+    {
+      "question_number": 22,
+      "question_text": "The principal stresses at a point in a stressed material are σ1 = 200 N/mm², σ2 = 150 N/mm², and σ3 = 200 N/mm². E = 210 kN/mm² and μ = 0.3. The volumetric strain will be",
+      "options": {
+        "a": "8.954 × 10⁻⁴",
+        "b": "8.954 × 10⁻²",
+        "c": "6.54 × 10⁻³",
+        "d": "6.54 × 10⁻⁴"
+      }
+    },
+    {
+      "question_number": 23,
+      "question_text": "A mild steel bar, circular in cross-section, tapers from 40 mm diameter to 20 mm diameter over its length of 800 mm. It is subjected to an axial pull of 20 kN. E = 2 × 10⁵ N/mm². The increase in the length of the rod will be",
+      "options": {
+        "a": "1 / (10π) mm",
+        "b": "2 / (5π) mm",
+        "c": "4 / (5π) mm",
+        "d": "1 / (5π) mm"
+      }
+    },
+    {
+      "question_number": 24,
+      "question_text": "The state of stress at a point in an elastic material, with yield stress of 200 MPa in simple tension, and Poisson's ratio 0.3, is as shown in the figure (2σ compressive stress vertically and 1.4σ tensile stress horizontally). The permissible value of σ by maximum strain theory is",
+      "options": {
+        "a": "75 MPa",
+        "b": "100 MPa",
+        "c": "150 MPa",
+        "d": "200 MPa"
+      },
+      "image": "fig24"
+    },
+    {
+      "question_number": 25,
+      "question_text": "Consider the following statements in respect of arched construction made of voussoirs:\n1. The superimposed load is transferred to the sidewalls only by the strength of cohesion of the mortar between the voussoirs.\n2. The arch may fail under crushing when the compressive stress or thrust in it exceeds the safe crushing strength of the voussoir material.\n3. Every element in the arch is subjected to compression only.\n4. Failure of the arch due to the sliding of any voussoir past the adjacent one due to transverse shear can be avoided by reducing the height of the voussoirs.\nWhich of the above statements are correct?",
+      "options": {
+        "a": "1 and 4 only",
+        "b": "1 and 3 only",
+        "c": "2 and 4 only",
+        "d": "2 and 3 only"
+      }
+    },
+    {
+      "question_number": 26,
+      "question_text": "A homogeneous prismatic simply supported beam is subjected to a point load F. The load can be placed anywhere along the span of the beam. The very maximum flexural stress developed in the beam is (Span L, Width B, Depth D)",
+      "options": {
+        "a": "3FL / (2BD²)",
+        "b": "3FL / (4BD²)",
+        "c": "2FL / (3BD²)",
+        "d": "4FL / (3BD²)"
+      }
+    },
+    {
+      "question_number": 27,
+      "question_text": "The ratio (s/t) of, (s) stiffness of a beam (of constant EI) at the near end when the far end is hinged, to (t) the stiffness of the same beam at the near end when the far end is fixed, is",
+      "options": {
+        "a": "1/2",
+        "b": "3/4",
+        "c": "1/1",
+        "d": "4/3"
+      }
+    },
+    {
+      "question_number": 28,
+      "question_text": "Which of the following are examples of indeterminate structures?\n1. Fixed beam\n2. Continuous beam\n3. Two-hinged arch\n4. Beam overhanging on both sides\nSelect the correct answer using the codes given below:",
+      "options": {
+        "a": "1, 2 and 3 only",
+        "b": "1, 2 and 4 only",
+        "c": "1, 3 and 4 only",
+        "d": "2, 3 and 4 only"
+      }
+    },
+    {
+      "question_number": 29,
+      "question_text": "The rotational stiffness coefficient indicated as K11 for the frame with details as shown is (Joint C is connected to a hinged support A via a member of EI, L and to a fixed support B via a member of EI, L)",
+      "options": {
+        "a": "9EI / L",
+        "b": "8EI / L",
+        "c": "7EI / L",
+        "d": "6EI / L"
+      },
+      "image": "fig29"
+    },
+    {
+      "question_number": 30,
+      "question_text": "A single-bay portal frame of height h fixed at the base is subjected to a horizontal displacement Δ at the top. With constant EI, the base moment developed is proportional to",
+      "options": {
+        "a": "1/h",
+        "b": "1/h²",
+        "c": "1/h³",
+        "d": "1/h⁴"
+      }
+    },
+    {
+      "question_number": 31,
+      "question_text": "Consider the following statements:\n1. When the number of members (n) and joints (j) are such that the equation n = (2j - 3) is satisfied, the framed structure is said to be a perfect structure.\n2. In a redundant frame, the number of members is less than that required for a perfect frame.\n3. If, in a framed structure, the number of members provided is more than that required for a perfect frame, it is called as a deficient frame.\nWhich of the above statements is/are correct?",
+      "options": {
+        "a": "1, 2 and 3",
+        "b": "1 only",
+        "c": "2 only",
+        "d": "3 only"
+      }
+    },
+    {
+      "question_number": 32,
+      "question_text": "A cantilever beam, 3 m long, carries a uniformly distributed load over the entire length. If the slope at the free end is 1°, the deflection at the free end is",
+      "options": {
+        "a": "49.27 mm",
+        "b": "39.27 mm",
+        "c": "30.27 mm",
+        "d": "20.27 mm"
+      }
+    },
+    {
+      "question_number": 33,
+      "question_text": "The maximum bending moment at a given section, in which a train of wheel loads moves, occurs when the average load on the left segment is\n1. Equal to the average load on the right segment.\n2. More than the average load on the right segment.\n3. Less than the average load on the right segment.\nSelect the correct answer using the codes given below:",
+      "options": {
+        "a": "1, 2 and 3",
+        "b": "1 only",
+        "c": "2 only",
+        "d": "3 only"
+      }
+    },
+    {
+      "question_number": 34,
+      "question_text": "A single degree of freedom system of mass 22 kg and stiffness 17 kN/m vibrates freely. If damping in the system is 2%, the cyclic frequency and the damped circular frequency, respectively, are nearly",
+      "options": {
+        "a": "4.4 Hz and 0.88 rad/sec",
+        "b": "0.88 Hz and 27.8 rad/sec",
+        "c": "4.4 Hz and 27.8 rad/sec",
+        "d": "0.88 Hz and 0.88 rad/sec"
+      }
+    },
+    {
+      "question_number": 35,
+      "question_text": "A cable of insignificant weight, 18 m long, is supported at its two ends, 16 m apart, at the same level. The cable supports at its mid-reach a load of 120 N. The tension in the cable is nearly",
+      "options": {
+        "a": "136 N",
+        "b": "131 N",
+        "c": "126 N",
+        "d": "121 N"
+      }
+    },
+    {
+      "question_number": 36,
+      "question_text": "The design strength of a tension member is governed by\n1. Rupture at a critical section\n2. Yielding of gross area\n3. Block shear of end region\nSelect the correct answer using the codes given below:",
+      "options": {
+        "a": "1 only",
+        "b": "2 only",
+        "c": "3 only",
+        "d": "1, 2 and 3"
+      }
+    },
+    {
+      "question_number": 37,
+      "question_text": "Two parallel rails are running on railway sleepers. The centre-to-centre distance between the rails is 'b' with the sleepers projecting by an amount 'a' at each end beyond the rails. When the train passes over the rails, the reaction exerted by the ground can be taken as uniformly distributed over the sleeper. The ratio b/a for the condition that the maximum bending moment is as small as possible is",
+      "options": {
+        "a": "2.83",
+        "b": "2.90",
+        "c": "2.50",
+        "d": "3.00"
+      }
+    },
+    {
+      "question_number": 38,
+      "question_text": "The kinetic indeterminacy of the structure shown in the figure is equal to (Image shows a two-story, two-bay 2D frame. Left column is fixed at the base, middle column is hinged at the base, and right column is fixed at the base)",
+      "options": {
+        "a": "14",
+        "b": "15",
+        "c": "16",
+        "d": "17"
+      },
+      "image": "fig38"
+    },
+    {
+      "question_number": 39,
+      "question_text": "A beam-column is alternately bent either (1) in single curvature, or (2) in double curvature. The secondary moments induced are to be compared. These are indicated SM1 and SM2 as per the conditions (1) and (2) respectively.",
+      "options": {
+        "a": "SM1 > SM2",
+        "b": "SM1 < SM2",
+        "c": "SM1 = SM2",
+        "d": "Cannot be ascertained"
+      }
+    },
+    {
+      "question_number": 40,
+      "question_text": "Gantry girders can be designed\n1. As laterally supported beams.\n2. As laterally unsupported beams.\n3. By using channel sections.\nSelect the correct answer using the codes given below:",
+      "options": {
+        "a": "1, 2 and 3",
+        "b": "1 and 2 only",
+        "c": "2 and 3 only",
+        "d": "1 and 3 only"
+      }
+    }
+  ]
+}
