@@ -53,6 +53,8 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     paper: row.paper,
     type: row.type,
     numerical: row.numerical === true,
+    unit: row.unit ?? null,
+    answerRange: row.answerRange ?? null,
     appearances: row.appearances ?? [],
     references: row.references ?? [],
     questionStyle: row.questionStyle ?? null,
@@ -160,6 +162,8 @@ export function documentToDtoInput(
     paper: doc.paper,
     type: doc.type === "numerical" ? "numerical" : "mcq",
     numerical: doc.numerical === true || doc.type === "numerical",
+    unit: null,
+    answerRange: null,
     appearances: doc.appearances ?? [],
     references: doc.references ?? [],
     questionStyle: doc.questionStyle ?? null,
@@ -251,6 +255,8 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
     question: dto.question,
     type: answerType,
     numerical: dto.numerical === true,
+    unit: dto.unit ?? null,
+    answerRange: dto.answerRange ?? null,
     appearances: normalizeAppearances(
       dto.appearances?.length > 0
         ? dto.appearances
@@ -362,6 +368,8 @@ export function legacyJsonToCreatePayload(
     qno: q.qno ?? null,
     type,
     numerical: q.numerical === true,
+    unit: q.unit ?? null,
+    answerRange: q.answerRange ?? null,
     appearances: q.appearances ?? [],
     references: q.references ?? [],
     questionStyle: q.questionStyle ?? parsed.questionStyle ?? null,

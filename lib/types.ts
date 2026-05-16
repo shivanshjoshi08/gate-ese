@@ -45,6 +45,10 @@ export interface Question {
    * — numerical items may use MCQ options or NAT number input.
    */
   numerical?: boolean;
+  /** SI / display unit for NAT answers (e.g. mm). `null` until range NAT is used. */
+  unit?: string | null;
+  /** Accepted answer span for NAT grading. `null` until configured. */
+  answerRange?: import("@/lib/question-schema").AnswerRange;
   /** Rich content (TipTap) — when set, QuestionRenderer is used */
   richStem?: import("@/lib/question-types").RichContent;
   richSolution?: import("@/lib/question-types").RichContent;

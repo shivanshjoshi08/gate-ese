@@ -25,6 +25,17 @@ export const questionCreateSchema = z.object({
   paper: z.string().nullable().optional(),
   type: z.enum(["mcq", "numerical"]),
   numerical: z.boolean().optional().default(false),
+  unit: z.string().nullable().optional().default(null),
+  answerRange: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+      exact: z.number().optional(),
+      tolerance: z.number().optional(),
+    })
+    .nullable()
+    .optional()
+    .default(null),
   appearances: z
     .array(
       z.object({

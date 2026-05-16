@@ -10,15 +10,15 @@ export function isTheoryQuestion(q: Pick<Question, "numerical">): boolean {
   return q.numerical !== true;
 }
 
-/** Resolve `numerical` from bundled JSON / import payload. */
+/**
+ * Resolve `numerical` from bundled JSON / import payload.
+ * Category flag only — not tied to `type: nat` (range NAT inputs are separate).
+ */
 export function resolveNumericalFlag(raw: {
   numerical?: unknown;
-  type?: unknown;
 }): boolean {
   if (raw.numerical === true || raw.numerical === "true") return true;
-  if (raw.numerical === false || raw.numerical === "false") return false;
-  const t = String(raw.type ?? "").toLowerCase();
-  return t === "nat" || t === "numerical";
+  return false;
 }
 
 /** Answer UI type in practice JSON (`mcq` | `nat` | `msq`). */
@@ -35,12 +35,9 @@ export function resolveLegacyAnswerType(raw: {
 export function resolveMongoAnswerType(raw: {
   type?: unknown;
   options?: unknown;
+  numerical?: unknown;
 }): "mcq" | "numerical" {
   const legacy = resolveLegacyAnswerType(raw);
   if (legacy === "nat") return "numerical";
-  if (legacy === "mcq") {
-    const opts = Array.isArray(raw.options) ? raw.options : [];
-    return opts.length === 0 && resolveNumericalFlag(raw) ? "numerical" : "mcq";
-  }
   return "mcq";
 }

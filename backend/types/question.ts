@@ -32,6 +32,15 @@ export interface QuestionDto {
   type: QuestionType;
   /** Numericals filter category (may be true with `type: mcq` or `type: numerical`). */
   numerical: boolean;
+  /** NAT unit label. Null until range NAT is used. */
+  unit: string | null;
+  /** NAT grading span. Null until configured. */
+  answerRange: {
+    min?: number;
+    max?: number;
+    exact?: number;
+    tolerance?: number;
+  } | null;
   appearances: {
     exam: ExamType;
     year: number;

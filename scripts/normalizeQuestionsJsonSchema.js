@@ -20,6 +20,8 @@ function defaults(q) {
 
   return {
     numerical,
+    unit: q.unit ?? null,
+    answerRange: q.answerRange ?? null,
     branch: q.branch ?? "CE",
     section: q.section ?? null,
     qno: q.qno ?? null,

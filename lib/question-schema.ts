@@ -29,6 +29,41 @@ export type SolutionStep = {
 
 export type WhyWrongOptions = Record<string, string>;
 
+/** NAT / range grading span — fill when range-input questions ship; `null` until then. */
+export type AnswerRange = {
+  min?: number;
+  max?: number;
+  exact?: number;
+  tolerance?: number;
+} | null;
+
+export const answerRangeSchema = z
+  .object({
+    min: z.number().optional(),
+    max: z.number().optional(),
+    exact: z.number().optional(),
+    tolerance: z.number().optional(),
+  })
+  .nullable()
+  .default(null);
+
+export function normalizeAnswerRange(raw: unknown): AnswerRange {
+  if (raw == null) return null;
+  if (typeof raw !== "object" || Array.isArray(raw)) return null;
+  const r = raw as Record<string, unknown>;
+  const out: Exclude<AnswerRange, null> = {};
+  for (const key of ["min", "max", "exact", "tolerance"] as const) {
+    const v = r[key];
+    if (typeof v === "number" && Number.isFinite(v)) out[key] = v;
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+export function normalizeUnit(raw: unknown): string | null {
+  if (raw == null || raw === "") return null;
+  return String(raw).trim() || null;
+}
+
 export type QuestionAddedBy = "admin" | "community" | "ai-generated";
 export type QuestionSourceKind =
   | "official-pdf"
@@ -69,7 +104,11 @@ export const bundledQuestionSchema = z
     correct: z
       .union([z.number(), z.string(), z.array(z.number()), z.null()])
       .optional(),
-    numerical: z.boolean().optional(),
+    numerical: z.boolean().default(false),
+    /** Display / grading unit for future NAT (e.g. mm, kN/m³). */
+    unit: z.string().nullable().default(null),
+    /** Accepted answer span for future NAT grading. */
+    answerRange: answerRangeSchema,
 
     exam: z.enum(["GATE", "ESE", "ISRO", "SSC-JE"]).default("GATE"),
     year: z.number().int(),
@@ -285,6 +324,8 @@ export function normalizeBundledQuestion(raw: unknown): Question {
     images: images.length ? images : undefined,
     hasAnswerKey: parsed.hasAnswerKey !== false,
     numerical: resolveNumericalFlag(legacyType),
+    unit: normalizeUnit(parsed.unit),
+    answerRange: normalizeAnswerRange(parsed.answerRange),
     appearances: normalizeAppearances(parsed, exam, paper),
     references: (parsed.references ?? []) as QuestionReference[],
     questionStyle: normalizeQuestionStyle(
@@ -329,6 +370,8 @@ export function bundledToMongoExtended(
     qno: parsed.qno ?? null,
     subtopic: parsed.subtopic ?? "",
     negativeMarking: parsed.negativeMarking ?? 0,
+    unit: normalizeUnit(parsed.unit),
+    answerRange: normalizeAnswerRange(parsed.answerRange),
     questionStyle: parsed.questionStyle ?? null,
     solutionSteps: parsed.solutionSteps ?? [],
     conceptUsed: parsed.conceptUsed ?? "",

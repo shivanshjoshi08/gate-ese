@@ -43,6 +43,10 @@ const questionSchema = new Schema(
     type: { type: String, enum: ["mcq", "numerical"], required: true },
     /** Category: shows under learner Numericals filter (independent of answer `type`). */
     numerical: { type: Boolean, default: false, index: true },
+    /** NAT unit label (e.g. mm, kN/m³). Null until range NAT questions are added. */
+    unit: { type: String, default: null },
+    /** NAT acceptable range / tolerance. Null until configured. */
+    answerRange: { type: Schema.Types.Mixed, default: null },
     appearances: {
       type: [
         {
@@ -171,6 +175,13 @@ export type QuestionLean = {
   paper: string | null;
   type: "mcq" | "numerical";
   numerical: boolean;
+  unit?: string | null;
+  answerRange?: {
+    min?: number;
+    max?: number;
+    exact?: number;
+    tolerance?: number;
+  } | null;
   appearances: {
     exam: "GATE" | "ESE";
     year: number;
