@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/admin", label: "Dashboard" },
+  { href: "/admin", label: "Dashboard", exact: true },
+  { href: "/admin/users", label: "Learners" },
   { href: "/admin/questions", label: "Questions" },
   { href: "/admin/questions/new", label: "New" },
   { href: "/admin/questions/import", label: "JSON import" },
@@ -19,19 +20,22 @@ export default function AdminNav() {
           Question CMS
         </Link>
         <nav className="flex gap-2">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`rounded-lg px-3 py-1.5 text-sm ${
-                pathname === href || pathname.startsWith(href + "/")
-                  ? "bg-white/20"
-                  : "hover:bg-white/10"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+          {links.map(({ href, label, exact }) => {
+            const active = exact
+              ? pathname === href
+              : pathname === href || pathname.startsWith(`${href}/`);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`rounded-lg px-3 py-1.5 text-sm ${
+                  active ? "bg-white/20" : "hover:bg-white/10"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </nav>
         <Link href="/" className="text-sm text-zinc-400 hover:text-white">
           ← App

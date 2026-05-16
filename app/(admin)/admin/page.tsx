@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getQuestionBankStats } from "@/backend/services/question.service";
+import { listLearnersForAdmin } from "@/backend/services/admin-users.service";
 
 export default async function AdminDashboardPage() {
   let stats = {
@@ -10,8 +11,25 @@ export default async function AdminDashboardPage() {
     legacyPyq: 0,
   };
 
+  let learnerCount = 0;
+  let activeLearners = 0;
+
   try {
     stats = await getQuestionBankStats();
+  } catch {
+    /* Mongo unreachable */
+  }
+
+  try {
+    const learners = await listLearnersForAdmin();
+    learnerCount = learners.length;
+    activeLearners = learners.filter((u) => {
+      if (!u.lastAttemptAt) return false;
+      const days =
+        (Date.now() - new Date(u.lastAttemptAt).getTime()) /
+        (24 * 60 * 60 * 1000);
+      return days <= 7;
+    }).length;
   } catch {
     /* Mongo unreachable */
   }
@@ -59,6 +77,26 @@ export default async function AdminDashboardPage() {
         Learners see <strong className="text-zinc-400">approved</strong> questions
         only. Drafts stay hidden until published/approved.
       </p>
+
+      <Link
+        href="/admin/users"
+        className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-violet-500/30 bg-zinc-900/60 p-5 transition hover:brightness-110"
+      >
+        <div>
+          <p className="text-sm font-semibold text-zinc-200">Learners</p>
+          <p className="text-xs text-zinc-500">
+            Last login, last question attempt, practice stats
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-3xl font-bold tabular-nums text-zinc-100">
+            {learnerCount}
+          </p>
+          <p className="text-xs text-zinc-500">
+            {activeLearners} active in last 7 days
+          </p>
+        </div>
+      </Link>
 
       <div className="mt-10 flex flex-wrap gap-3">
         <Link
