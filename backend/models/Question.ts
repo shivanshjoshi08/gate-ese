@@ -112,7 +112,7 @@ const questionSchema = new Schema(
     verified: { type: Boolean, default: false },
     source: {
       type: String,
-      enum: ["official-pdf", "book", "community", "ai"],
+      enum: ["official-pdf", "book", "community", "ai", "ai-generated"],
       default: "official-pdf",
     },
     aiExplanation: { type: String, default: null },

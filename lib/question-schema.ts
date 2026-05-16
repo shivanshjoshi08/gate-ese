@@ -69,7 +69,8 @@ export type QuestionSourceKind =
   | "official-pdf"
   | "book"
   | "community"
-  | "ai";
+  | "ai"
+  | "ai-generated";
 
 const appearanceSchema = z.object({
   exam: z.enum(["GATE", "ESE", "ISRO", "SSC-JE"]),
@@ -154,7 +155,7 @@ export const bundledQuestionSchema = z
 
     repeatCount: z.number().int().min(0).optional(),
     isHighRepeat: z.boolean().optional(),
-    trendNote: z.string().optional(),
+    trendNote: z.string().nullable().optional(),
 
     tags: z.array(z.string()).optional(),
 
@@ -172,7 +173,7 @@ export const bundledQuestionSchema = z
     addedBy: z.enum(["admin", "community", "ai-generated"]).optional(),
     verified: z.boolean().optional(),
     source: z
-      .enum(["official-pdf", "book", "community", "ai"])
+      .enum(["official-pdf", "book", "community", "ai", "ai-generated"])
       .optional(),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),

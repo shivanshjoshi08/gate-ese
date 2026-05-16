@@ -74,7 +74,7 @@ export interface Question {
   keyTakeaway?: string;
   repeatCount?: number;
   isHighRepeat?: boolean;
-  trendNote?: string;
+  trendNote?: string | null;
   tags?: string[];
   mainsRelevant?: boolean;
   selfEvalChecklist?: string[];
@@ -82,7 +82,7 @@ export interface Question {
   diagramUrl?: string;
   addedBy?: string;
   verified?: boolean;
-  source?: string;
+  source?: import("@/lib/question-schema").QuestionSourceKind;
   createdAt?: string;
   updatedAt?: string;
   /** Filled at runtime by AI — keep null in DB/JSON. */
