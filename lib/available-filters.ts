@@ -19,7 +19,7 @@ function mcqPool(bank: Question[], filters: Filters): Question[] {
 function subjectOptionsFromPool(pool: Question[]): FilterOption[] {
   const subjects = new Set<string>();
   for (const q of pool) subjects.add(q.subject);
-  const sorted = [...subjects].sort((a, b) =>
+  const sorted = Array.from(subjects).sort((a, b) =>
     getSubjectShort(a).localeCompare(getSubjectShort(b)),
   );
   if (sorted.length === 0) return [];
