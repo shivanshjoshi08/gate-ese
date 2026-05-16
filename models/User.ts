@@ -12,6 +12,9 @@ const userSchema = new Schema(
     },
     passwordHash: { type: String, required: true, select: false },
     name: { type: String, default: "" },
+    lastLoginAt: { type: Date, default: null, index: true },
+    lastActivityAt: { type: Date, default: null, index: true },
+    lastAttemptAt: { type: Date, default: null, index: true },
   },
   { timestamps: true },
 );
