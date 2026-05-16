@@ -125,7 +125,7 @@ export function manifestMatchesBank(bank: Question[]): boolean {
   return ids.some((id) => byId.has(id));
 }
 
-function useManifestLevels(
+function shouldUseManifestLevels(
   bank: Question[],
   bankKind: PracticeBankKind,
 ): boolean {
@@ -149,7 +149,7 @@ export function resolvePracticeLevelForFilters(
     );
   }
   if (isDefaultPracticeFilters(filters)) {
-    if (useManifestLevels(bank, bankKind)) {
+    if (shouldUseManifestLevels(bank, bankKind)) {
       return resolvePracticeLevelQuestions(bank, levelNumber);
     }
     return resolvePyqLevelQuestions(bank, levelNumber);
@@ -167,7 +167,7 @@ export function getPracticeLevelCountForFilters(
     return getFilteredPracticeLevelCount(bank, filters, excludeAttemptedIds);
   }
   if (isDefaultPracticeFilters(filters)) {
-    if (useManifestLevels(bank, bankKind)) {
+    if (shouldUseManifestLevels(bank, bankKind)) {
       return getPracticeLevelCount();
     }
     return getPyqLevelCount(bank);
@@ -191,7 +191,7 @@ export function hasPracticeLevelForFilters(
     );
   }
   if (isDefaultPracticeFilters(filters)) {
-    if (useManifestLevels(bank, bankKind)) {
+    if (shouldUseManifestLevels(bank, bankKind)) {
       return hasPracticeLevel(levelNumber);
     }
     return resolvePyqLevelQuestions(bank, levelNumber).length > 0;

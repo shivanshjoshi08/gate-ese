@@ -11,6 +11,7 @@ import {
 import type { Question } from "@/lib/types";
 import { legacyQuestions } from "@/lib/legacy-questions";
 import { buildingMaterialsQuestions } from "@/lib/buildingMaterials";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 type PracticeBankContextValue = {
   /** Practice bank: bundled JSON + Mongo `sourceType=practice` (approved). */
@@ -70,7 +71,7 @@ export function PracticeBankProvider({
     setError(null);
     try {
       const [pyq, practice] = await Promise.all([
-        fetchApprovedBank("pyq"),
+        USER_PYQ_ENABLED ? fetchApprovedBank("pyq") : Promise.resolve([]),
         fetchApprovedBank("practice"),
       ]);
       setPyqRemote(pyq);
@@ -104,6 +105,7 @@ export function PracticeBankProvider({
   }, [practiceRemote]);
 
   const pyqQuestions = useMemo(() => {
+    if (!USER_PYQ_ENABLED) return [];
     const fromMongo = pyqRemote.map((q) => ({
       ...q,
       questionBank: "pyq" as const,
