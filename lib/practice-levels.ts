@@ -6,10 +6,8 @@ import {
   slicePracticeQuestionsForLevel,
   type PracticeBankKind,
 } from "@/lib/questions";
-import {
-  isDefaultPracticeFilters,
-  practiceTypeFilter,
-} from "@/lib/available-filters";
+import { isDefaultPracticeFilters } from "@/lib/available-filters";
+import { isTheoryQuestion } from "@/lib/question-numerical";
 
 export type PracticeLevelsManifest = {
   version: number;
@@ -58,7 +56,7 @@ export function resolvePyqLevelQuestions(
   levelNumber: number,
 ): Question[] {
   const mcqs = [...bank]
-    .filter((q) => q.type === "mcq")
+    .filter((q) => isTheoryQuestion(q))
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const batch = PRACTICE_LEVEL_BATCH_SIZE;
   const idx = Math.max(0, levelNumber - 1);
@@ -68,7 +66,7 @@ export function resolvePyqLevelQuestions(
 }
 
 export function getPyqLevelCount(bank: Question[]): number {
-  const n = bank.filter((q) => q.type === "mcq").length;
+  const n = bank.filter((q) => isTheoryQuestion(q)).length;
   return Math.max(0, Math.ceil(n / PRACTICE_LEVEL_BATCH_SIZE));
 }
 
@@ -77,11 +75,7 @@ function sortedMcqsForFilters(
   filters: Filters,
   excludeAttemptedIds?: Set<string>,
 ): Question[] {
-  const pool = filterQuestions(
-    bank,
-    { ...filters, type: practiceTypeFilter(filters) },
-    excludeAttemptedIds,
-  );
+  const pool = filterQuestions(bank, filters, excludeAttemptedIds);
   return [...pool].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 

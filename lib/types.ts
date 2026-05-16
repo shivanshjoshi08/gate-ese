@@ -6,6 +6,19 @@ export type ExamType = "GATE" | "ESE";
 
 export type EsePaper = "PRE" | "P1" | "P2" | null;
 
+export type {
+  QuestionAppearance,
+  QuestionReference,
+  QuestionReferenceKind,
+  QuestionStyleTag,
+} from "@/lib/question-sources";
+
+import type {
+  QuestionAppearance,
+  QuestionReference,
+  QuestionStyleTag,
+} from "@/lib/question-sources";
+
 export interface Question {
   id: string;
   question: string;
@@ -26,12 +39,23 @@ export interface Question {
   images?: string[];
   /** When false, practice records selection only (no right/wrong) */
   hasAnswerKey?: boolean;
+  /**
+   * Category for Numericals filter (calculation-heavy). Independent of {@link type}
+   * — numerical items may use MCQ options or NAT number input.
+   */
+  numerical?: boolean;
   /** Rich content (TipTap) — when set, QuestionRenderer is used */
   richStem?: import("@/lib/question-types").RichContent;
   richSolution?: import("@/lib/question-types").RichContent;
   richOptions?: import("@/lib/question-types").QuestionOption[];
   /** Learner-facing source: bundled JSON vs published PYQ bank (set by PracticeBank provider). */
   questionBank?: "ai" | "pyq";
+  /** Official PYQ appearances (GATE / ESE / year / paper). */
+  appearances?: QuestionAppearance[];
+  /** Books, coaching modules, or duplicate exam tracks. */
+  references?: QuestionReference[];
+  /** Pattern tag for analysis (conceptual, formula, trap, etc.). */
+  questionStyle?: QuestionStyleTag;
 }
 
 export interface AttemptRecord {

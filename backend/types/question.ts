@@ -30,6 +30,28 @@ export interface QuestionDto {
   year: number;
   paper: string | null;
   type: QuestionType;
+  /** Numericals filter category (may be true with `type: mcq` or `type: numerical`). */
+  numerical: boolean;
+  appearances: {
+    exam: ExamType;
+    year: number;
+    paper?: string | null;
+    session?: string;
+  }[];
+  references: {
+    kind: "book" | "coaching" | "standard" | "web" | "other";
+    label: string;
+    exam?: ExamType;
+    year?: number;
+    notes?: string;
+  }[];
+  questionStyle?:
+    | "conceptual"
+    | "formula-based"
+    | "statement-trap"
+    | "code-based"
+    | "practical"
+    | null;
   question: string;
   options: QuestionOptionDto[];
   correctOption: string;

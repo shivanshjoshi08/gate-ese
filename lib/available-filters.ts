@@ -1,6 +1,18 @@
-import type { ExamType, Filters, Question } from "@/lib/types";
+import type { Filters, Question } from "@/lib/types";
 import { filterQuestions } from "@/lib/questions";
 import { getSubjectShort } from "@/lib/constants";
+import { isNumericalQuestion } from "@/lib/question-numerical";
+import {
+  FILTER_TYPE_MCQ,
+  FILTER_TYPE_NUMERICALS,
+  isNumericalsFilter,
+} from "@/lib/practice-filters";
+
+export {
+  FILTER_TYPE_MCQ,
+  FILTER_TYPE_NUMERICALS,
+  isNumericalsFilter,
+} from "@/lib/practice-filters";
 
 export type FilterOption = { value: string; label: string };
 
@@ -8,26 +20,14 @@ export type SimplePracticeFilterOptions = {
   exams: FilterOption[];
   subjects: FilterOption[];
   difficulties: FilterOption[];
-  /** Show MCQ vs Numericals chips when the bank has NAT questions. */
+  /** Show MCQ vs Numericals chips when the bank has numerical-category questions. */
   hasNumericals: boolean;
 };
 
 const DIFFICULTY_LEVELS = ["Easy", "Medium", "Hard"] as const;
 
-/** `filters.type` when learner selects Numericals (NAT questions). */
-export const FILTER_TYPE_NUMERICALS = "NAT";
-export const FILTER_TYPE_MCQ = "MCQ";
-
-export function isNumericalsFilter(filters: Filters): boolean {
-  return filters.type === FILTER_TYPE_NUMERICALS;
-}
-
-export function practiceTypeFilter(filters: Filters): typeof FILTER_TYPE_MCQ | typeof FILTER_TYPE_NUMERICALS {
-  return isNumericalsFilter(filters) ? FILTER_TYPE_NUMERICALS : FILTER_TYPE_MCQ;
-}
-
 function practicePool(bank: Question[], filters: Filters): Question[] {
-  return filterQuestions(bank, { ...filters, type: practiceTypeFilter(filters) });
+  return filterQuestions(bank, filters);
 }
 
 function subjectOptionsFromPool(pool: Question[]): FilterOption[] {
@@ -62,10 +62,11 @@ export function getSimplePracticeFilters(
   bank: Question[],
   filters: Filters,
 ): SimplePracticeFilterOptions {
-  const hasNumericals = bank.some((q) => q.type === "nat");
-  const typeScopedBank = hasNumericals && isNumericalsFilter(filters)
-    ? bank.filter((q) => q.type === "nat")
-    : bank.filter((q) => q.type === "mcq");
+  const hasNumericals = bank.some((q) => isNumericalQuestion(q));
+  const typeScopedBank =
+    hasNumericals && isNumericalsFilter(filters)
+      ? bank.filter((q) => isNumericalQuestion(q))
+      : bank.filter((q) => !isNumericalQuestion(q));
 
   /* Exam filter — re-enable when needed
   const examPool = practicePool(

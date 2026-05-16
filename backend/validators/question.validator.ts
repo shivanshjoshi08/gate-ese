@@ -24,6 +24,40 @@ export const questionCreateSchema = z.object({
   year: z.coerce.number().int().min(1990).max(2100),
   paper: z.string().nullable().optional(),
   type: z.enum(["mcq", "numerical"]),
+  numerical: z.boolean().optional().default(false),
+  appearances: z
+    .array(
+      z.object({
+        exam: z.enum(["GATE", "ESE"]),
+        year: z.number().int(),
+        paper: z.string().nullable().optional(),
+        session: z.string().optional(),
+      }),
+    )
+    .optional()
+    .default([]),
+  references: z
+    .array(
+      z.object({
+        kind: z.enum(["book", "coaching", "standard", "web", "other"]),
+        label: z.string().min(1),
+        exam: z.enum(["GATE", "ESE"]).optional(),
+        year: z.number().int().optional(),
+        notes: z.string().optional(),
+      }),
+    )
+    .optional()
+    .default([]),
+  questionStyle: z
+    .enum([
+      "conceptual",
+      "formula-based",
+      "statement-trap",
+      "code-based",
+      "practical",
+    ])
+    .nullable()
+    .optional(),
   question: z.string().min(1),
   options: z.array(optionSchema).default([]),
   correctOption: z.string().default(""),

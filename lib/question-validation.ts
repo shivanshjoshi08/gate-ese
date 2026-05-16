@@ -33,6 +33,37 @@ export const questionDocumentSchema = z.object({
   id: z.string().min(1),
   status: z.enum(["draft", "published"]),
   type: z.enum(["mcq", "msq", "numerical", "subjective"]),
+  numerical: z.boolean().optional(),
+  appearances: z
+    .array(
+      z.object({
+        exam: z.enum(["GATE", "ESE"]),
+        year: z.number().int(),
+        paper: z.union([z.enum(["PRE", "P1", "P2"]), z.null()]).optional(),
+        session: z.string().optional(),
+      }),
+    )
+    .optional(),
+  references: z
+    .array(
+      z.object({
+        kind: z.enum(["book", "coaching", "standard", "web", "other"]),
+        label: z.string().min(1),
+        exam: z.enum(["GATE", "ESE"]).optional(),
+        year: z.number().int().optional(),
+        notes: z.string().optional(),
+      }),
+    )
+    .optional(),
+  questionStyle: z
+    .enum([
+      "conceptual",
+      "formula-based",
+      "statement-trap",
+      "code-based",
+      "practical",
+    ])
+    .optional(),
   stem: richContentSchema,
   options: z.array(questionOptionSchema),
   solution: richContentSchema,

@@ -1,5 +1,10 @@
 import type { AttemptRecord, ExamType, Filters, Question } from "./types";
 import { legacyQuestions } from "@/lib/legacy-questions";
+import {
+  FILTER_TYPE_MCQ,
+  isNumericalsFilter,
+} from "@/lib/practice-filters";
+import { isNumericalQuestion } from "@/lib/question-numerical";
 
 /** @deprecated Use usePracticeBank().questions — legacy-only subset without DB. */
 export const allQuestions: Question[] = legacyQuestions;
@@ -63,7 +68,11 @@ export function filterQuestions(
     const marks = filters.marks === "1 Mark" ? 1 : 2;
     result = result.filter((q) => q.marks === marks);
   }
-  if (filters.type !== "All") {
+  if (filters.type === FILTER_TYPE_MCQ) {
+    result = result.filter((q) => !isNumericalQuestion(q));
+  } else if (isNumericalsFilter(filters)) {
+    result = result.filter((q) => isNumericalQuestion(q));
+  } else if (filters.type !== "All") {
     const type = filters.type.toLowerCase() as Question["type"];
     result = result.filter((q) => q.type === type);
   }

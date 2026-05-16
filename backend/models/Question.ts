@@ -41,6 +41,45 @@ const questionSchema = new Schema(
     year: { type: Number, required: true, index: true },
     paper: { type: String, default: null },
     type: { type: String, enum: ["mcq", "numerical"], required: true },
+    /** Category: shows under learner Numericals filter (independent of answer `type`). */
+    numerical: { type: Boolean, default: false, index: true },
+    appearances: {
+      type: [
+        {
+          exam: { type: String, enum: ["GATE", "ESE"] },
+          year: Number,
+          paper: { type: String, default: null },
+          session: { type: String, default: "" },
+        },
+      ],
+      default: [],
+    },
+    references: {
+      type: [
+        {
+          kind: {
+            type: String,
+            enum: ["book", "coaching", "standard", "web", "other"],
+          },
+          label: String,
+          exam: { type: String, enum: ["GATE", "ESE"], required: false },
+          year: Number,
+          notes: { type: String, default: "" },
+        },
+      ],
+      default: [],
+    },
+    questionStyle: {
+      type: String,
+      enum: [
+        "conceptual",
+        "formula-based",
+        "statement-trap",
+        "code-based",
+        "practical",
+      ],
+      default: null,
+    },
     question: { type: String, required: true },
     options: { type: [optionSchema], default: [] },
     correctOption: { type: String, default: "" },
@@ -98,6 +137,27 @@ export type QuestionLean = {
   year: number;
   paper: string | null;
   type: "mcq" | "numerical";
+  numerical: boolean;
+  appearances: {
+    exam: "GATE" | "ESE";
+    year: number;
+    paper?: string | null;
+    session?: string;
+  }[];
+  references: {
+    kind: "book" | "coaching" | "standard" | "web" | "other";
+    label: string;
+    exam?: "GATE" | "ESE";
+    year?: number;
+    notes?: string;
+  }[];
+  questionStyle?:
+    | "conceptual"
+    | "formula-based"
+    | "statement-trap"
+    | "code-based"
+    | "practical"
+    | null;
   question: string;
   options: { id: string; text: string; image?: string | null }[];
   correctOption: string;

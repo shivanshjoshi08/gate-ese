@@ -129,6 +129,9 @@ export async function createQuestion(
     marks: input.marks ?? 1,
     negativeMarks: input.negativeMarks ?? 0,
     tags: input.tags ?? [],
+    appearances: input.appearances ?? [],
+    references: input.references ?? [],
+    questionStyle: input.questionStyle ?? null,
     images: input.images ?? [],
     status: input.status ?? "draft",
   });

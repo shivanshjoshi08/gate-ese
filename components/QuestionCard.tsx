@@ -14,6 +14,7 @@ import ImageBlock from "@/components/question/ImageBlock";
 import QuestionRenderer from "@/components/question/QuestionRenderer";
 import RichContentRenderer from "@/components/question/RichContentRenderer";
 import OptionRenderer from "@/components/question/OptionRenderer";
+import QuestionSourcePanel from "@/components/question/QuestionSourcePanel";
 import "@/components/question/question-renderer.css";
 import {
   recordAttempt,
@@ -413,6 +414,8 @@ export default function QuestionCard({
           </button>
         </div>
       </div>
+
+      <QuestionSourcePanel question={question} className="mb-4" />
 
       {question.richStem ? (
         <div className="mb-6">

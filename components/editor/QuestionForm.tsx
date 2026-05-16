@@ -113,16 +113,30 @@ export default function QuestionForm({
           </select>
           <select
             value={doc.type}
-            onChange={(e) =>
-              patch({ type: e.target.value as QuestionDocument["type"] })
-            }
+            onChange={(e) => {
+              const type = e.target.value as QuestionDocument["type"];
+              patch({
+                type,
+                numerical:
+                  type === "numerical" ? true : doc.numerical,
+              });
+            }}
             className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-100"
           >
             <option value="mcq">MCQ</option>
             <option value="msq">MSQ</option>
-            <option value="numerical">Numerical</option>
+            <option value="numerical">Numerical (number input)</option>
             <option value="subjective">Subjective</option>
           </select>
+          <label className="flex min-h-[40px] cursor-pointer items-center gap-2 rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-200">
+            <input
+              type="checkbox"
+              checked={doc.numerical === true}
+              onChange={(e) => patch({ numerical: e.target.checked })}
+              className="h-4 w-4 rounded border-zinc-500"
+            />
+            Numericals filter
+          </label>
           <select
             value={doc.exam}
             onChange={(e) =>

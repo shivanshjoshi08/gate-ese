@@ -8,6 +8,12 @@ const SAMPLE_LEGACY = `[
     "id": "ese_ce_2025_01",
     "question": "Minimum grade of concrete for RCC in moderate exposure (IS 456)?",
     "type": "mcq",
+    "numerical": false,
+    "questionStyle": "conceptual",
+    "appearances": [{ "exam": "GATE", "year": 2025, "paper": null }],
+    "references": [
+      { "kind": "book", "label": "Made Easy — RCC", "notes": "Similar Q in Ch.4" }
+    ],
     "options": ["M15", "M20", "M25", "M30"],
     "correct": 1,
     "solution": "M20 is minimum for moderate exposure.",
@@ -31,6 +37,7 @@ const SAMPLE_UNIFIED = `[
     "year": 2023,
     "paper": null,
     "type": "mcq",
+    "numerical": false,
     "question": "Bernoulli equation along a streamline applies when flow is:",
     "options": [
       { "id": "A", "text": "Steady incompressible inviscid" },

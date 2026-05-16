@@ -60,6 +60,10 @@ const questionSchema = new mongoose.Schema(
     year: { type: Number, required: true },
     paper: { type: String, default: null },
     type: { type: String, enum: ["mcq", "numerical"], required: true },
+    numerical: { type: Boolean, default: false },
+    appearances: { type: Array, default: [] },
+    references: { type: Array, default: [] },
+    questionStyle: { type: String, default: null },
     question: { type: String, required: true },
     options: [optionSchema],
     correctOption: String,
@@ -96,7 +100,15 @@ function transform(raw) {
   if (!id || !raw.question) return null;
 
   const typeRaw = String(raw.type || "mcq").toLowerCase();
-  const type = typeRaw === "nat" || typeRaw === "numerical" ? "numerical" : "mcq";
+  const numerical =
+    raw.numerical === true ||
+    raw.numerical === "true" ||
+    typeRaw === "nat" ||
+    typeRaw === "numerical";
+  const type =
+    typeRaw === "nat" || typeRaw === "numerical"
+      ? "numerical"
+      : "mcq";
   const optionsArr = Array.isArray(raw.options) ? raw.options : [];
   const options = optionsArr.map((text, i) => ({
     id: String.fromCharCode(65 + i),
@@ -128,6 +140,19 @@ function transform(raw) {
     year,
     paper: raw.paper ? String(raw.paper) : null,
     type,
+    numerical,
+    appearances: Array.isArray(raw.appearances)
+      ? raw.appearances
+      : [
+          {
+            exam,
+            year,
+            paper: raw.paper ? String(raw.paper) : null,
+          },
+        ],
+    references: Array.isArray(raw.references) ? raw.references : [],
+    questionStyle:
+      typeof raw.questionStyle === "string" ? raw.questionStyle : null,
     question: String(raw.question),
     options,
     correctOption,
@@ -179,6 +204,7 @@ async function main() {
   });
 
   let inserted = 0;
+  let updated = 0;
   let skipped = 0;
   const failed = [];
 
@@ -195,7 +221,21 @@ async function main() {
         .select("_id")
         .lean();
       if (exists) {
-        skipped++;
+        await Question.updateOne(
+          { _id: exists._id },
+          {
+            $set: {
+              numerical: doc.numerical,
+              type: doc.type,
+              options: doc.options,
+              correctOption: doc.correctOption,
+              appearances: doc.appearances,
+              references: doc.references,
+              questionStyle: doc.questionStyle,
+            },
+          },
+        );
+        updated++;
         continue;
       }
       await Question.create(doc);
@@ -206,7 +246,9 @@ async function main() {
   }
 
   const total = await Question.countDocuments({ sourceType: "practice" });
-  console.log(`Import done: +${inserted} inserted, ${skipped} skipped (duplicate)`);
+  console.log(
+    `Import done: +${inserted} inserted, ${updated} updated (numerical/type sync), ${skipped} skipped`,
+  );
   console.log(`Practice questions in DB: ${total}`);
   if (failed.length) {
     console.log(`Failed (${failed.length}):`);

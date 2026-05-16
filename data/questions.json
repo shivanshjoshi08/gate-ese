@@ -17,7 +17,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_02",
@@ -37,7 +38,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_03",
@@ -57,7 +59,8 @@
     "year": 2024,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_04",
@@ -77,7 +80,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_05",
@@ -97,7 +101,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_06",
@@ -117,7 +122,8 @@
     "year": 2024,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_07",
@@ -137,7 +143,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2024_08",
@@ -157,7 +164,8 @@
     "year": 2024,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_09",
@@ -177,7 +185,8 @@
     "year": 2023,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_10",
@@ -192,7 +201,8 @@
     "year": 2023,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": true
   },
   {
     "id": "gate_ce_2023_11",
@@ -207,7 +217,8 @@
     "year": 2023,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": true
   },
   {
     "id": "gate_ce_2023_12",
@@ -227,7 +238,8 @@
     "year": 2023,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_13",
@@ -247,7 +259,8 @@
     "year": 2023,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_14",
@@ -267,7 +280,8 @@
     "year": 2023,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_15",
@@ -287,7 +301,8 @@
     "year": 2023,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2023_16",
@@ -307,7 +322,8 @@
     "year": 2023,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2022_17",
@@ -327,7 +343,8 @@
     "year": 2022,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2022_18",
@@ -347,7 +364,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2022_19",
@@ -367,7 +385,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2022_20",
@@ -387,7 +406,8 @@
     "year": 2022,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2021_21",
@@ -407,7 +427,8 @@
     "year": 2021,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2021_22",
@@ -427,7 +448,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2021_23",
@@ -442,7 +464,8 @@
     "year": 2021,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": true
   },
   {
     "id": "gate_ce_2020_24",
@@ -462,7 +485,8 @@
     "year": 2020,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2020_25",
@@ -482,7 +506,8 @@
     "year": 2020,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2019_26",
@@ -502,7 +527,8 @@
     "year": 2019,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2019_27",
@@ -522,7 +548,8 @@
     "year": 2019,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "gate_ce_2018_28",
@@ -542,7 +569,8 @@
     "year": 2018,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_2024_pre_01",
@@ -562,7 +590,8 @@
     "year": 2024,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "PRE"
+    "paper": "PRE",
+    "numerical": false
   },
   {
     "id": "ese_ce_2024_p2_02",
@@ -582,7 +611,8 @@
     "year": 2024,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "ese_ce_2023_pre_03",
@@ -602,7 +632,8 @@
     "year": 2023,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "PRE"
+    "paper": "PRE",
+    "numerical": false
   },
   {
     "id": "ese_ce_2023_p2_04",
@@ -622,7 +653,8 @@
     "year": 2023,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "ese_ce_2022_pre_05",
@@ -642,7 +674,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "PRE"
+    "paper": "PRE",
+    "numerical": false
   },
   {
     "id": "ese_ce_2022_p2_06",
@@ -662,7 +695,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "ese_ce_2021_pre_07",
@@ -682,7 +716,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "PRE"
+    "paper": "PRE",
+    "numerical": false
   },
   {
     "id": "ese_ce_2021_p2_08",
@@ -702,7 +737,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_soil_01",
@@ -722,7 +758,8 @@
     "year": 2020,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_fluid_02",
@@ -742,7 +779,8 @@
     "year": 2019,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_som_03",
@@ -762,7 +800,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_env_04",
@@ -782,7 +821,8 @@
     "year": 2018,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_trans_05",
@@ -802,7 +842,8 @@
     "year": 2022,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_rcc_06",
@@ -822,7 +863,8 @@
     "year": 2020,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_survey_07",
@@ -842,7 +884,8 @@
     "year": 2019,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_hydro_08",
@@ -862,7 +905,8 @@
     "year": 2017,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_steel_09",
@@ -882,7 +926,8 @@
     "year": 2018,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_fluid_10",
@@ -902,7 +947,8 @@
     "year": 2021,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_soil_11",
@@ -922,7 +968,8 @@
     "year": 2020,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_irrigation_12",
@@ -942,7 +989,8 @@
     "year": 2019,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_steel_13",
@@ -962,7 +1010,8 @@
     "year": 2021,
     "difficulty": "Hard",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_trans_14",
@@ -982,7 +1031,8 @@
     "year": 2018,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_env_15",
@@ -1002,7 +1052,8 @@
     "year": 2019,
     "difficulty": "Easy",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_rcc_16",
@@ -1022,7 +1073,8 @@
     "year": 2020,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_cpm_17",
@@ -1042,7 +1094,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_som_18",
@@ -1062,7 +1115,8 @@
     "year": 2021,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_trans_19",
@@ -1082,7 +1136,8 @@
     "year": 2020,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_survey_20",
@@ -1102,7 +1157,8 @@
     "year": 2019,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_soil_21",
@@ -1122,7 +1178,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_fluid_22",
@@ -1142,7 +1199,8 @@
     "year": 2018,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_survey_23",
@@ -1162,7 +1220,8 @@
     "year": 2020,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_som_24",
@@ -1182,7 +1241,8 @@
     "year": 2019,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_rcc_25",
@@ -1202,7 +1262,8 @@
     "year": 2022,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_steel_26",
@@ -1222,7 +1283,8 @@
     "year": 2020,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_trans_27",
@@ -1242,7 +1304,8 @@
     "year": 2018,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_env_28",
@@ -1262,7 +1325,8 @@
     "year": 2021,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_som_29",
@@ -1282,7 +1346,8 @@
     "year": 2017,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_hydro_30",
@@ -1302,7 +1367,8 @@
     "year": 2019,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_steel_31",
@@ -1322,7 +1388,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_cpm_32",
@@ -1342,7 +1409,8 @@
     "year": 2020,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_irrigation_33",
@@ -1362,7 +1430,8 @@
     "year": 2018,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_soil_34",
@@ -1382,7 +1451,8 @@
     "year": 2017,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_trans_35",
@@ -1402,7 +1472,8 @@
     "year": 2019,
     "difficulty": "Hard",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_fluid_36",
@@ -1422,7 +1493,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   },
   {
     "id": "gate_ce_rcc_37",
@@ -1442,7 +1514,8 @@
     "year": 2020,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_survey_38",
@@ -1462,7 +1535,8 @@
     "year": 2018,
     "difficulty": "Hard",
     "exam": "ESE",
-    "paper": "P1"
+    "paper": "P1",
+    "numerical": false
   },
   {
     "id": "gate_ce_env_39",
@@ -1482,7 +1556,8 @@
     "year": 2021,
     "difficulty": "Medium",
     "exam": "GATE",
-    "paper": null
+    "paper": null,
+    "numerical": false
   },
   {
     "id": "ese_ce_soil_40",
@@ -1502,6 +1577,7 @@
     "year": 2019,
     "difficulty": "Easy",
     "exam": "ESE",
-    "paper": "P2"
+    "paper": "P2",
+    "numerical": false
   }
 ]

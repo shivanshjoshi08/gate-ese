@@ -34,6 +34,11 @@ export interface QuestionDocument {
   sourceType?: "pyq" | "practice";
   status: QuestionStatus;
   type: QuestionType;
+  /** Numericals filter category (independent of answer type). */
+  numerical?: boolean;
+  appearances?: import("@/lib/question-sources").QuestionAppearance[];
+  references?: import("@/lib/question-sources").QuestionReference[];
+  questionStyle?: import("@/lib/question-sources").QuestionStyleTag;
   stem: RichContent;
   options: QuestionOption[];
   solution: RichContent;

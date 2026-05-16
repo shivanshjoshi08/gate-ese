@@ -192,6 +192,7 @@ export function questionDocumentToPractice(doc: QuestionDocument): PracticeQuest
   return {
     id: doc.id,
     question: stemPlain,
+    numerical: doc.numerical === true || doc.type === "numerical",
     type,
     options: doc.type === "numerical" ? [] : optionsPlain,
     correct,

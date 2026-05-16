@@ -1,4 +1,4 @@
-import type { Question as PracticeQuestion } from "@/lib/types";
+import type { ExamType, Question as PracticeQuestion } from "@/lib/types";
 import type { QuestionDocument, QuestionOption } from "@/lib/question-types";
 import { createParagraph, extractPlainText } from "@/lib/rich-content";
 import type { QuestionDto } from "@/backend/types/question";
@@ -14,6 +14,14 @@ import {
   normalizeImageList,
   normalizeQuestionImageUrl,
 } from "@/lib/question-images";
+import {
+  resolveMongoAnswerType,
+  resolveNumericalFlag,
+} from "@/lib/question-numerical";
+import {
+  deriveAppearancesFromLegacy,
+  type QuestionAppearance,
+} from "@/lib/question-sources";
 
 function asIso(d: Date | string): string {
   return d instanceof Date ? d.toISOString() : new Date(d).toISOString();
@@ -38,6 +46,10 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     year: row.year,
     paper: row.paper,
     type: row.type,
+    numerical: row.numerical === true,
+    appearances: row.appearances ?? [],
+    references: row.references ?? [],
+    questionStyle: row.questionStyle ?? null,
     question: row.question,
     options: row.options ?? [],
     correctOption: row.correctOption ?? "",
@@ -124,6 +136,10 @@ export function documentToDtoInput(
     year: doc.year,
     paper: doc.paper,
     type: doc.type === "numerical" ? "numerical" : "mcq",
+    numerical: doc.numerical === true || doc.type === "numerical",
+    appearances: doc.appearances ?? [],
+    references: doc.references ?? [],
+    questionStyle: doc.questionStyle ?? null,
     question: doc.stem.plainText ?? extractPlainText(doc.stem.doc),
     options,
     correctOption,
@@ -162,6 +178,7 @@ export function dtoToQuestionDocument(dto: QuestionDto): QuestionDocument {
     sourceType: dto.sourceType,
     status: dto.status === "approved" ? "published" : "draft",
     type,
+    numerical: dto.numerical === true,
     stem: createParagraph(dto.question),
     options,
     solution: createParagraph(dto.solution.text),
@@ -203,10 +220,25 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
     ...dto.options.map((o) => o.image),
   ]);
 
+  const answerType: PracticeQuestion["type"] =
+    dto.type === "numerical" ? "nat" : "mcq";
+
   return {
     id: dto.id,
     question: dto.question,
-    type: dto.type === "numerical" ? "nat" : "mcq",
+    type: answerType,
+    numerical: dto.numerical === true,
+    appearances: normalizeAppearances(
+      dto.appearances?.length > 0
+        ? dto.appearances
+        : deriveAppearancesFromLegacy({
+            exam: dto.exam,
+            year: dto.year,
+            paper: (dto.paper as PracticeQuestion["paper"]) ?? null,
+          }),
+    ),
+    references: dto.references ?? [],
+    questionStyle: dto.questionStyle ?? undefined,
     options: optionsText,
     correct,
     solution: dto.solution.text,
@@ -249,8 +281,8 @@ export function legacyJsonToCreatePayload(
   raw: Record<string, unknown>,
 ): Record<string, unknown> {
   const id = String(raw.id ?? "");
-  const typeRaw = String(raw.type ?? "mcq").toLowerCase();
-  const type = typeRaw === "nat" || typeRaw === "numerical" ? "numerical" : "mcq";
+  const type = resolveMongoAnswerType(raw);
+  const numerical = resolveNumericalFlag(raw);
   const optionsArr = Array.isArray(raw.options) ? raw.options : [];
   const options = optionsArr.map((text, i) => ({
     id: String.fromCharCode(65 + i),
@@ -288,6 +320,17 @@ export function legacyJsonToCreatePayload(
     year,
     paper: raw.paper ? String(raw.paper) : null,
     type,
+    numerical,
+    appearances: Array.isArray(raw.appearances)
+      ? raw.appearances
+      : deriveAppearancesFromLegacy({
+          exam: raw.exam === "ESE" ? "ESE" : "GATE",
+          year: typeof raw.year === "number" ? raw.year : 2024,
+          paper: parseEsePaper(raw.paper),
+        }),
+    references: Array.isArray(raw.references) ? raw.references : [],
+    questionStyle:
+      typeof raw.questionStyle === "string" ? raw.questionStyle : null,
     question: String(raw.question ?? ""),
     options,
     correctOption,
@@ -310,6 +353,31 @@ export function legacyJsonToCreatePayload(
       : [],
     status,
   };
+}
+
+function parseEsePaper(raw: unknown): PracticeQuestion["paper"] {
+  if (raw === "PRE" || raw === "P1" || raw === "P2") return raw;
+  return null;
+}
+
+function normalizeAppearances(
+  rows: {
+    exam: ExamType;
+    year: number;
+    paper?: string | null;
+    session?: string;
+  }[],
+): QuestionAppearance[] {
+  const papers = new Set(["PRE", "P1", "P2"]);
+  return rows.map((a) => ({
+    exam: a.exam,
+    year: a.year,
+    paper:
+      a.paper && papers.has(a.paper)
+        ? (a.paper as QuestionAppearance["paper"])
+        : null,
+    session: a.session,
+  }));
 }
 
 /** Detect legacy `questions.json` shape vs unified REST schema */
