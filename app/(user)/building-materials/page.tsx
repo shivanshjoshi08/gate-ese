@@ -128,6 +128,8 @@ export default function BuildingMaterialsPage() {
         <QuestionCard
           key={current.id}
           question={current}
+          questionNumber={index + 1}
+          questionTotal={questions.length}
           onAnswered={handleAnswered}
           onNext={handleNext}
         />

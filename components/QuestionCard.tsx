@@ -25,6 +25,9 @@ const LABELS = ["A", "B", "C", "D"];
 
 interface QuestionCardProps {
   question: Question;
+  questionNumber?: number;
+  questionTotal?: number;
+  levelNumber?: number;
   onAnswered: (correct: boolean) => void;
   onNext: () => void;
   focusMode?: boolean;
@@ -32,6 +35,9 @@ interface QuestionCardProps {
 
 export default function QuestionCard({
   question,
+  questionNumber,
+  questionTotal,
+  levelNumber,
   onAnswered,
   onNext,
   focusMode = false,
@@ -260,11 +266,39 @@ export default function QuestionCard({
     };
   }, [answered, question]);
 
+  const numberLabel =
+    questionNumber != null
+      ? questionTotal != null
+        ? `Question ${questionNumber} of ${questionTotal}`
+        : `Question ${questionNumber}`
+      : null;
+
   return (
     <div
       className={`mx-auto w-full max-w-2xl px-4 py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
       onAnimationEnd={() => setShake(false)}
     >
+      {(numberLabel || levelNumber != null) && (
+        <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          {numberLabel && (
+            <p className="text-base font-bold tabular-nums text-study-ink sm:text-lg">
+              {numberLabel}
+            </p>
+          )}
+          {levelNumber != null && (
+            <p className="text-xs font-medium text-study-muted">
+              Level {levelNumber}
+            </p>
+          )}
+          <p
+            className="text-[11px] font-mono text-study-muted/90"
+            title="Question ID for support or admin updates"
+          >
+            ID: {question.id}
+          </p>
+        </div>
+      )}
+
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 gap-y-2 text-xs text-study-muted sm:text-sm">
         <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 leading-relaxed">
           {question.questionBank === "pyq" ? (

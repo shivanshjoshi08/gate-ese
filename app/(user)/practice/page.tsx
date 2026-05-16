@@ -94,7 +94,6 @@ function PracticeContent() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [index, setIndex] = useState(0);
-  const [sessionDone, setSessionDone] = useState(0);
   const [stats, setStats] = useState(() => getStats(exam));
   const [focusMode, setFocusMode] = useState(false);
   const [initialized, setInitialized] = useState(false);
@@ -167,7 +166,6 @@ function PracticeContent() {
       setQuestions(list);
       setCurrentLevel(level);
       setIndex(0);
-      setSessionDone(0);
     },
     [aiQuestions, pyqQuestions, exam],
   );
@@ -214,7 +212,6 @@ function PracticeContent() {
         ),
       );
       setIndex(0);
-      setSessionDone(0);
       setCurrentLevel(0);
       setInitialized(true);
       return;
@@ -247,7 +244,6 @@ function PracticeContent() {
         );
         setQuestions(qs);
         setIndex(nextIndex);
-        setSessionDone(nextIndex);
         setCurrentLevel(
           parseLevelFromFilterKey(progress.session.filterKey) ??
             getActivePracticeLevel(
@@ -301,7 +297,6 @@ function PracticeContent() {
       return;
     }
     setIndex(next);
-    setSessionDone(next);
     const progress = loadProgress(exam);
     if (progress.session) {
       saveSession({ ...progress.session, currentIndex: next }, exam);
@@ -415,7 +410,6 @@ function PracticeContent() {
                 ),
               );
               setIndex(0);
-              setSessionDone(0);
               return;
             }
             if (practiceBankFromUrl && questions.length > 0) {
@@ -468,8 +462,6 @@ function PracticeContent() {
         wrong={stats.wrong}
         accuracy={stats.accuracy}
         streak={stats.streak}
-        current={sessionDone}
-        total={questions.length}
       />
       {isLevelMode && !bookmarksMode && (
         <SimplePracticeFilters
@@ -492,6 +484,9 @@ function PracticeContent() {
         <QuestionCard
           key={current.id}
           question={current}
+          questionNumber={index + 1}
+          questionTotal={questions.length}
+          levelNumber={isLevelMode ? currentLevel : undefined}
           onAnswered={handleAnswered}
           onNext={handleNext}
           focusMode={focusMode}
