@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import {
+  getAiQuestionSummary,
+  saveAiQuestionSummary,
+} from "@/lib/ai-summary-store";
+import {
   groqChatCompletion,
   GroqApiError,
   GroqNotConfiguredError,
@@ -8,27 +12,52 @@ import { GROQ_CONTEXT_CHAR_LIMIT } from "@/lib/groq-question-context";
 
 type CacheEntry = { summary: string; t: number };
 
-const cache = new Map<string, CacheEntry>();
+const memoryCache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const MAX_CACHE_KEYS = 400;
-const CACHE_PREFIX = "en-v3|";
 
-function getCached(questionId: string): string | null {
-  const e = cache.get(CACHE_PREFIX + questionId);
+function getMemoryCached(questionId: string): string | null {
+  const e = memoryCache.get(questionId);
   if (!e) return null;
   if (Date.now() - e.t > CACHE_TTL_MS) {
-    cache.delete(CACHE_PREFIX + questionId);
+    memoryCache.delete(questionId);
     return null;
   }
   return e.summary;
 }
 
-function setCached(questionId: string, summary: string) {
-  if (cache.size >= MAX_CACHE_KEYS) {
-    const first = cache.keys().next().value as string | undefined;
-    if (first) cache.delete(first);
+function setMemoryCached(questionId: string, summary: string) {
+  if (memoryCache.size >= MAX_CACHE_KEYS) {
+    const first = memoryCache.keys().next().value as string | undefined;
+    if (first) memoryCache.delete(first);
   }
-  cache.set(CACHE_PREFIX + questionId, { summary, t: Date.now() });
+  memoryCache.set(questionId, { summary, t: Date.now() });
+}
+
+async function loadStoredSummary(questionId: string): Promise<string | null> {
+  const memory = getMemoryCached(questionId);
+  if (memory) return memory;
+
+  const persisted = await getAiQuestionSummary(questionId);
+  if (persisted) setMemoryCached(questionId, persisted);
+  return persisted;
+}
+
+export async function GET(req: Request) {
+  const questionId =
+    new URL(req.url).searchParams.get("questionId")?.trim().slice(0, 128) ??
+    "";
+
+  if (!questionId) {
+    return NextResponse.json({ error: "Missing questionId" }, { status: 400 });
+  }
+
+  const summary = await loadStoredSummary(questionId);
+  if (!summary) {
+    return NextResponse.json({ found: false }, { status: 404 });
+  }
+
+  return NextResponse.json({ summary, cached: true, source: "store" });
 }
 
 export async function POST(req: Request) {
@@ -50,9 +79,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Context too long" }, { status: 413 });
     }
 
-    const cached = getCached(questionId);
-    if (cached) {
-      return NextResponse.json({ summary: cached, cached: true });
+    const stored = await loadStoredSummary(questionId);
+    if (stored) {
+      return NextResponse.json({ summary: stored, cached: true, source: "store" });
     }
 
     const summary = await groqChatCompletion(
@@ -70,8 +99,10 @@ export async function POST(req: Request) {
       { maxTokens: 360, temperature: 0.35 },
     );
 
-    setCached(questionId, summary);
-    return NextResponse.json({ summary, cached: false });
+    setMemoryCached(questionId, summary);
+    await saveAiQuestionSummary(questionId, summary);
+
+    return NextResponse.json({ summary, cached: false, source: "ai" });
   } catch (e) {
     if (e instanceof GroqNotConfiguredError) {
       return NextResponse.json(

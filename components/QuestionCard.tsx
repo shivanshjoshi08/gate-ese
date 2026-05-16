@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import type { Question } from "@/lib/types";
+import {
+  getClientAiSummary,
+  setClientAiSummary,
+} from "@/lib/ai-summary-client-cache";
 import { buildGroqQuestionContextString } from "@/lib/groq-question-context";
 import { checkAnswer } from "@/lib/questions";
 import { EXAM_COLORS } from "@/lib/exam";
@@ -179,6 +183,14 @@ export default function QuestionCard({
   useEffect(() => {
     if (!answered) return;
 
+    const local = getClientAiSummary(question.id);
+    if (local) {
+      setAiSummary(local);
+      setAiError(null);
+      setAiLoading(false);
+      return;
+    }
+
     let cancelled = false;
     setAiLoading(true);
     setAiError(null);
@@ -187,6 +199,20 @@ export default function QuestionCard({
 
     void (async () => {
       try {
+        const cachedRes = await fetch(
+          `/api/ai/question-summary?questionId=${encodeURIComponent(question.id)}`,
+        );
+        if (cancelled) return;
+
+        if (cachedRes.ok) {
+          const cached = (await cachedRes.json()) as { summary?: string };
+          if (cached.summary) {
+            setAiSummary(cached.summary);
+            setClientAiSummary(question.id, cached.summary);
+            return;
+          }
+        }
+
         const res = await fetch("/api/ai/question-summary", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -204,8 +230,10 @@ export default function QuestionCard({
           setAiError(data.error || "Could not load AI summary.");
           return;
         }
-        if (data.summary) setAiSummary(data.summary);
-        else setAiError("No summary returned.");
+        if (data.summary) {
+          setAiSummary(data.summary);
+          setClientAiSummary(question.id, data.summary);
+        } else setAiError("No summary returned.");
       } catch {
         if (!cancelled) setAiError("Network error while loading AI summary.");
       } finally {
