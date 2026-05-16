@@ -1,16 +1,25 @@
-import type { AttemptRecord, ExamType, ProgressData, SessionState } from "./types";
+import type {
+  AttemptRecord,
+  ExamType,
+  ProgressData,
+  SessionState,
+} from "./types";
 import { LEGACY_STORAGE_KEY, PROGRESS_KEYS } from "./constants";
 import { getSelectedExam } from "./exam";
+import { PRACTICE_MCQ_BATCH_SIZE } from "./questions";
 
 const defaultProgress: ProgressData = {
   attempts: [],
   bookmarks: [],
   session: null,
   lastVisited: null,
+  aiPracticeSetsCompleted: 0,
+  pyqPracticeSetsCompleted: 0,
+  aiLastRoundQuestionIds: [],
 };
 
 function getKey(exam?: ExamType): string {
-  const e = exam ?? (typeof window !== "undefined" ? getSelectedExam() : "GATE");
+  const e = exam ?? (typeof window !== "undefined" ? getSelectedExam() : "ESE");
   return PROGRESS_KEYS[e];
 }
 
@@ -35,6 +44,11 @@ export function loadProgress(exam?: ExamType): ProgressData {
       bookmarks: data.bookmarks ?? [],
       session: data.session ?? null,
       lastVisited: data.lastVisited ?? null,
+      aiPracticeSetsCompleted: data.aiPracticeSetsCompleted ?? 0,
+      pyqPracticeSetsCompleted: data.pyqPracticeSetsCompleted ?? 0,
+      aiLastRoundQuestionIds: Array.isArray(data.aiLastRoundQuestionIds)
+        ? data.aiLastRoundQuestionIds
+        : [],
     };
   } catch {
     return { ...defaultProgress };
@@ -43,7 +57,15 @@ export function loadProgress(exam?: ExamType): ProgressData {
 
 export function saveProgress(data: ProgressData, exam?: ExamType): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(getKey(exam), JSON.stringify(data));
+  const e = exam ?? getSelectedExam();
+  localStorage.setItem(getKey(e), JSON.stringify(data));
+  try {
+    window.dispatchEvent(
+      new CustomEvent("gate-progress-saved", { detail: { exam: e } }),
+    );
+  } catch {
+    /* ignore */
+  }
 }
 
 export function recordAttempt(attempt: AttemptRecord, exam?: ExamType): void {
@@ -57,6 +79,7 @@ export function recordAttempt(attempt: AttemptRecord, exam?: ExamType): void {
   } else {
     progress.attempts.push(attempt);
   }
+  progress.lastVisited = new Date().toISOString();
   saveProgress(progress, e);
 }
 
@@ -81,17 +104,118 @@ export function isBookmarked(questionId: string, exam?: ExamType): boolean {
 export function saveSession(session: SessionState | null, exam?: ExamType): void {
   const progress = loadProgress(exam);
   progress.session = session;
+  progress.lastVisited = new Date().toISOString();
   saveProgress(progress, exam);
+}
+
+/**
+ * Call when learner finishes an AI Practice MCQ round (all questions in batch).
+ * Tracks set count for progress UI and biases the following round away from the same 10 ids.
+ */
+export function applyAiPracticeRoundComplete(
+  exam: ExamType,
+  roundQuestionIds: string[],
+): void {
+  applyPracticeLevelComplete(exam, "ai", roundQuestionIds);
+}
+
+export function applyPracticeLevelComplete(
+  exam: ExamType,
+  bank: "ai" | "pyq",
+  roundQuestionIds: string[],
+): void {
+  const p = loadProgress(exam);
+  if (bank === "ai") {
+    p.aiLastRoundQuestionIds = Array.from(new Set(roundQuestionIds)).slice(
+      0,
+      PRACTICE_MCQ_BATCH_SIZE + 4,
+    );
+    p.aiPracticeSetsCompleted = (p.aiPracticeSetsCompleted ?? 0) + 1;
+  } else {
+    p.pyqPracticeSetsCompleted = (p.pyqPracticeSetsCompleted ?? 0) + 1;
+  }
+  p.lastVisited = new Date().toISOString();
+  saveProgress(p, exam);
+}
+
+export function getPracticeLevelsCompleted(
+  exam: ExamType | undefined,
+  bank: "ai" | "pyq",
+): number {
+  const p = loadProgress(exam);
+  return bank === "ai"
+    ? (p.aiPracticeSetsCompleted ?? 0)
+    : (p.pyqPracticeSetsCompleted ?? 0);
 }
 
 export function getAttemptedIds(exam?: ExamType): Set<string> {
   return new Set(loadProgress(exam).attempts.map((a) => a.questionId));
 }
 
+/** Latest attempt per question across GATE + ESE progress slots. */
+export function getMergedAttemptsMap(): Map<string, AttemptRecord> {
+  const byId = new Map<string, AttemptRecord>();
+  for (const ex of ["ESE", "GATE"] as const) {
+    for (const a of loadProgress(ex).attempts) {
+      const prev = byId.get(a.questionId);
+      if (!prev || a.timestamp > prev.timestamp) {
+        byId.set(a.questionId, a);
+      }
+    }
+  }
+  return byId;
+}
+
+/** Resolve attempted question ids when practice filters include both GATE + ESE. */
+export function getAttemptedIdsForFilter(
+  filterExam: ExamType | "All",
+): Set<string> {
+  if (filterExam === "All") {
+    const g = loadProgress("GATE").attempts.map((a) => a.questionId);
+    const e = loadProgress("ESE").attempts.map((a) => a.questionId);
+    return new Set(g.concat(e));
+  }
+  return getAttemptedIds(filterExam);
+}
+
+export function createEmptyProgress(): ProgressData {
+  return {
+    attempts: [],
+    bookmarks: [],
+    session: null,
+    lastVisited: null,
+    aiPracticeSetsCompleted: 0,
+    pyqPracticeSetsCompleted: 0,
+    aiLastRoundQuestionIds: [],
+  };
+}
+
 export function resetProgress(exam?: ExamType): void {
   if (typeof window === "undefined") return;
   const e = exam ?? getSelectedExam();
   localStorage.removeItem(getKey(e));
+  try {
+    window.dispatchEvent(
+      new CustomEvent("gate-progress-saved", { detail: { exam: e } }),
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Clear local progress for both GATE and ESE exam slots. */
+export function resetAllProgress(): void {
+  if (typeof window === "undefined") return;
+  migrateLegacyProgress();
+  (["ESE", "GATE"] as const).forEach((e) => localStorage.removeItem(getKey(e)));
+  localStorage.removeItem(LEGACY_STORAGE_KEY);
+  try {
+    window.dispatchEvent(
+      new CustomEvent("gate-progress-saved", { detail: { exam: "ALL" } }),
+    );
+  } catch {
+    /* ignore */
+  }
 }
 
 export function getStats(exam?: ExamType) {
