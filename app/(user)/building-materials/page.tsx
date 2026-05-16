@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 import QuestionCard from "@/components/QuestionCard";
 import {
   buildingMaterialsQuestions,
@@ -13,6 +15,12 @@ const TOTAL = buildingMaterialsQuestions.length;
 const accent = EXAM_COLORS.ESE;
 
 export default function BuildingMaterialsPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!USER_PYQ_ENABLED) router.replace("/practice?bank=ai");
+  }, [router]);
+
   const [index, setIndex] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
 

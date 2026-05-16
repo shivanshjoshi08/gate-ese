@@ -55,7 +55,7 @@ export default function RegisterPage() {
     <div className="mx-auto max-w-sm px-4 py-16 text-study-ink">
       <h1 className="text-2xl font-bold tracking-tight">Create account</h1>
       <p className="mt-2 text-sm text-study-muted">
-        Password at least 8 characters. Used for Practice / PYQ tracking.
+        Password at least 8 characters. Used for Practice progress tracking.
       </p>
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-8 space-y-4">
         <div>

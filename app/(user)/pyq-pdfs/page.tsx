@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   PYQ_PDF_ENTRIES,
   pyqPdfDownloadUrl,
 } from "@/lib/pyq-pdfs";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 export const metadata = {
   title: "PYQ papers (PDF) | ESE CE Practice",
@@ -11,6 +13,8 @@ export const metadata = {
 };
 
 export default function PyqPdfsPage() {
+  if (!USER_PYQ_ENABLED) redirect("/");
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 text-study-ink sm:py-14">
       <div className="mb-10 text-center">

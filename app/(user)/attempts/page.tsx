@@ -181,7 +181,7 @@ export default function MyAttemptsPage() {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <StatusBadge attempt={attempt!} />
                 <span className="text-xs text-study-muted">
-                  {question.questionBank === "pyq" ? "PYQ" : "Practice"} |{" "}
+                  Practice |{" "}
                   {question.difficulty}
                 </span>
               </div>

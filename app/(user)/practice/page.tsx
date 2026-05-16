@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import StatsBar from "@/components/StatsBar";
 import QuestionCard from "@/components/QuestionCard";
@@ -24,7 +24,6 @@ import {
   getActivePracticeLevel,
   hasPracticeLevelForFilters,
   PRACTICE_LEVEL_BATCH_SIZE,
-  getPracticeLevelCount,
 } from "@/lib/practice-levels";
 import SimplePracticeFilters from "@/components/SimplePracticeFilters";
 import {
@@ -40,6 +39,7 @@ import { useSession } from "next-auth/react";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
 import { usePracticeBank } from "@/hooks/PracticeBankContext";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 function parseLevelFromFilterKey(filterKey: string | undefined): number | null {
   const m = filterKey?.match(/::level:(\d+)$/);
@@ -50,52 +50,16 @@ function getAttemptedQuestionIds(): Set<string> {
   return new Set(getMergedAttemptsMap().keys());
 }
 
-function BankChooser() {
-  const accent = EXAM_COLORS.ESE;
-  const totalLevels = getPracticeLevelCount();
-  return (
-    <div className="mx-auto max-w-lg px-4 py-16 text-study-ink">
-      <h1 className="text-center text-xl font-bold tracking-tight">Choose a question set</h1>
-      <p className="mx-auto mt-2 max-w-sm text-center text-sm text-study-muted">
-        Level-based practice · 10 questions per level
-      </p>
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center sm:gap-5">
-        <Link
-          href="/practice?bank=ai"
-          className="flex flex-1 flex-col rounded-2xl border border-sky-400/35 bg-sky-500/[0.08] px-5 py-4 text-left shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:brightness-[1.03] sm:max-w-[14rem]"
-        >
-          <span className="text-sm font-semibold text-study-ink">Practice</span>
-          <span className="mt-1 text-xs text-study-muted">
-            Curated MCQs by level
-          </span>
-          <span
-            className="mt-4 inline-flex w-fit rounded-lg px-3 py-2 text-xs font-semibold text-white"
-            style={{ backgroundColor: accent.accent }}
-          >
-            Start →
-          </span>
-        </Link>
-        <Link
-          href="/practice?bank=pyq"
-          className="flex flex-1 flex-col rounded-2xl border border-emerald-400/35 bg-emerald-500/[0.08] px-5 py-4 text-left shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:brightness-[1.03] sm:max-w-[14rem]"
-        >
-          <span className="text-sm font-semibold text-study-ink">PYQ</span>
-          <span className="mt-1 text-xs text-study-muted">
-            Previous-year papers · level batches
-          </span>
-          <span className="mt-4 inline-flex w-fit rounded-lg border border-emerald-400/50 bg-emerald-600/90 px-3 py-2 text-xs font-semibold text-white">
-            Start →
-          </span>
-        </Link>
-      </div>
-      <Link href="/" className="mt-10 block text-center text-sm text-study-muted hover:text-study-soft">
-        Home
-      </Link>
-    </div>
-  );
+function questionsForBank(
+  pb: PracticeBankKind,
+  ai: Question[],
+  pyq: Question[],
+): Question[] {
+  return pb === "pyq" && USER_PYQ_ENABLED ? pyq : ai;
 }
 
 function PracticeContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { exam } = useExam();
   const { status, data: session } = useSession();
@@ -109,10 +73,22 @@ function PracticeContent() {
   } = usePracticeBank();
 
   const [dbHydrated, setDbHydrated] = useState(false);
-  const practiceBankFromUrl = useMemo(
-    () => parsePracticeBankQueryParam(searchParams.get("bank")),
-    [searchParams],
-  );
+  const practiceBankFromUrl = useMemo(() => {
+    const raw = parsePracticeBankQueryParam(searchParams.get("bank"));
+    if (!USER_PYQ_ENABLED && raw === "pyq") return "ai" as PracticeBankKind;
+    return raw;
+  }, [searchParams]);
+
+  const bookmarksMode = searchParams.get("bookmarks") === "1";
+  const continueSession = searchParams.get("continue") === "1";
+
+  useEffect(() => {
+    if (USER_PYQ_ENABLED || bookmarksMode || continueSession) return;
+    const raw = parsePracticeBankQueryParam(searchParams.get("bank"));
+    if (raw === null || raw === "pyq") {
+      router.replace("/practice?bank=ai");
+    }
+  }, [searchParams, bookmarksMode, continueSession, router]);
 
   const [filters, setFilters] = useState<FiltersType>(defaultPracticeFilters);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -122,9 +98,6 @@ function PracticeContent() {
   const [stats, setStats] = useState(() => getStats(exam));
   const [focusMode, setFocusMode] = useState(false);
   const [initialized, setInitialized] = useState(false);
-
-  const bookmarksMode = searchParams.get("bookmarks") === "1";
-  const continueSession = searchParams.get("continue") === "1";
 
   const activeBank = useMemo(() => {
     if (practiceBankFromUrl === "pyq") return pyqQuestions;
@@ -163,7 +136,7 @@ function PracticeContent() {
     return () => {
       cancelled = true;
     };
-  }, [status, session?.user?.id]);
+  }, [status, session?.user]);
 
   const booting =
     status === "loading" ||
@@ -229,7 +202,6 @@ function PracticeContent() {
     if (initialized) return;
 
     if (!bookmarksMode && !continueSession && practiceBankFromUrl === null) {
-      setQuestions([]);
       setInitialized(true);
       return;
     }
@@ -318,8 +290,7 @@ function PracticeContent() {
   ]);
 
   const accent = EXAM_COLORS[exam];
-  const isLevelMode =
-    practiceBankFromUrl === "ai" || practiceBankFromUrl === "pyq";
+  const isLevelMode = practiceBankFromUrl === "ai";
 
   const handleAnswered = () => setStats(getStats(exam));
 
@@ -339,18 +310,14 @@ function PracticeContent() {
 
   const bankBanner = useMemo(() => {
     if (bookmarksMode) return "Bookmarks";
-    if (practiceBankFromUrl === "ai" || practiceBankFromUrl === "pyq") {
+    if (practiceBankFromUrl === "ai") {
       return `Level ${currentLevel}`;
     }
     return null;
   }, [practiceBankFromUrl, bookmarksMode, currentLevel]);
 
   const bankBannerClass =
-    practiceBankFromUrl === "ai"
-      ? "border-l-[3px] border-l-sky-400/80 bg-sky-500/[0.06]"
-      : practiceBankFromUrl === "pyq"
-        ? "border-l-[3px] border-l-emerald-400/80 bg-emerald-500/[0.06]"
-        : "";
+    "border-l-[3px] border-l-sky-400/80 bg-sky-500/[0.06]";
 
   if (!initialized || booting || (loadingPyq && practiceBankFromUrl)) {
     return (
@@ -360,45 +327,10 @@ function PracticeContent() {
     );
   }
 
-  if (!bookmarksMode && !continueSession && practiceBankFromUrl === null) {
-    return <BankChooser />;
-  }
-
-  if (
-    practiceBankFromUrl === "pyq" &&
-    !loadingPyq &&
-    pyqQuestions.length === 0
-  ) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <p className="text-lg text-study-soft">No PYQ questions available yet.</p>
-        <p className="mt-2 text-sm text-study-muted">
-          {bankError
-            ? bankError
-            : "Add questions in Admin with source PYQ and status Approved, or import JSON with source PYQ."}
-        </p>
-        <button
-          type="button"
-          onClick={() => reloadBank()}
-          className="mt-4 text-sm font-medium text-sky-400 hover:underline"
-        >
-          Retry loading
-        </button>
-        <Link
-          href="/practice?bank=ai"
-          className="mt-6 inline-block rounded-xl px-5 py-2.5 font-semibold text-white"
-          style={{ backgroundColor: accent.accent }}
-        >
-          Try Practice
-        </Link>
-      </div>
-    );
-  }
-
   if (questions.length === 0 && isLevelMode) {
     const pb = practiceBankFromUrl!;
     const completed = getPracticeLevelsCompleted(exam, pb);
-    const bank = pb === "pyq" ? pyqQuestions : aiQuestions;
+    const bank = questionsForBank(pb, aiQuestions, pyqQuestions);
     const attemptedIds = getAttemptedQuestionIds();
     const allDone =
       !hasPracticeLevelForFilters(
@@ -436,7 +368,7 @@ function PracticeContent() {
     const pb = practiceBankFromUrl ?? "ai";
     const levelFinished = currentLevel > 0 ? currentLevel : 1;
     const nextLevel = levelFinished + 1;
-    const bank = pb === "pyq" ? pyqQuestions : aiQuestions;
+    const bank = questionsForBank(pb, aiQuestions, pyqQuestions);
     const attemptedIds = getAttemptedQuestionIds();
     const hasNext = hasPracticeLevelForFilters(
       bank,

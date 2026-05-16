@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { EXAM_COLORS } from "@/lib/exam";
+import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 const accent = EXAM_COLORS.ESE;
 
@@ -41,16 +42,18 @@ export default function Nav() {
           >
             Home
           </Link>
-          <Link
-            href="/pyq-pdfs"
-            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-              pdfsActive
-                ? `${accent.light} ${accent.text}`
-                : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
-            }`}
-          >
-            PYQ PDFs
-          </Link>
+          {USER_PYQ_ENABLED && (
+            <Link
+              href="/pyq-pdfs"
+              className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                pdfsActive
+                  ? `${accent.light} ${accent.text}`
+                  : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
+              }`}
+            >
+              PYQ PDFs
+            </Link>
+          )}
           <Link
             href="/attempts"
             className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
