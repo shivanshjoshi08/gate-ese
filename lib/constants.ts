@@ -98,6 +98,9 @@ export const PROGRESS_KEYS: Record<ExamType, string> = {
 
 export const LEGACY_STORAGE_KEY = "gate-ce-progress";
 
+/** Stable anonymous id for syncing progress when MongoDB is configured. */
+export const LEARNER_PUBLIC_ID_KEY = "gate_learner_public_id";
+
 export const MOCK_GATE_DURATION_SEC = 3 * 60 * 60;
 export const MOCK_GATE_TOTAL = 65;
 export const MOCK_ESE_PRE_DURATION_SEC = 2 * 60 * 60;

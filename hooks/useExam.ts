@@ -5,7 +5,7 @@ import type { ExamType } from "@/lib/exam";
 import { getSelectedExam, setSelectedExam } from "@/lib/exam";
 
 export function useExam() {
-  const [exam, setExamState] = useState<ExamType>("GATE");
+  const [exam, setExamState] = useState<ExamType>("ESE");
 
   useEffect(() => {
     setExamState(getSelectedExam());
@@ -17,9 +17,9 @@ export function useExam() {
     return () => window.removeEventListener("exam-changed", handler);
   }, []);
 
-  const setExam = useCallback((e: ExamType) => {
-    setSelectedExam(e);
-    setExamState(e);
+  const setExam = useCallback((_e: ExamType) => {
+    setSelectedExam("ESE");
+    setExamState("ESE");
   }, []);
 
   return { exam, setExam };
