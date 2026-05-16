@@ -14,6 +14,7 @@ import { usePracticeBank } from "@/hooks/PracticeBankContext";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
 import { getSubjectShort } from "@/lib/constants";
+import { formatDateTime } from "@/lib/format-date";
 
 type StatusFilter = "all" | "correct" | "incorrect";
 type BankFilter = "all" | "ai" | "pyq";
@@ -217,10 +218,7 @@ export default function MyAttemptsPage() {
               </p>
               <p className="mt-2 text-xs text-study-muted">
                 Last attempt:{" "}
-                {new Date(attempt!.timestamp).toLocaleString(undefined, {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
+                {formatDateTime(attempt!.timestamp)}
               </p>
               <Link
                 href={practiceHref(question)}

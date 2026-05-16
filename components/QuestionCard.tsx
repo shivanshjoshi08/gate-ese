@@ -611,7 +611,7 @@ export default function QuestionCard({
         <button
           type="button"
           onClick={onNext}
-          className="mt-6 w-full rounded-2xl bg-study-soft py-3.5 font-semibold text-study-page shadow-md shadow-black/15 transition hover:bg-white"
+          className="mt-6 w-full rounded-2xl bg-white py-3.5 font-semibold text-study-page shadow-lg shadow-black/25 ring-1 ring-white/30 transition hover:bg-zinc-50 hover:shadow-xl hover:brightness-105"
         >
           Next Question →
         </button>
