@@ -4,9 +4,6 @@ import { getSubjectShort } from "@/lib/constants";
 
 export type FilterOption = { value: string; label: string };
 
-/** Max subject choices in the practice bar (plus “All”). */
-const MAX_SUBJECT_CHOICES = 8;
-
 export type SimplePracticeFilterOptions = {
   exams: FilterOption[];
   subjects: FilterOption[];
@@ -19,18 +16,28 @@ function mcqPool(bank: Question[], filters: Filters): Question[] {
   return filterQuestions(bank, { ...filters, type: "MCQ" });
 }
 
-function topSubjectsByCount(
-  pool: Question[],
-  limit: number,
-): { subject: string; count: number }[] {
-  const counts = new Map<string, number>();
-  for (const q of pool) {
-    counts.set(q.subject, (counts.get(q.subject) ?? 0) + 1);
+function subjectOptionsFromPool(pool: Question[]): FilterOption[] {
+  const subjects = new Set<string>();
+  for (const q of pool) subjects.add(q.subject);
+  const sorted = [...subjects].sort((a, b) =>
+    getSubjectShort(a).localeCompare(getSubjectShort(b)),
+  );
+  if (sorted.length === 0) return [];
+  if (sorted.length === 1) {
+    return [
+      {
+        value: sorted[0]!,
+        label: getSubjectShort(sorted[0]!),
+      },
+    ];
   }
-  return Array.from(counts.entries())
-    .map(([subject, count]) => ({ subject, count }))
-    .sort((a, b) => b.count - a.count || a.subject.localeCompare(b.subject))
-    .slice(0, limit);
+  return [
+    { value: "All", label: "All subjects" },
+    ...sorted.map((subject) => ({
+      value: subject,
+      label: getSubjectShort(subject),
+    })),
+  ];
 }
 
 /**
@@ -58,28 +65,11 @@ export function getSimplePracticeFilters(
   }
   */
 
-  /* Subject filter — re-enable when needed
   const subjectPool = mcqPool(
     mcqBank,
     { ...filters, subject: "All", type: "MCQ" },
   );
-  const top = topSubjectsByCount(subjectPool, MAX_SUBJECT_CHOICES);
-  const subjectOptions: FilterOption[] = [];
-  if (top.length > 1) {
-    subjectOptions.push({ value: "All", label: "All subjects" });
-    for (const { subject } of top) {
-      subjectOptions.push({
-        value: subject,
-        label: getSubjectShort(subject),
-      });
-    }
-  } else if (top.length === 1) {
-    subjectOptions.push({
-      value: top[0]!.subject,
-      label: getSubjectShort(top[0]!.subject),
-    });
-  }
-  */
+  const subjectOptions = subjectOptionsFromPool(subjectPool);
 
   const difficultyPool = mcqPool(
     mcqBank,
@@ -94,8 +84,12 @@ export function getSimplePracticeFilters(
   }
 
   return {
-    exams: [], // examOptions — re-enable with exam filter UI
-    subjects: [], // subjectOptions — re-enable with subject filter UI
+    exams: [],
+    subjects:
+      subjectOptions.length > 1 ||
+      (subjectOptions.length === 1 && subjectOptions[0]!.value !== "All")
+        ? subjectOptions
+        : [],
     difficulties:
       difficultyOptions.length > 1 ? difficultyOptions : [],
   };
@@ -142,12 +136,11 @@ export function sanitizePracticeFilters(
   //   next.exam = pick(avail.exams, next.exam, "All") as Filters["exam"];
   // }
   next.exam = "All";
-  // if (avail.subjects.length) {
-  //   next.subject = pick(avail.subjects, next.subject, "All");
-  // } else {
-  //   next.subject = "All";
-  // }
-  next.subject = "All";
+  if (avail.subjects.length) {
+    next.subject = pick(avail.subjects, next.subject, avail.subjects[0]!.value);
+  } else {
+    next.subject = "All";
+  }
   if (avail.difficulties.length) {
     next.difficulty = pick(avail.difficulties, next.difficulty, "All");
   } else {

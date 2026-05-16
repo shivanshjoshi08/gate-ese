@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLearnerDetailForAdmin } from "@/backend/services/admin-users.service";
-import { formatDateTime, formatRelative } from "@/lib/format-date";
+import { formatDateTime, formatDuration, formatRelative } from "@/lib/format-date";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -105,6 +105,7 @@ export default async function AdminUserDetailPage({ params }: Props) {
                   <th className="px-4 py-2">Slot</th>
                   <th className="px-4 py-2">Subject</th>
                   <th className="px-4 py-2">Result</th>
+                  <th className="px-4 py-2">Time</th>
                   <th className="px-4 py-2">Question</th>
                 </tr>
               </thead>
@@ -126,6 +127,11 @@ export default async function AdminUserDetailPage({ params }: Props) {
                       >
                         {a.correct ? "Correct" : "Wrong"}
                       </span>
+                    </td>
+                    <td className="px-4 py-2 tabular-nums text-zinc-400">
+                      {a.timeSpentSec != null
+                        ? formatDuration(a.timeSpentSec)
+                        : "—"}
                     </td>
                     <td className="max-w-[12rem] truncate px-4 py-2 font-mono text-xs text-zinc-500">
                       {a.questionId}

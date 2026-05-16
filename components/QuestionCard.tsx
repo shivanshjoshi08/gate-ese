@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { Question } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import type { AttemptRecord, Question } from "@/lib/types";
+import { formatDuration } from "@/lib/format-date";
 import {
   getClientAiSummary,
   setClientAiSummary,
@@ -54,6 +55,10 @@ export default function QuestionCard({
   const [aiError, setAiError] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
 
+  const questionStartRef = useRef(Date.now());
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const [timeSpentSec, setTimeSpentSec] = useState<number | null>(null);
+
   const hasAnswerKey = question.hasAnswerKey !== false;
   const figureUrls =
     question.images && question.images.length > 0
@@ -71,6 +76,41 @@ export default function QuestionCard({
       ? (question.correct as number)
       : -1;
 
+  useEffect(() => {
+    questionStartRef.current = Date.now();
+    setElapsedSec(0);
+    setTimeSpentSec(null);
+  }, [question.id]);
+
+  useEffect(() => {
+    if (answered) return;
+    const tick = () => {
+      setElapsedSec(
+        Math.floor((Date.now() - questionStartRef.current) / 1000),
+      );
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [answered, question.id]);
+
+  const captureTimeSpent = () => {
+    const sec = Math.max(1, Math.round((Date.now() - questionStartRef.current) / 1000));
+    setTimeSpentSec(sec);
+    return sec;
+  };
+
+  const saveAttempt = (
+    data: Omit<AttemptRecord, "timestamp" | "timeSpentSec">,
+  ) => {
+    const sec = captureTimeSpent();
+    recordAttempt({
+      ...data,
+      timestamp: Date.now(),
+      timeSpentSec: sec,
+    });
+  };
+
   const handleMcqSelect = (index: number) => {
     if (answered) return;
     setSelected(index);
@@ -82,11 +122,10 @@ export default function QuestionCard({
     if (!hasAnswerKey) {
       setAnswered(true);
       setIsCorrect(true);
-      recordAttempt({
+      saveAttempt({
         questionId: question.id,
         userAnswer: selected,
         correct: true,
-        timestamp: Date.now(),
         subject: question.subject,
         topic: question.topic,
         exam: question.exam,
@@ -99,11 +138,10 @@ export default function QuestionCard({
     setIsCorrect(correct);
     setAnswered(true);
     if (!correct) setShake(true);
-    recordAttempt({
+    saveAttempt({
       questionId: question.id,
       userAnswer: selected,
       correct,
-      timestamp: Date.now(),
       subject: question.subject,
       topic: question.topic,
       exam: question.exam,
@@ -120,11 +158,10 @@ export default function QuestionCard({
     setIsCorrect(correct);
     setAnswered(true);
     if (!correct) setShake(true);
-    recordAttempt({
+    saveAttempt({
       questionId: question.id,
       userAnswer: natInput.trim(),
       correct,
-      timestamp: Date.now(),
       subject: question.subject,
       topic: question.topic,
       exam: question.exam,
@@ -145,11 +182,10 @@ export default function QuestionCard({
     setIsCorrect(correct);
     setAnswered(true);
     if (!correct) setShake(true);
-    recordAttempt({
+    saveAttempt({
       questionId: question.id,
       userAnswer: msqSelected,
       correct,
-      timestamp: Date.now(),
       subject: question.subject,
       topic: question.topic,
       exam: question.exam,
@@ -352,14 +388,30 @@ export default function QuestionCard({
           </span>
           <span>{question.difficulty}</span>
         </p>
-        <button
-          type="button"
-          onClick={handleBookmark}
-          className="shrink-0 text-xl text-study-muted transition hover:text-amber-400/95"
-          aria-label="Bookmark"
-        >
-          {bookmarked || isBookmarked(question.id) ? "⭐" : "☆"}
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <span
+            className="rounded-lg border border-study-border/80 bg-study-raised/70 px-2.5 py-1 font-mono text-xs tabular-nums text-study-soft"
+            aria-live="polite"
+            title={
+              answered
+                ? "Time taken on this question"
+                : "Time on this question"
+            }
+          >
+            ⏱{" "}
+            {formatDuration(
+              answered && timeSpentSec != null ? timeSpentSec : elapsedSec,
+            )}
+          </span>
+          <button
+            type="button"
+            onClick={handleBookmark}
+            className="text-xl text-study-muted transition hover:text-amber-400/95"
+            aria-label="Bookmark"
+          >
+            {bookmarked || isBookmarked(question.id) ? "⭐" : "☆"}
+          </button>
+        </div>
       </div>
 
       {question.richStem ? (
@@ -436,11 +488,10 @@ export default function QuestionCard({
               onClick={() => {
                 setAnswered(true);
                 setIsCorrect(true);
-                recordAttempt({
+                saveAttempt({
                   questionId: question.id,
                   userAnswer: "open",
                   correct: true,
-                  timestamp: Date.now(),
                   subject: question.subject,
                   topic: question.topic,
                   exam: question.exam,

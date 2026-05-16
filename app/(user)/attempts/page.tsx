@@ -14,7 +14,7 @@ import { usePracticeBank } from "@/hooks/PracticeBankContext";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
 import { getSubjectShort } from "@/lib/constants";
-import { formatDateTime } from "@/lib/format-date";
+import { formatDateTime, formatDuration } from "@/lib/format-date";
 
 type StatusFilter = "all" | "correct" | "incorrect";
 type BankFilter = "all" | "ai" | "pyq";
@@ -145,7 +145,7 @@ export default function MyAttemptsPage() {
           My attempts
         </h1>
         <p className="mt-1 text-sm text-study-muted">
-          Questions you have already attempted — filter by result or difficulty
+          Questions you have already attempted — filter by subject or difficulty
         </p>
       </div>
 
@@ -158,6 +158,28 @@ export default function MyAttemptsPage() {
       <div className="mb-4 rounded-xl border border-study-border/80 bg-study-surface/80 p-4">
         {/* Bank filter — re-enable when needed (bankFilter: all | ai | pyq) */}
         {/* Status filter — re-enable when needed (statusFilter: all | correct | incorrect) */}
+
+        {available.subjects.length > 1 && (
+          <>
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-study-muted">
+              Subject
+            </p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {available.subjects.map((s) => (
+                <FilterChip
+                  key={s.value}
+                  active={sanitized.subject === s.value}
+                  onClick={() =>
+                    setFilters((f) => ({ ...f, subject: s.value }))
+                  }
+                  accent={accent.accent}
+                >
+                  {s.label}
+                </FilterChip>
+              ))}
+            </div>
+          </>
+        )}
 
         {available.difficulties.length > 1 && (
           <>
@@ -181,7 +203,15 @@ export default function MyAttemptsPage() {
           </>
         )}
 
-        {/* Exam filter — re-enable when needed */}
+        {(sanitized.subject !== "All" || sanitized.difficulty !== "All") && (
+          <button
+            type="button"
+            onClick={() => setFilters(defaultPracticeFilters())}
+            className="mt-3 text-xs font-medium text-study-muted underline-offset-2 hover:text-study-soft hover:underline"
+          >
+            Clear filters
+          </button>
+        )}
       </div>
 
       <p className="mb-3 text-sm text-study-muted">
@@ -217,8 +247,13 @@ export default function MyAttemptsPage() {
                 {question.year}
               </p>
               <p className="mt-2 text-xs text-study-muted">
-                Last attempt:{" "}
-                {formatDateTime(attempt!.timestamp)}
+                Last attempt: {formatDateTime(attempt!.timestamp)}
+                {attempt!.timeSpentSec != null && (
+                  <>
+                    {" "}
+                    · Time: {formatDuration(attempt!.timeSpentSec)}
+                  </>
+                )}
               </p>
               <Link
                 href={practiceHref(question)}

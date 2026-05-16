@@ -39,6 +39,8 @@ export interface AttemptRecord {
   userAnswer: string | number | number[];
   correct: boolean;
   timestamp: number;
+  /** Seconds spent on this question before submit (practice timer). */
+  timeSpentSec?: number;
   subject: string;
   topic: string;
   exam: ExamType;
