@@ -1,4 +1,27 @@
 import { z } from "zod";
+import { normalizeQuestionStyle } from "@/lib/question-schema";
+
+const mongoQuestionStyleSchema = z.preprocess(
+  (raw) => {
+    if (raw === undefined) return undefined;
+    if (raw == null || raw === "") return null;
+    return normalizeQuestionStyle(String(raw)) ?? null;
+  },
+  z
+    .enum([
+      "conceptual",
+      "formula-based",
+      "statement-trap",
+      "code-based",
+      "practical",
+      "practical-application",
+      "numerical-calculation",
+      "graph-based",
+      "diagram-based",
+    ])
+    .nullable()
+    .optional(),
+);
 
 const optionSchema = z.object({
   id: z.string().min(1),
@@ -59,16 +82,7 @@ export const questionCreateSchema = z.object({
     )
     .optional()
     .default([]),
-  questionStyle: z
-    .enum([
-      "conceptual",
-      "formula-based",
-      "statement-trap",
-      "code-based",
-      "practical",
-    ])
-    .nullable()
-    .optional(),
+  questionStyle: mongoQuestionStyleSchema,
   question: z.string().min(1),
   options: z.array(optionSchema).default([]),
   correctOption: z.string().default(""),

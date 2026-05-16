@@ -1,6 +1,6 @@
 import type { Filters, Question } from "@/lib/types";
 import { filterQuestions } from "@/lib/questions";
-import { getSubjectShort } from "@/lib/constants";
+import { getPracticeSubjectFilterOptions } from "@/lib/practice-subjects";
 import { isNumericalQuestion } from "@/lib/question-numerical";
 import {
   FILTER_TYPE_MCQ,
@@ -31,27 +31,8 @@ function practicePool(bank: Question[], filters: Filters): Question[] {
 }
 
 function subjectOptionsFromPool(pool: Question[]): FilterOption[] {
-  const subjects = new Set<string>();
-  for (const q of pool) subjects.add(q.subject);
-  const sorted = Array.from(subjects).sort((a, b) =>
-    getSubjectShort(a).localeCompare(getSubjectShort(b)),
-  );
-  if (sorted.length === 0) return [];
-  if (sorted.length === 1) {
-    return [
-      {
-        value: sorted[0]!,
-        label: getSubjectShort(sorted[0]!),
-      },
-    ];
-  }
-  return [
-    { value: "All", label: "All subjects" },
-    ...sorted.map((subject) => ({
-      value: subject,
-      label: getSubjectShort(subject),
-    })),
-  ];
+  if (pool.length === 0) return [];
+  return getPracticeSubjectFilterOptions();
 }
 
 /**

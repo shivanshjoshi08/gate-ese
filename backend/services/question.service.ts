@@ -10,6 +10,7 @@ import type { QuestionCreateInput, QuestionUpdateInput } from "@/backend/validat
 import { leanRowToDto } from "@/backend/mappers/question.mapper";
 import { slugify } from "@/backend/utils/slug";
 import { paginatedMeta } from "@/backend/utils/pagination";
+import { buildMongoSubjectFilter } from "@/lib/practice-subjects";
 
 function buildFilter(query: QuestionListQuery): Record<string, unknown> {
   const and: Record<string, unknown>[] = [];
@@ -36,7 +37,10 @@ function buildFilter(query: QuestionListQuery): Record<string, unknown> {
       $or: [{ exam: query.exam }, { examType: query.exam }],
     });
   }
-  if (query.subject) and.push({ subject: new RegExp(query.subject, "i") });
+  if (query.subject) {
+    const subjectFilter = buildMongoSubjectFilter(query.subject);
+    if (subjectFilter) and.push(subjectFilter);
+  }
   if (query.topic) and.push({ topic: new RegExp(query.topic, "i") });
   if (query.year) and.push({ year: query.year });
   if (query.difficulty) and.push({ difficulty: query.difficulty });

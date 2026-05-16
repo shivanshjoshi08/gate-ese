@@ -72,10 +72,50 @@ export type QuestionSourceKind =
   | "ai"
   | "ai-generated";
 
+const ESE_PAPER_VALUES = ["PRE", "P1", "P2"] as const;
+export type BundledEsePaper = (typeof ESE_PAPER_VALUES)[number];
+
+/** GATE rows often use `""` for paper; coerce to null before validation. */
+export function normalizeBundledPaper(
+  raw: unknown,
+): BundledEsePaper | null | undefined {
+  if (raw === undefined) return undefined;
+  if (raw == null || raw === "") return null;
+  const s = String(raw).trim().toUpperCase();
+  if (s === "PRE" || s === "P1" || s === "P2") return s;
+  return null;
+}
+
+const bundledPaperSchema = z.preprocess(
+  normalizeBundledPaper,
+  z.union([z.enum(ESE_PAPER_VALUES), z.null()]),
+);
+
+const QUESTION_STYLE_VALUES = [
+  "conceptual",
+  "formula-based",
+  "statement-trap",
+  "code-based",
+  "practical",
+  "numerical-calculation",
+  "practical-application",
+  "graph-based",
+  "diagram-based",
+] as const;
+
+const bundledQuestionStyleSchema = z.preprocess(
+  (raw) => {
+    if (raw === undefined) return undefined;
+    if (raw == null || raw === "") return null;
+    return normalizeQuestionStyle(String(raw)) ?? null;
+  },
+  z.enum(QUESTION_STYLE_VALUES).nullable().optional(),
+);
+
 const appearanceSchema = z.object({
   exam: z.enum(["GATE", "ESE", "ISRO", "SSC-JE"]),
   year: z.number().int(),
-  paper: z.union([z.enum(["PRE", "P1", "P2"]), z.null()]).optional(),
+  paper: bundledPaperSchema.optional(),
   qno: z.number().int().nullable().optional(),
   session: z.string().optional(),
 });
@@ -113,7 +153,7 @@ export const bundledQuestionSchema = z
 
     exam: z.enum(["GATE", "ESE", "ISRO", "SSC-JE"]).default("GATE"),
     year: z.number().int(),
-    paper: z.union([z.enum(["PRE", "P1", "P2"]), z.null()]).optional(),
+    paper: bundledPaperSchema.optional(),
     section: z.string().nullable().optional(),
     qno: z.number().int().nullable().optional(),
     marks: z.union([z.literal(1), z.literal(2)]).default(1),
@@ -128,20 +168,7 @@ export const bundledQuestionSchema = z
       .enum(["Easy", "Moderate", "Medium", "Hard"])
       .default("Moderate"),
 
-    questionStyle: z
-      .enum([
-        "conceptual",
-        "formula-based",
-        "statement-trap",
-        "code-based",
-        "practical",
-        "numerical-calculation",
-        "practical-application",
-        "graph-based",
-        "diagram-based",
-      ])
-      .nullable()
-      .optional(),
+    questionStyle: bundledQuestionStyleSchema,
 
     solution: z.string().default(""),
     solutionSteps: z.array(solutionStepSchema).optional(),
@@ -200,21 +227,32 @@ export function difficultyForFilters(d: string): string {
 export function normalizeQuestionStyle(
   raw: string | undefined,
 ): QuestionStyleTag | undefined {
-  if (!raw) return undefined;
-  if (raw === "practical" || raw === "practical-application")
-    return "practical-application";
-  if (raw === "numerical-calculation") return "formula-based";
-  if (raw === "code-based") return "code-based";
-  if (
-    raw === "conceptual" ||
-    raw === "formula-based" ||
-    raw === "statement-trap" ||
-    raw === "graph-based" ||
-    raw === "diagram-based"
-  ) {
-    return raw as QuestionStyleTag;
-  }
-  return undefined;
+  if (!raw || !String(raw).trim()) return undefined;
+  const key = String(raw).trim().toLowerCase();
+  const aliases: Record<string, QuestionStyleTag> = {
+    conceptual: "conceptual",
+    concept: "conceptual",
+    theory: "conceptual",
+    "formula-based": "formula-based",
+    formula: "formula-based",
+    "numerical-calculation": "formula-based",
+    numerical: "formula-based",
+    calculation: "formula-based",
+    "statement-trap": "statement-trap",
+    trap: "statement-trap",
+    "code-based": "code-based",
+    code: "code-based",
+    practical: "practical-application",
+    "practical-application": "practical-application",
+    application: "practical-application",
+    "application-based": "practical-application",
+    "graph-based": "graph-based",
+    graph: "graph-based",
+    graphical: "graph-based",
+    "diagram-based": "diagram-based",
+    diagram: "diagram-based",
+  };
+  return aliases[key];
 }
 
 function normalizeExam(exam: BundledExamType): ExamType {

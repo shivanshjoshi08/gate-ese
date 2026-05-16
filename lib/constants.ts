@@ -38,6 +38,11 @@ export const ESE_P2_SUBJECTS = [
 ] as const;
 
 export const SUBJECT_SHORT: Record<string, string> = {
+  "Soil Mechanics": "Soil",
+  "RCC + Steel Design": "RCC + Steel",
+  "Fluid Mechanics + Hydraulics": "Fluid + Hyd",
+  "Geotechnical (Foundation Design)": "Geotech",
+  "SOM (Strength of Materials)": "SOM",
   "Structural Engineering": "Structural",
   "Geotechnical Engineering": "Geotechnical",
   "Fluid Mechanics & Hydraulics": "Fluid Mechanics",

@@ -20,7 +20,7 @@ export function createEmptyQuestionDocument(
     ],
     solution: createRichContent(EMPTY_DOC),
     correctAnswer: "A",
-    subject: "Building Materials",
+    subject: "Soil Mechanics",
     topic: "Untitled",
     tags: [],
     difficulty: "Medium",

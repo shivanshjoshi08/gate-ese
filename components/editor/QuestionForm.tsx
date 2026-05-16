@@ -12,18 +12,9 @@ interface QuestionFormProps {
   onAfterPublish?: (doc: QuestionDocument) => void;
 }
 
-const SUBJECTS = [
-  "Building Materials",
-  "Structural Analysis",
-  "RCC",
-  "Steel Structures",
-  "Geotechnical",
-  "Fluid Mechanics",
-  "Environmental",
-  "Transportation",
-  "Surveying",
-  "Engineering Mechanics",
-];
+import { PRACTICE_FILTER_SUBJECTS } from "@/lib/practice-subjects";
+
+const SUBJECTS = [...PRACTICE_FILTER_SUBJECTS];
 
 export default function QuestionForm({
   initial,
