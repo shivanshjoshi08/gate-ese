@@ -2,50 +2,103 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useExam } from "@/hooks/useExam";
+import { signOut, useSession } from "next-auth/react";
 import { EXAM_COLORS } from "@/lib/exam";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/practice", label: "Practice" },
-  { href: "/mock", label: "Mock Test" },
-  { href: "/bookmarks", label: "Bookmarks" },
-  { href: "/analysis", label: "Analysis" },
-];
+const accent = EXAM_COLORS.ESE;
 
 export default function Nav() {
   const pathname = usePathname();
-  const { exam } = useExam();
-  const isPractice = pathname.startsWith("/practice");
-  const accent = EXAM_COLORS[exam];
+  const { data: session, status } = useSession();
+
+  const homeActive = pathname === "/";
+  const pdfsActive = pathname === "/pyq-pdfs";
+  const meActive = pathname === "/me";
+  const attemptsActive = pathname === "/attempts";
+
+  const authedLearnerNav =
+    status === "authenticated" && session?.user?.role !== "admin";
+  /** Admin CMS session shares NextAuth JWT; treat as signed-in for learner nav exits. */
+  const authedAsAdminLearnerGate =
+    status === "authenticated" && session?.user?.role === "admin";
 
   return (
-    <header className="hide-in-focus sticky top-[49px] z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="text-lg font-bold text-gray-900">
-          <span style={{ color: accent.accent }}>{exam}</span>{" "}
-          <span className="text-gray-700">CE</span>
+    <header className="hide-in-focus sticky top-0 z-50 border-b border-study-border/70 bg-study-surface/90 shadow-sm shadow-black/10 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
+        <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight text-study-ink">
+          <span style={{ color: accent.accent }}>ESE</span>{" "}
+          <span className="hidden text-study-muted sm:inline">CE</span>
         </Link>
-        <nav className="flex gap-1 sm:gap-2">
-          {links.map(({ href, label }) => {
-            const active =
-              href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(href);
-            return (
+
+        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-1">
+          <Link
+            href="/"
+            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              homeActive
+                ? `${accent.light} ${accent.text}`
+                : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
+            }`}
+          >
+            Home
+          </Link>
+          <Link
+            href="/pyq-pdfs"
+            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              pdfsActive
+                ? `${accent.light} ${accent.text}`
+                : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
+            }`}
+          >
+            PYQ PDFs
+          </Link>
+          <Link
+            href="/attempts"
+            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              attemptsActive
+                ? `${accent.light} ${accent.text}`
+                : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
+            }`}
+          >
+            My attempts
+          </Link>
+          <Link
+            href="/me"
+            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              meActive
+                ? `${accent.light} ${accent.text}`
+                : "text-study-muted hover:bg-study-raised/80 hover:text-study-soft"
+            }`}
+          >
+            Progress
+          </Link>
+
+          {status === "loading" ? (
+            <span className="px-2 text-xs text-study-muted">…</span>
+          ) : authedLearnerNav || authedAsAdminLearnerGate ? (
+            <button
+              type="button"
+              onClick={() => void signOut({ callbackUrl: "/" })}
+              className="whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-study-muted transition hover:bg-study-raised/80 hover:text-study-soft"
+            >
+              Sign out
+            </button>
+          ) : (
+            <>
               <Link
-                key={href}
-                href={href}
-                className={`rounded-lg px-2 py-1.5 text-sm font-medium transition sm:px-3 ${
-                  active
-                    ? `${accent.light} ${accent.text}`
-                    : "text-gray-600 hover:bg-gray-100"
-                } ${isPractice && href !== "/practice" ? "hidden sm:inline-flex" : ""}`}
+                href="/login"
+                className="whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-study-muted transition hover:bg-study-raised/80 hover:text-study-soft"
               >
-                {label}
+                Log in
               </Link>
-            );
-          })}
+              <Link
+                href="/register"
+                className="whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-study-ink transition hover:bg-study-raised/80"
+                style={{ color: accent.accent }}
+              >
+                Register
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>
