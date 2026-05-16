@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useState } from "react";
 import { adminFetch } from "@/lib/admin-api";
@@ -9,11 +9,8 @@ const SAMPLE_LEGACY = `[
     "question": "Minimum grade of concrete for RCC in moderate exposure (IS 456)?",
     "type": "mcq",
     "numerical": false,
-    "questionStyle": "conceptual",
-    "appearances": [{ "exam": "GATE", "year": 2025, "paper": null }],
-    "references": [
-      { "kind": "book", "label": "Made Easy — RCC", "notes": "Similar Q in Ch.4" }
-    ],
+    "unit": null,
+    "answerRange": null,
     "options": ["M15", "M20", "M25", "M30"],
     "correct": 1,
     "solution": "M20 is minimum for moderate exposure.",
@@ -35,23 +32,19 @@ const SAMPLE_UNIFIED = `[
     "subject": "Fluid Mechanics",
     "topic": "Bernoulli",
     "year": 2023,
-    "paper": null,
     "type": "mcq",
     "numerical": false,
+    "unit": null,
+    "answerRange": null,
     "question": "Bernoulli equation along a streamline applies when flow is:",
     "options": [
       { "id": "A", "text": "Steady incompressible inviscid" },
-      { "id": "B", "text": "Turbulent only" },
-      { "id": "C", "text": "Unsteady compressible" },
-      { "id": "D", "text": "Open channel only" }
+      { "id": "B", "text": "Turbulent only" }
     ],
     "correctOption": "A",
     "solution": { "text": "Standard Bernoulli assumptions.", "latex": "", "images": [] },
-    "difficulty": "Medium",
+    "difficulty": "Moderate",
     "marks": 1,
-    "negativeMarks": 0,
-    "tags": ["practice"],
-    "images": [],
     "status": "approved"
   }
 ]`;
@@ -124,97 +117,113 @@ export default function JsonQuestionImport() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-sm text-zinc-400">
-        <p className="mb-2 text-zinc-200">JSON se questions upload</p>
-        <ul className="list-inside list-disc space-y-1">
-          <li>Ek question object ya array bhej sakte ho</li>
+      <section className="rounded-xl border border-zinc-700 bg-zinc-900/60 p-4 sm:p-5">
+        <h2 className="text-sm font-semibold text-zinc-200">How to import</h2>
+        <ul className="mt-3 list-inside list-disc space-y-1.5 text-sm text-zinc-400">
+          <li>Send one question object or a JSON array.</li>
           <li>
-            <strong>Simple format</strong> - jaise{" "}
-            <code className="text-zinc-300">questions.json</code> (id, question,
-            options, correct index)
+            <strong className="text-zinc-300">Simple</strong> - like{" "}
+            <code className="rounded bg-zinc-800 px-1.5 py-0.5 text-xs text-zinc-200">
+              data/questions.json
+            </code>{" "}
+            (id, question, options, correct index).
           </li>
           <li>
-            <strong>Full format</strong> - sourceType, correctOption, solution
-            object, etc.
+            <strong className="text-zinc-300">Full</strong> - unified schema with
+            appearances, references, solutionSteps, etc.
           </li>
           <li>
-            Status <strong>Approved</strong> rakho to practice bank me users ko
-            dikhenge
+            Set status to <strong className="text-zinc-300">Approved</strong> for
+            questions to show in the practice bank.
           </li>
         </ul>
-      </div>
+      </section>
 
-      <div className="flex flex-wrap gap-3">
-        <label className="text-sm text-zinc-300">
-          Status
-          <select
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value as "approved" | "draft")
-            }
-            className="ml-2 rounded-lg border border-zinc-600 bg-zinc-900 px-2 py-1.5 text-zinc-100"
-          >
-            <option value="approved">Approved (live for users)</option>
-            <option value="draft">Draft</option>
-          </select>
-        </label>
-        <button
-          type="button"
-          onClick={() => loadSample("legacy")}
-          className="rounded-lg border border-zinc-600 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800"
-        >
-          Sample: simple
-        </button>
-        <button
-          type="button"
-          onClick={() => loadSample("unified")}
-          className="rounded-lg border border-zinc-600 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800"
-        >
-          Sample: full schema
-        </button>
-        <label className="cursor-pointer rounded-lg border border-zinc-600 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800">
-          Upload .json file
-          <input
-            type="file"
-            accept=".json,application/json"
-            className="hidden"
-            onChange={onFile}
+      <section className="rounded-xl border border-zinc-700 bg-zinc-900/40 p-4 sm:p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+          <label className="flex flex-col gap-1.5 text-sm text-zinc-300">
+            <span className="font-medium">Status</span>
+            <select
+              value={status}
+              onChange={(e) =>
+                setStatus(e.target.value as "approved" | "draft")
+              }
+              className="rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 text-zinc-100"
+            >
+              <option value="approved">Approved (live for users)</option>
+              <option value="draft">Draft</option>
+            </select>
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => loadSample("legacy")}
+              className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800"
+            >
+              Sample: simple
+            </button>
+            <button
+              type="button"
+              onClick={() => loadSample("unified")}
+              className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800"
+            >
+              Sample: full schema
+            </button>
+            <label className="cursor-pointer rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800">
+              Choose .json file
+              <input
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={onFile}
+              />
+            </label>
+          </div>
+        </div>
+
+        <label className="mt-4 block">
+          <span className="mb-2 block text-sm font-medium text-zinc-300">
+            JSON payload
+          </span>
+          <textarea
+            value={jsonText}
+            onChange={(e) => setJsonText(e.target.value)}
+            placeholder='Paste JSON here, e.g. [{ "id": "...", "question": "...", "options": [...], "correct": 0 }]'
+            className="min-h-[320px] w-full resize-y rounded-xl border border-zinc-600 bg-zinc-950 p-4 font-mono text-sm leading-relaxed text-zinc-100 placeholder:text-zinc-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            spellCheck={false}
           />
         </label>
-      </div>
 
-      <textarea
-        value={jsonText}
-        onChange={(e) => setJsonText(e.target.value)}
-        placeholder='Paste JSON array here, e.g. [{ "id": "...", "question": "...", ... }]'
-        className="h-80 w-full rounded-xl border border-zinc-600 bg-zinc-950 p-4 font-mono text-sm text-zinc-100 placeholder:text-zinc-600"
-        spellCheck={false}
-      />
-
-      <button
-        type="button"
-        disabled={busy || !jsonText.trim()}
-        onClick={onSubmit}
-        className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50"
-      >
-        {busy ? "Importing..." : "Import to database"}
-      </button>
+        <button
+          type="button"
+          disabled={busy || !jsonText.trim()}
+          onClick={onSubmit}
+          className="mt-4 w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        >
+          {busy ? "Importing..." : "Import to database"}
+        </button>
+      </section>
 
       {error && (
-        <pre className="whitespace-pre-wrap rounded-lg border border-red-900/50 bg-red-950/30 p-3 text-sm text-red-300">
+        <pre className="whitespace-pre-wrap rounded-xl border border-red-900/50 bg-red-950/30 p-4 text-sm text-red-300">
           {error}
         </pre>
       )}
 
       {result && (
-        <div className="rounded-xl border border-emerald-900/40 bg-emerald-950/20 p-4 text-sm">
-          <p className="font-medium text-emerald-300">Import complete</p>
-          <p className="mt-2 text-zinc-300">
-            {result.inserted} inserted | {result.skipped} skipped (duplicate) |{" "}
-            {result.failed.length} failed | {result.total} total
+        <section className="rounded-xl border border-emerald-900/40 bg-emerald-950/25 p-4 sm:p-5">
+          <p className="font-semibold text-emerald-300">Import complete</p>
+          <p className="mt-2 text-sm text-zinc-300">
+            <span className="font-medium text-emerald-200">{result.inserted}</span>{" "}
+            inserted | <span className="text-zinc-400">{result.skipped}</span> skipped
+            (duplicate) |{" "}
+            <span className={result.failed.length ? "text-red-300" : "text-zinc-400"}>
+              {result.failed.length}
+            </span>{" "}
+            failed | {result.total} total
           </p>
           {result.failed.length > 0 && (
-            <ul className="mt-3 max-h-48 overflow-y-auto text-red-300">
+            <ul className="mt-3 max-h-48 space-y-1 overflow-y-auto text-sm text-red-300">
               {result.failed.slice(0, 15).map((f) => (
                 <li key={f.index}>
                   #{f.index + 1}
@@ -222,11 +231,13 @@ export default function JsonQuestionImport() {
                 </li>
               ))}
               {result.failed.length > 15 && (
-                <li>... and {result.failed.length - 15} more</li>
+                <li className="text-zinc-500">
+                  ... and {result.failed.length - 15} more
+                </li>
               )}
             </ul>
           )}
-        </div>
+        </section>
       )}
     </div>
   );
