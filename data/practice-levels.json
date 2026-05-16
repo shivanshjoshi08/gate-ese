@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "batchSize": 10,
+  "source": "data/questions.json",
+  "totalMcqs": 73,
+  "levelCount": 8,
+  "levels": [
+    {
+      "level": 1,
+      "questionIds": [
+        "ese_ce_2021_p2_08",
+        "ese_ce_2021_pre_07",
+        "ese_ce_2022_p2_06",
+        "ese_ce_2022_pre_05",
+        "ese_ce_2023_p2_04",
+        "ese_ce_2023_pre_03",
+        "ese_ce_2024_p2_02",
+        "ese_ce_2024_pre_01",
+        "ese_ce_cpm_32",
+        "ese_ce_env_04"
+      ]
+    },
+    {
+      "level": 2,
+      "questionIds": [
+        "ese_ce_env_28",
+        "ese_ce_fluid_02",
+        "ese_ce_fluid_10",
+        "ese_ce_fluid_22",
+        "ese_ce_fluid_36",
+        "ese_ce_hydro_08",
+        "ese_ce_hydro_30",
+        "ese_ce_irrigation_12",
+        "ese_ce_rcc_06",
+        "ese_ce_rcc_16"
+      ]
+    },
+    {
+      "level": 3,
+      "questionIds": [
+        "ese_ce_soil_34",
+        "ese_ce_soil_40",
+        "ese_ce_som_18",
+        "ese_ce_som_24",
+        "ese_ce_steel_26",
+        "ese_ce_survey_20",
+        "ese_ce_survey_38",
+        "ese_ce_trans_14",
+        "gate_ce_2018_28",
+        "gate_ce_2019_26"
+      ]
+    },
+    {
+      "level": 4,
+      "questionIds": [
+        "gate_ce_2019_27",
+        "gate_ce_2020_24",
+        "gate_ce_2020_25",
+        "gate_ce_2021_21",
+        "gate_ce_2021_22",
+        "gate_ce_2022_17",
+        "gate_ce_2022_18",
+        "gate_ce_2022_19",
+        "gate_ce_2022_20",
+        "gate_ce_2023_09"
+      ]
+    },
+    {
+      "level": 5,
+      "questionIds": [
+        "gate_ce_2023_12",
+        "gate_ce_2023_13",
+        "gate_ce_2023_14",
+        "gate_ce_2023_15",
+        "gate_ce_2023_16",
+        "gate_ce_2024_01",
+        "gate_ce_2024_02",
+        "gate_ce_2024_03",
+        "gate_ce_2024_04",
+        "gate_ce_2024_05"
+      ]
+    },
+    {
+      "level": 6,
+      "questionIds": [
+        "gate_ce_2024_06",
+        "gate_ce_2024_07",
+        "gate_ce_2024_08",
+        "gate_ce_cpm_17",
+        "gate_ce_env_15",
+        "gate_ce_env_39",
+        "gate_ce_irrigation_33",
+        "gate_ce_rcc_25",
+        "gate_ce_rcc_37",
+        "gate_ce_soil_01"
+      ]
+    },
+    {
+      "level": 7,
+      "questionIds": [
+        "gate_ce_soil_11",
+        "gate_ce_soil_21",
+        "gate_ce_som_03",
+        "gate_ce_som_29",
+        "gate_ce_steel_09",
+        "gate_ce_steel_13",
+        "gate_ce_steel_31",
+        "gate_ce_survey_07",
+        "gate_ce_survey_23",
+        "gate_ce_trans_05"
+      ]
+    },
+    {
+      "level": 8,
+      "questionIds": [
+        "gate_ce_trans_19",
+        "gate_ce_trans_27",
+        "gate_ce_trans_35"
+      ]
+    }
+  ]
+}
