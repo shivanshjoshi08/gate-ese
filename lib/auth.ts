@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectMongo } from "@/lib/mongoose";
 import { User } from "@/models/User";
+import { touchUserLogin } from "@/backend/services/admin-users.service";
 
 const adminEmail = process.env.ADMIN_EMAIL ?? "";
 
@@ -99,4 +100,15 @@ export const authOptions = {
     },
   },
   secret: authSecret,
+  events: {
+    async signIn({ user }) {
+      const id = user?.id;
+      if (!id || id === "admin") return;
+      try {
+        await touchUserLogin(id);
+      } catch (e) {
+        console.error("[auth signIn] touchUserLogin", e);
+      }
+    },
+  },
 };
