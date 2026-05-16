@@ -20,6 +20,13 @@ import { loadProgress, getSubjectStats } from "@/lib/storage";
 import { usePracticeBank } from "@/hooks/PracticeBankContext";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
+import AiPerformanceInsights from "@/components/AiPerformanceInsights";
+import {
+  buildPerformanceSnapshot,
+  snapshotFingerprint,
+} from "@/lib/performance-snapshot";
+
+const AI_MIN_ATTEMPTS = 5;
 
 const chartGrid = "#3f3f46";
 const chartTick = { fill: "#a1a1aa", fontSize: 11 };
@@ -38,7 +45,14 @@ export default function AnalysisPage() {
     setMounted(true);
   }, []);
 
-  const { attempts } = mounted ? loadProgress(exam) : { attempts: [] };
+  const progress = useMemo(
+    () => (mounted ? loadProgress(exam) : null),
+    [mounted, exam],
+  );
+  const attempts = useMemo(
+    () => progress?.attempts ?? [],
+    [progress],
+  );
   const accent = EXAM_COLORS[exam];
 
   const questionMap = useMemo(
@@ -110,7 +124,15 @@ export default function AnalysisPage() {
       }));
   }, [attempts]);
 
+  const performanceSnapshot = useMemo(() => {
+    if (!mounted) return null;
+    return buildPerformanceSnapshot(exam, attempts, questionMap, progress ?? undefined);
+  }, [mounted, exam, attempts, questionMap, progress]);
 
+  const snapshotFingerprintKey = useMemo(
+    () => (performanceSnapshot ? snapshotFingerprint(performanceSnapshot) : ""),
+    [performanceSnapshot],
+  );
 
   if (!mounted) {
     return (
@@ -125,6 +147,12 @@ export default function AnalysisPage() {
       <h1 className="text-2xl font-bold" style={{ color: accent.accent }}>
         Progress
       </h1>
+
+      <AiPerformanceInsights
+        snapshot={performanceSnapshot}
+        fingerprint={snapshotFingerprintKey}
+        minAttempts={AI_MIN_ATTEMPTS}
+      />
 
       {exam === "ESE" && paperData.length > 0 && (
         <section className="mt-8">
