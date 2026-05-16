@@ -62,7 +62,7 @@ export const questionCreateSchema = z.object({
   options: z.array(optionSchema).default([]),
   correctOption: z.string().default(""),
   solution: solutionSchema.default({ text: "", latex: "", images: [] }),
-  difficulty: z.enum(["Easy", "Medium", "Hard"]),
+  difficulty: z.enum(["Easy", "Moderate", "Medium", "Hard"]),
   marks: z.coerce.number().int().min(1).max(2).default(1),
   negativeMarks: z.coerce.number().min(0).default(0),
   tags: z.array(z.string()).default([]),

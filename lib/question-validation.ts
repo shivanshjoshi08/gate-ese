@@ -76,7 +76,7 @@ export const questionDocumentSchema = z.object({
   subject: z.string().min(1),
   topic: z.string(),
   tags: z.array(z.string()).default([]),
-  difficulty: z.enum(["Easy", "Medium", "Hard"]),
+  difficulty: z.enum(["Easy", "Moderate", "Medium", "Hard"]),
   marks: z.union([z.literal(1), z.literal(2)]),
   exam: z.enum(["GATE", "ESE"]),
   paper: z.union([z.enum(["PRE", "P1", "P2"]), z.null()]).optional(),

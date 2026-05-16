@@ -29,7 +29,7 @@ const SAMPLE_LEGACY = `[
 
 const SAMPLE_UNIFIED = `[
   {
-    "sourceType": "pyq",
+    "sourceType": "practice",
     "exam": "GATE",
     "branch": "CE",
     "subject": "Fluid Mechanics",
@@ -50,7 +50,7 @@ const SAMPLE_UNIFIED = `[
     "difficulty": "Medium",
     "marks": 1,
     "negativeMarks": 0,
-    "tags": ["PYQ"],
+    "tags": ["practice"],
     "images": [],
     "status": "approved"
   }
@@ -65,7 +65,6 @@ type ImportResult = {
 
 export default function JsonQuestionImport() {
   const [jsonText, setJsonText] = useState("");
-  const [sourceType, setSourceType] = useState<"pyq" | "practice">("practice");
   const [status, setStatus] = useState<"approved" | "draft">("approved");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +105,7 @@ export default function JsonQuestionImport() {
         method: "POST",
         body: JSON.stringify({
           questions: parsed,
-          defaults: { sourceType, status },
+          defaults: { sourceType: "practice", status },
         }),
       });
 
@@ -139,26 +138,13 @@ export default function JsonQuestionImport() {
             object, etc.
           </li>
           <li>
-            Approved + Practice/PYQ select karo - users ko practice / PYQ bank
-            me dikhenge
+            Status <strong>Approved</strong> rakho to practice bank me users ko
+            dikhenge
           </li>
         </ul>
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <label className="text-sm text-zinc-300">
-          Default source
-          <select
-            value={sourceType}
-            onChange={(e) =>
-              setSourceType(e.target.value as "pyq" | "practice")
-            }
-            className="ml-2 rounded-lg border border-zinc-600 bg-zinc-900 px-2 py-1.5 text-zinc-100"
-          >
-            <option value="practice">Practice</option>
-            <option value="pyq">PYQ</option>
-          </select>
-        </label>
         <label className="text-sm text-zinc-300">
           Status
           <select

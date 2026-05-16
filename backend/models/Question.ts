@@ -49,6 +49,7 @@ const questionSchema = new Schema(
           exam: { type: String, enum: ["GATE", "ESE"] },
           year: Number,
           paper: { type: String, default: null },
+          qno: { type: Number, default: null },
           session: { type: String, default: "" },
         },
       ],
@@ -62,6 +63,7 @@ const questionSchema = new Schema(
             enum: ["book", "coaching", "standard", "web", "other"],
           },
           label: String,
+          chapter: { type: String, default: "" },
           exam: { type: String, enum: ["GATE", "ESE"], required: false },
           year: Number,
           notes: { type: String, default: "" },
@@ -77,16 +79,47 @@ const questionSchema = new Schema(
         "statement-trap",
         "code-based",
         "practical",
+        "practical-application",
+        "numerical-calculation",
+        "graph-based",
+        "diagram-based",
       ],
       default: null,
     },
+    section: { type: String, default: null },
+    qno: { type: Number, default: null },
+    conceptUsed: { type: String, default: "" },
+    formulaUsed: { type: [String], default: [] },
+    solutionSteps: { type: [Schema.Types.Mixed], default: [] },
+    whyWrongOptions: { type: Schema.Types.Mixed, default: {} },
+    keyTakeaway: { type: String, default: "" },
+    repeatCount: { type: Number, default: 0 },
+    isHighRepeat: { type: Boolean, default: false },
+    trendNote: { type: String, default: "" },
+    mainsRelevant: { type: Boolean, default: false },
+    selfEvalChecklist: { type: [String], default: [] },
+    diagramRequired: { type: Boolean, default: false },
+    diagramUrl: { type: String, default: null },
+    addedBy: {
+      type: String,
+      enum: ["admin", "community", "ai-generated"],
+      default: "admin",
+    },
+    verified: { type: Boolean, default: false },
+    source: {
+      type: String,
+      enum: ["official-pdf", "book", "community", "ai"],
+      default: "official-pdf",
+    },
+    aiExplanation: { type: String, default: null },
+    similarQuestionsGenerated: { type: [String], default: [] },
     question: { type: String, required: true },
     options: { type: [optionSchema], default: [] },
     correctOption: { type: String, default: "" },
     solution: { type: solutionSchema, default: () => ({}) },
     difficulty: {
       type: String,
-      enum: ["Easy", "Medium", "Hard"],
+      enum: ["Easy", "Moderate", "Medium", "Hard"],
       required: true,
       index: true,
     },
@@ -151,18 +184,29 @@ export type QuestionLean = {
     year?: number;
     notes?: string;
   }[];
-  questionStyle?:
-    | "conceptual"
-    | "formula-based"
-    | "statement-trap"
-    | "code-based"
-    | "practical"
-    | null;
+  questionStyle?: string | null;
+  section?: string | null;
+  qno?: number | null;
+  conceptUsed?: string;
+  formulaUsed?: string[];
+  solutionSteps?: unknown[];
+  whyWrongOptions?: Record<string, string>;
+  keyTakeaway?: string;
+  repeatCount?: number;
+  isHighRepeat?: boolean;
+  trendNote?: string;
+  mainsRelevant?: boolean;
+  selfEvalChecklist?: string[];
+  diagramRequired?: boolean;
+  diagramUrl?: string | null;
+  addedBy?: string;
+  verified?: boolean;
+  source?: string;
   question: string;
   options: { id: string; text: string; image?: string | null }[];
   correctOption: string;
   solution: { text: string; latex?: string; images?: string[] };
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty: "Easy" | "Moderate" | "Medium" | "Hard";
   marks: number;
   negativeMarks: number;
   tags: string[];

@@ -8,7 +8,7 @@ export function createEmptyQuestionDocument(
   const id = partial?.id ?? `new_${Date.now()}`;
   return {
     id,
-    sourceType: "pyq",
+    sourceType: "practice",
     status: "draft",
     type: "mcq",
     stem: createRichContent(EMPTY_DOC),

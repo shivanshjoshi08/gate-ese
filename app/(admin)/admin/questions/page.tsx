@@ -40,11 +40,7 @@ export default async function AdminQuestionsPage({
       page,
       limit: 20,
       status,
-      sourceType:
-        searchParams.sourceType === "pyq" ||
-        searchParams.sourceType === "practice"
-          ? searchParams.sourceType
-          : undefined,
+      sourceType: "practice",
       subject: searchParams.subject || undefined,
       topic: searchParams.topic || undefined,
       year: searchParams.year ? Number(searchParams.year) : undefined,
@@ -72,7 +68,7 @@ export default async function AdminQuestionsPage({
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-100">Question bank</h1>
+        <h1 className="text-2xl font-bold text-zinc-100">Practice questions</h1>
         <div className="flex gap-2">
           <Link
             href="/admin/questions/import"

@@ -4,7 +4,7 @@ export type SourceType = "pyq" | "practice";
 export type ExamType = "GATE" | "ESE";
 export type QuestionStatus = "approved" | "draft";
 export type QuestionType = "mcq" | "numerical";
-export type Difficulty = "Easy" | "Medium" | "Hard";
+export type Difficulty = "Easy" | "Moderate" | "Medium" | "Hard";
 
 export interface QuestionOptionDto {
   id: string;
@@ -36,22 +36,35 @@ export interface QuestionDto {
     exam: ExamType;
     year: number;
     paper?: string | null;
+    qno?: number | null;
     session?: string;
   }[];
   references: {
     kind: "book" | "coaching" | "standard" | "web" | "other";
     label: string;
+    chapter?: string;
     exam?: ExamType;
     year?: number;
     notes?: string;
   }[];
-  questionStyle?:
-    | "conceptual"
-    | "formula-based"
-    | "statement-trap"
-    | "code-based"
-    | "practical"
-    | null;
+  questionStyle?: string | null;
+  section?: string | null;
+  qno?: number | null;
+  conceptUsed?: string;
+  formulaUsed?: string[];
+  solutionSteps?: unknown[];
+  whyWrongOptions?: Record<string, string>;
+  keyTakeaway?: string;
+  repeatCount?: number;
+  isHighRepeat?: boolean;
+  trendNote?: string;
+  mainsRelevant?: boolean;
+  selfEvalChecklist?: string[];
+  diagramRequired?: boolean;
+  diagramUrl?: string | null;
+  addedBy?: string;
+  verified?: boolean;
+  source?: string;
   question: string;
   options: QuestionOptionDto[];
   correctOption: string;

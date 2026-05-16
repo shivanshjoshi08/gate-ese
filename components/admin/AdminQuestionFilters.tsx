@@ -22,7 +22,6 @@ export default function AdminQuestionFilters() {
   const sp = useSearchParams();
 
   const status = sp.get("status") ?? "draft";
-  const sourceType = sp.get("sourceType") ?? "";
   const subject = sp.get("subject") ?? "";
   const exam = sp.get("exam") ?? "";
   const difficulty = sp.get("difficulty") ?? "";
@@ -61,16 +60,6 @@ export default function AdminQuestionFilters() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <select
-          value={sourceType}
-          onChange={onSelect("sourceType")}
-          className={selectCls}
-          aria-label="Source type"
-        >
-          <option value="">All sources</option>
-          <option value="pyq">PYQ</option>
-          <option value="practice">Practice</option>
-        </select>
         <select
           value={exam}
           onChange={onSelect("exam")}

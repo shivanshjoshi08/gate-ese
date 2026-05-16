@@ -4,7 +4,7 @@ export type RichBodyFormat = "tiptap-v1";
 
 export type QuestionType = "mcq" | "msq" | "numerical" | "subjective";
 export type QuestionStatus = "draft" | "published";
-export type Difficulty = "Easy" | "Medium" | "Hard";
+export type Difficulty = "Easy" | "Moderate" | "Medium" | "Hard";
 export type ExamType = "GATE" | "ESE";
 export type EsePaper = "PRE" | "P1" | "P2" | null;
 
@@ -38,7 +38,7 @@ export interface QuestionDocument {
   numerical?: boolean;
   appearances?: import("@/lib/question-sources").QuestionAppearance[];
   references?: import("@/lib/question-sources").QuestionReference[];
-  questionStyle?: import("@/lib/question-sources").QuestionStyleTag;
+  questionStyle?: import("@/lib/question-sources").QuestionStyleTag | null;
   stem: RichContent;
   options: QuestionOption[];
   solution: RichContent;

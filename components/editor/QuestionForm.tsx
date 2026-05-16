@@ -99,18 +99,9 @@ export default function QuestionForm({
     <div className="grid gap-8 lg:grid-cols-2">
       <div className="space-y-6">
         <div className="flex flex-wrap gap-3">
-          <select
-            value={doc.sourceType ?? "pyq"}
-            onChange={(e) =>
-              patch({
-                sourceType: e.target.value as "pyq" | "practice",
-              })
-            }
-            className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-100"
-          >
-            <option value="pyq">PYQ</option>
-            <option value="practice">Practice</option>
-          </select>
+          <span className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-300">
+            Practice
+          </span>
           <select
             value={doc.type}
             onChange={(e) => {

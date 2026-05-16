@@ -24,7 +24,7 @@ export type SimplePracticeFilterOptions = {
   hasNumericals: boolean;
 };
 
-const DIFFICULTY_LEVELS = ["Easy", "Medium", "Hard"] as const;
+const DIFFICULTY_LEVELS = ["Easy", "Moderate", "Medium", "Hard"] as const;
 
 function practicePool(bank: Question[], filters: Filters): Question[] {
   return filterQuestions(bank, filters);

@@ -27,13 +27,7 @@ export default async function AdminDbStats({ compact }: { compact?: boolean }) {
           label="Practice"
           value={stats.practice.total}
           sub={`${stats.practice.approved} live`}
-          href="/admin/questions?sourceType=practice"
-        />
-        <StatPill
-          label="PYQ"
-          value={stats.pyq.total}
-          sub={`${stats.pyq.approved} live`}
-          href="/admin/questions?sourceType=pyq"
+          href="/admin/questions"
         />
       </div>
     );

@@ -22,6 +22,12 @@ import {
   deriveAppearancesFromLegacy,
   type QuestionAppearance,
 } from "@/lib/question-sources";
+import {
+  bundledQuestionSchema,
+  normalizeBundledQuestion,
+  normalizeDifficulty,
+  normalizeQuestionStyle,
+} from "@/lib/question-schema";
 
 function asIso(d: Date | string): string {
   return d instanceof Date ? d.toISOString() : new Date(d).toISOString();
@@ -64,6 +70,23 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     tags: row.tags ?? [],
     images: row.images ?? [],
     status: row.status,
+    section: row.section ?? null,
+    qno: row.qno ?? null,
+    conceptUsed: row.conceptUsed ?? "",
+    formulaUsed: row.formulaUsed ?? [],
+    solutionSteps: row.solutionSteps ?? [],
+    whyWrongOptions: row.whyWrongOptions ?? {},
+    keyTakeaway: row.keyTakeaway ?? "",
+    repeatCount: row.repeatCount ?? 0,
+    isHighRepeat: row.isHighRepeat === true,
+    trendNote: row.trendNote ?? "",
+    mainsRelevant: row.mainsRelevant === true,
+    selfEvalChecklist: row.selfEvalChecklist ?? [],
+    diagramRequired: row.diagramRequired === true,
+    diagramUrl: row.diagramUrl ?? null,
+    addedBy: row.addedBy,
+    verified: row.verified,
+    source: row.source,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -238,7 +261,8 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
           }),
     ),
     references: dto.references ?? [],
-    questionStyle: dto.questionStyle ?? undefined,
+    questionStyle:
+      normalizeQuestionStyle(dto.questionStyle ?? undefined) ?? undefined,
     options: optionsText,
     correct,
     solution: dto.solution.text,
@@ -252,6 +276,24 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
     image: images[0],
     images,
     questionBank: dto.sourceType === "pyq" ? "pyq" : "ai",
+    branch: dto.branch,
+    section: dto.section,
+    qno: dto.qno ?? undefined,
+    subtopic: dto.subtopic,
+    negativeMarking: dto.negativeMarks,
+    solutionSteps: dto.solutionSteps as PracticeQuestion["solutionSteps"],
+    conceptUsed: dto.conceptUsed,
+    formulaUsed: dto.formulaUsed,
+    whyWrongOptions: dto.whyWrongOptions,
+    keyTakeaway: dto.keyTakeaway,
+    repeatCount: dto.repeatCount,
+    isHighRepeat: dto.isHighRepeat,
+    trendNote: dto.trendNote,
+    tags: dto.tags,
+    mainsRelevant: dto.mainsRelevant,
+    selfEvalChecklist: dto.selfEvalChecklist,
+    diagramRequired: dto.diagramRequired,
+    diagramUrl: dto.diagramUrl ?? undefined,
   };
 }
 
@@ -280,24 +322,21 @@ export function leanRowToPracticeQuestion(
 export function legacyJsonToCreatePayload(
   raw: Record<string, unknown>,
 ): Record<string, unknown> {
-  const id = String(raw.id ?? "");
+  const parsed = bundledQuestionSchema.parse(raw);
+  const q = normalizeBundledQuestion(raw);
+  const id = q.id;
   const type = resolveMongoAnswerType(raw);
-  const numerical = resolveNumericalFlag(raw);
-  const optionsArr = Array.isArray(raw.options) ? raw.options : [];
-  const options = optionsArr.map((text, i) => ({
+  const options = q.options.map((text, i) => ({
     id: String.fromCharCode(65 + i),
-    text: String(text),
+    text,
     image: null,
   }));
-  const correctIdx =
-    typeof raw.correct === "number" ? raw.correct : parseInt(String(raw.correct), 10);
-  const correctOption =
-    type === "numerical"
-      ? String(raw.correct ?? "")
-      : String.fromCharCode(65 + (Number.isNaN(correctIdx) ? 0 : correctIdx));
-
-  const exam = raw.exam === "ESE" ? "ESE" : "GATE";
-  const year = typeof raw.year === "number" ? raw.year : 2024;
+  let correctOption = "A";
+  if (type === "numerical") {
+    correctOption = String(q.correct ?? "");
+  } else if (typeof q.correct === "number") {
+    correctOption = String.fromCharCode(65 + q.correct);
+  }
 
   const sourceType =
     raw.sourceType === "pyq" || raw.sourceType === "practice"
@@ -310,47 +349,54 @@ export function legacyJsonToCreatePayload(
 
   return {
     importKey: id,
-    slug: slugify([id, String(raw.subject ?? ""), year]),
+    slug: slugify([id, q.subject, q.year]),
     sourceType,
-    exam,
-    branch: "CE",
-    subject: String(raw.subject ?? "General"),
-    topic: String(raw.topic ?? ""),
-    subtopic: "",
-    year,
-    paper: raw.paper ? String(raw.paper) : null,
+    exam: q.exam,
+    branch: q.branch ?? "CE",
+    subject: q.subject,
+    topic: q.topic,
+    subtopic: q.subtopic ?? "",
+    year: q.year,
+    paper: q.paper,
+    section: q.section ?? null,
+    qno: q.qno ?? null,
     type,
-    numerical,
-    appearances: Array.isArray(raw.appearances)
-      ? raw.appearances
-      : deriveAppearancesFromLegacy({
-          exam: raw.exam === "ESE" ? "ESE" : "GATE",
-          year: typeof raw.year === "number" ? raw.year : 2024,
-          paper: parseEsePaper(raw.paper),
-        }),
-    references: Array.isArray(raw.references) ? raw.references : [],
-    questionStyle:
-      typeof raw.questionStyle === "string" ? raw.questionStyle : null,
-    question: String(raw.question ?? ""),
+    numerical: q.numerical === true,
+    appearances: q.appearances ?? [],
+    references: q.references ?? [],
+    questionStyle: q.questionStyle ?? parsed.questionStyle ?? null,
+    question: q.question,
     options,
     correctOption,
     solution: {
-      text: String(raw.solution ?? ""),
+      text: q.solution,
       latex: "",
-      images: [],
+      images: q.images ?? [],
     },
-    difficulty:
-      raw.difficulty === "Easy" || raw.difficulty === "Hard"
-        ? raw.difficulty
-        : "Medium",
-    marks: raw.marks === 2 ? 2 : 1,
-    negativeMarks: 0,
-    tags: [],
-    images: raw.image
-      ? [normalizeQuestionImageUrl(String(raw.image))].filter(
-          (u): u is string => !!u,
-        )
-      : [],
+    difficulty: normalizeDifficulty(
+      typeof parsed.difficulty === "string" ? parsed.difficulty : "Moderate",
+    ),
+    marks: q.marks,
+    negativeMarks: q.negativeMarking ?? 0,
+    tags: q.tags ?? [],
+    conceptUsed: q.conceptUsed ?? "",
+    formulaUsed: q.formulaUsed ?? [],
+    solutionSteps: q.solutionSteps ?? [],
+    whyWrongOptions: q.whyWrongOptions ?? {},
+    keyTakeaway: q.keyTakeaway ?? "",
+    repeatCount: q.repeatCount ?? 0,
+    isHighRepeat: q.isHighRepeat === true,
+    trendNote: q.trendNote ?? "",
+    mainsRelevant: q.mainsRelevant === true,
+    selfEvalChecklist: q.selfEvalChecklist ?? [],
+    diagramRequired: q.diagramRequired === true,
+    diagramUrl: q.diagramUrl ?? null,
+    addedBy: q.addedBy ?? "admin",
+    verified: q.verified === true,
+    source: q.source ?? "official-pdf",
+    aiExplanation: null,
+    similarQuestionsGenerated: [],
+    images: q.images ?? [],
     status,
   };
 }
@@ -395,11 +441,15 @@ export function normalizeImportRecord(
 ): Record<string, unknown> {
   if (isLegacyImportShape(raw)) {
     const base = legacyJsonToCreatePayload(raw);
-    if (defaults?.sourceType) base.sourceType = defaults.sourceType;
+    base.sourceType = "practice";
     if (defaults?.status) base.status = defaults.status;
     return base;
   }
-  const merged: Record<string, unknown> = { ...defaults, ...raw };
+  const merged: Record<string, unknown> = {
+    ...defaults,
+    ...raw,
+    sourceType: "practice",
+  };
   if (!merged.importKey && raw.id) merged.importKey = String(raw.id);
   return merged;
 }

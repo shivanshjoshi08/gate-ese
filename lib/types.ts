@@ -1,6 +1,7 @@
 export type QuestionType = "mcq" | "nat" | "msq";
 
-export type Difficulty = "Easy" | "Medium" | "Hard";
+/** `Medium` kept for legacy rows; prefer `Moderate` in new JSON. */
+export type Difficulty = "Easy" | "Moderate" | "Medium" | "Hard";
 
 export type ExamType = "GATE" | "ESE";
 
@@ -56,6 +57,33 @@ export interface Question {
   references?: QuestionReference[];
   /** Pattern tag for analysis (conceptual, formula, trap, etc.). */
   questionStyle?: QuestionStyleTag;
+
+  branch?: string;
+  section?: string | null;
+  qno?: number | null;
+  subtopic?: string;
+  negativeMarking?: number;
+  solutionSteps?: import("@/lib/question-schema").SolutionStep[];
+  conceptUsed?: string;
+  formulaUsed?: string[];
+  whyWrongOptions?: import("@/lib/question-schema").WhyWrongOptions;
+  keyTakeaway?: string;
+  repeatCount?: number;
+  isHighRepeat?: boolean;
+  trendNote?: string;
+  tags?: string[];
+  mainsRelevant?: boolean;
+  selfEvalChecklist?: string[];
+  diagramRequired?: boolean;
+  diagramUrl?: string;
+  addedBy?: string;
+  verified?: boolean;
+  source?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  /** Filled at runtime by AI — keep null in DB/JSON. */
+  aiExplanation?: string | null;
+  similarQuestionsGenerated?: string[];
 }
 
 export interface AttemptRecord {

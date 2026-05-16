@@ -1,0 +1,76 @@
+[
+  {
+    "id": "gate_ce_2021_soil_12",
+    "question": "A soil sample has a porosity of 50%. The void ratio of the soil will be:",
+    "type": "mcq",
+    "options": ["0.5", "1.0", "1.5", "2.0"],
+    "correct": 1,
+    "numerical": false,
+    "exam": "GATE",
+    "year": 2021,
+    "paper": null,
+    "section": null,
+    "qno": 12,
+    "marks": 2,
+    "negativeMarking": 0.67,
+    "branch": "CE",
+    "subject": "Soil Mechanics",
+    "topic": "Phase Relations",
+    "subtopic": "Void Ratio and Porosity",
+    "difficulty": "Easy",
+    "questionStyle": "formula-based",
+    "solution": "e = n/(1-n) = 0.5/0.5 = 1.0",
+    "solutionSteps": [
+      {
+        "step": 1,
+        "heading": "Formula Recall",
+        "content": "Relationship: e = n / (1 - n)",
+        "diagram": null
+      },
+      {
+        "step": 2,
+        "heading": "Substitution",
+        "content": "n = 0.50, so e = 0.50 / (1 - 0.50) = 1.0",
+        "diagram": null
+      }
+    ],
+    "conceptUsed": "Phase Relations in Soil — Void Ratio & Porosity",
+    "formulaUsed": ["e = n / (1 - n)"],
+    "whyWrongOptions": {
+      "0": "n and e are not the same — common confusion",
+      "2": "Wrong formula e = 1/(1-n)",
+      "3": "Multiplying n by 2 is incorrect"
+    },
+    "keyTakeaway": "Porosity n is always < 1; void ratio e can exceed 1",
+    "appearances": [
+      { "exam": "GATE", "year": 2021, "paper": null, "qno": 12 },
+      { "exam": "ESE", "year": 2019, "paper": "PRE", "qno": 40 }
+    ],
+    "references": [
+      {
+        "kind": "book",
+        "label": "Craig's Soil Mechanics — 8th Edition",
+        "chapter": "Chapter 1 — Basic Characteristics",
+        "notes": "Example 1.2 — same problem"
+      }
+    ],
+    "repeatCount": 3,
+    "isHighRepeat": true,
+    "trendNote": "Appears every 2–3 years in GATE or ESE",
+    "tags": ["must-do", "high-repeat", "formula-heavy"],
+    "mainsRelevant": true,
+    "selfEvalChecklist": [
+      "Formula correctly recalled?",
+      "Units checked?",
+      "Final answer boxed?"
+    ],
+    "diagramRequired": false,
+    "aiExplanation": null,
+    "similarQuestionsGenerated": [],
+    "images": [],
+    "diagramUrl": null,
+    "addedBy": "admin",
+    "verified": true,
+    "source": "official-pdf"
+  }
+]
