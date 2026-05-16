@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { connectMongo } from "@/lib/mongoose";
 import { UserProgress } from "@/models/UserProgress";
 import type { ExamType, ProgressData } from "@/lib/types";
+import { touchUserProgressActivity } from "@/backend/services/admin-users.service";
 
 export const runtime = "nodejs";
 
@@ -79,6 +80,8 @@ export async function POST(req: Request) {
       { $set: { snapshot: progress } },
       { upsert: true, new: true },
     ).exec();
+
+    await touchUserProgressActivity(userId, progress);
 
     return NextResponse.json({ ok: true });
   } catch (e) {
