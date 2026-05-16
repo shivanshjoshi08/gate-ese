@@ -1,3 +1,6 @@
+@import "katex/dist/katex.min.css";
+@import "highlight.js/styles/atom-one-dark.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +10,27 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply min-h-screen bg-study-page text-study-ink antialiased;
+    background-image: radial-gradient(
+        ellipse 100% 60% at 50% -15%,
+        rgba(147, 112, 219, 0.09),
+        transparent 52%
+      ),
+      radial-gradient(
+        ellipse 70% 45% at 100% 0%,
+        rgba(56, 189, 248, 0.06),
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 55% 40% at 0% 20%,
+        rgba(94, 234, 212, 0.04),
+        transparent 45%
+      );
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-violet-500/30 text-white;
   }
 }
 
@@ -15,4 +38,38 @@
   .focus-mode .hide-in-focus {
     @apply hidden;
   }
+}
+
+/* Practice filter selects — dark list + readable options (Windows/Chrome) */
+.study-filter-select {
+  color-scheme: dark;
+  background-color: #262f42;
+  color: #e8eaf2;
+  cursor: pointer;
+}
+.study-filter-select:hover {
+  background-color: #2f3a52;
+}
+.study-filter-select:focus {
+  outline: 2px solid rgba(149, 117, 234, 0.55);
+  outline-offset: 1px;
+}
+.study-filter-select option {
+  background-color: #1c2333;
+  color: #e8eaf2;
+}
+.study-filter-select option:checked,
+.study-filter-select option:hover {
+  background-color: #3d4d6b;
+  color: #ffffff;
+}
+
+/* Admin TipTap placeholder */
+.cms-tiptap .ProseMirror .is-empty:first-child::before,
+.cms-tiptap .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgb(113 113 122);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

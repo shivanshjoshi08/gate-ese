@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Lexend } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
+import { Providers } from "@/components/Providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const lexend = Lexend({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
-  title: "GATE & ESE CE Practice",
-  description: "GATE & ESE Civil Engineering PYQ practice app",
+  title: "ESE CE Practice",
+  description: "ESE Civil Engineering question practice",
 };
 
 export default function RootLayout({
@@ -16,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AppShell>{children}</AppShell>
+    <html lang="en" className="dark">
+      <body className={`${lexend.variable} font-sans`}>
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );
