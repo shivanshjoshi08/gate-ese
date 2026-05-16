@@ -37,7 +37,13 @@ function validateMongoUri(uri) {
   return null;
 }
 
-const QUESTIONS_JSON = path.join(__dirname, "..", "data", "questions.json");
+const DEFAULT_QUESTIONS_JSON = path.join(__dirname, "..", "data", "questions.json");
+const fileArg = process.argv[2];
+const QUESTIONS_JSON = fileArg
+  ? path.isAbsolute(fileArg)
+    ? fileArg
+    : path.join(process.cwd(), fileArg)
+  : DEFAULT_QUESTIONS_JSON;
 
 const optionSchema = new mongoose.Schema(
   { id: String, text: String, image: { type: String, default: null } },
@@ -160,7 +166,7 @@ function transform(raw) {
     difficulty,
     marks: raw.marks === 2 ? 2 : 1,
     negativeMarks: 0,
-    tags: [],
+    tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
     images: raw.image ? [String(raw.image)] : [],
     status: "approved",
   };
@@ -221,20 +227,8 @@ async function main() {
         .select("_id")
         .lean();
       if (exists) {
-        await Question.updateOne(
-          { _id: exists._id },
-          {
-            $set: {
-              numerical: doc.numerical,
-              type: doc.type,
-              options: doc.options,
-              correctOption: doc.correctOption,
-              appearances: doc.appearances,
-              references: doc.references,
-              questionStyle: doc.questionStyle,
-            },
-          },
-        );
+        const { importKey: _ik, slug: _slug, ...syncFields } = doc;
+        await Question.updateOne({ _id: exists._id }, { $set: syncFields });
         updated++;
         continue;
       }
