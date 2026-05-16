@@ -424,7 +424,7 @@ function PracticeContent() {
           disabled={
             bookmarksMode ? false : !practiceBankFromUrl || (!hasNext && isLevelMode)
           }
-          className="mt-6 rounded-xl px-6 py-2.5 font-semibold text-white shadow-lg shadow-black/15 transition hover:brightness-105 disabled:opacity-40"
+          className="mt-6 min-h-[48px] w-full max-w-xs rounded-xl px-6 py-3 font-semibold text-white shadow-lg shadow-black/15 transition active:brightness-105 disabled:opacity-40 sm:w-auto sm:min-h-0 sm:py-2.5 sm:hover:brightness-105"
           style={{ backgroundColor: accent.accent }}
         >
           {bookmarksMode
@@ -475,7 +475,7 @@ function PracticeContent() {
         <button
           type="button"
           onClick={() => setFocusMode((fm) => !fm)}
-          className="rounded-lg border border-study-border/80 bg-study-raised/50 px-3 py-1.5 text-sm text-study-muted transition hover:bg-study-raised hover:text-study-ink"
+          className="min-h-[44px] rounded-lg border border-study-border/80 bg-study-raised/50 px-4 py-2 text-sm text-study-muted transition hover:bg-study-raised hover:text-study-ink sm:min-h-0 sm:py-1.5"
         >
           {focusMode ? "Show menus" : "Focus"}
         </button>

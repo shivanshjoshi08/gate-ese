@@ -19,19 +19,43 @@ export default function Nav() {
 
   const authedLearnerNav =
     status === "authenticated" && session?.user?.role !== "admin";
-  /** Admin CMS session shares NextAuth JWT; treat as signed-in for learner nav exits. */
   const authedAsAdminLearnerGate =
     status === "authenticated" && session?.user?.role === "admin";
 
   return (
-    <header className="hide-in-focus sticky top-0 z-50 border-b border-study-border/70 bg-study-surface/90 shadow-sm shadow-black/10 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
-        <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight text-study-ink">
+    <header className="hide-in-focus sticky top-0 z-50 border-b border-study-border/70 bg-study-surface/90 shadow-sm shadow-black/10 backdrop-blur-md supports-[padding:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)]">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-4">
+        <Link
+          href="/"
+          className="shrink-0 text-base font-semibold tracking-tight text-study-ink sm:text-lg"
+        >
           <span style={{ color: accent.accent }}>ESE</span>{" "}
           <span className="hidden text-study-muted sm:inline">CE</span>
         </Link>
 
-        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-1">
+        <div className="flex items-center gap-1 md:hidden">
+          {status === "loading" ? (
+            <span className="px-2 text-xs text-study-muted">…</span>
+          ) : authedLearnerNav || authedAsAdminLearnerGate ? (
+            <button
+              type="button"
+              onClick={() => void signOut({ callbackUrl: "/" })}
+              className="min-h-[44px] rounded-lg px-3 py-2 text-sm font-medium text-study-muted"
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="min-h-[44px] rounded-lg px-3 py-2 text-sm font-medium"
+              style={{ color: accent.accent }}
+            >
+              Log in
+            </Link>
+          )}
+        </div>
+
+        <nav className="hidden items-center justify-end gap-1 md:flex">
           <Link
             href="/"
             className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${

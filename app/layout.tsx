@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Lexend } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
@@ -12,6 +12,13 @@ const lexend = Lexend({
 export const metadata: Metadata = {
   title: "ESE CE Practice",
   description: "ESE Civil Engineering question practice",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#161b26",
 };
 
 export default function RootLayout({

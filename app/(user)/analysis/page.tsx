@@ -143,7 +143,7 @@ export default function AnalysisPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 text-zinc-100">
+    <div className="mx-auto max-w-5xl px-3 py-6 pb-2 text-zinc-100 sm:px-4 sm:py-8">
       <h1 className="text-2xl font-bold" style={{ color: accent.accent }}>
         Progress
       </h1>

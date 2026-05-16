@@ -159,7 +159,7 @@ export default function MyProgressPage() {
   const accuracyPct = stats.accuracy;
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-10 text-study-ink">
+    <div className="mx-auto max-w-lg px-3 py-6 pb-2 text-study-ink sm:px-4 sm:py-10">
       <div className="mb-8 text-center">
         <Link
           href="/"
@@ -364,7 +364,7 @@ function LevelCard({
       <p className="mt-1 text-xs text-study-muted">Your current level</p>
       <Link
         href={href}
-        className={`mt-4 inline-flex w-full items-center justify-center rounded-lg py-2.5 text-sm font-semibold text-white transition hover:brightness-105 ${buttonClass ?? ""}`}
+        className={`mt-4 inline-flex min-h-[48px] w-full items-center justify-center rounded-lg py-3 text-sm font-semibold text-white transition active:brightness-105 sm:min-h-0 sm:py-2.5 sm:hover:brightness-105 ${buttonClass ?? ""}`}
         style={buttonStyle}
       >
         Start

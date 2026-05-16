@@ -8,12 +8,26 @@ export type SimplePracticeFilterOptions = {
   exams: FilterOption[];
   subjects: FilterOption[];
   difficulties: FilterOption[];
+  /** Show MCQ vs Numericals chips when the bank has NAT questions. */
+  hasNumericals: boolean;
 };
 
 const DIFFICULTY_LEVELS = ["Easy", "Medium", "Hard"] as const;
 
-function mcqPool(bank: Question[], filters: Filters): Question[] {
-  return filterQuestions(bank, { ...filters, type: "MCQ" });
+/** `filters.type` when learner selects Numericals (NAT questions). */
+export const FILTER_TYPE_NUMERICALS = "NAT";
+export const FILTER_TYPE_MCQ = "MCQ";
+
+export function isNumericalsFilter(filters: Filters): boolean {
+  return filters.type === FILTER_TYPE_NUMERICALS;
+}
+
+export function practiceTypeFilter(filters: Filters): typeof FILTER_TYPE_MCQ | typeof FILTER_TYPE_NUMERICALS {
+  return isNumericalsFilter(filters) ? FILTER_TYPE_NUMERICALS : FILTER_TYPE_MCQ;
+}
+
+function practicePool(bank: Question[], filters: Filters): Question[] {
+  return filterQuestions(bank, { ...filters, type: practiceTypeFilter(filters) });
 }
 
 function subjectOptionsFromPool(pool: Question[]): FilterOption[] {
@@ -48,12 +62,15 @@ export function getSimplePracticeFilters(
   bank: Question[],
   filters: Filters,
 ): SimplePracticeFilterOptions {
-  const mcqBank = bank.filter((q) => q.type === "mcq");
+  const hasNumericals = bank.some((q) => q.type === "nat");
+  const typeScopedBank = hasNumericals && isNumericalsFilter(filters)
+    ? bank.filter((q) => q.type === "nat")
+    : bank.filter((q) => q.type === "mcq");
 
   /* Exam filter — re-enable when needed
-  const examPool = mcqPool(
-    mcqBank,
-    { ...filters, exam: "All", type: "MCQ" },
+  const examPool = practicePool(
+    typeScopedBank,
+    { ...filters, exam: "All", type: practiceTypeFilter(filters) },
   );
   const exams = new Set<ExamType>();
   for (const q of examPool) exams.add(q.exam);
@@ -65,16 +82,16 @@ export function getSimplePracticeFilters(
   }
   */
 
-  const subjectPool = mcqPool(
-    mcqBank,
-    { ...filters, subject: "All", type: "MCQ" },
-  );
+  const subjectPool = practicePool(typeScopedBank, {
+    ...filters,
+    subject: "All",
+  });
   const subjectOptions = subjectOptionsFromPool(subjectPool);
 
-  const difficultyPool = mcqPool(
-    mcqBank,
-    { ...filters, difficulty: "All", type: "MCQ" },
-  );
+  const difficultyPool = practicePool(typeScopedBank, {
+    ...filters,
+    difficulty: "All",
+  });
   const present = new Set(difficultyPool.map((q) => q.difficulty));
   const difficultyOptions: FilterOption[] = [{ value: "All", label: "All" }];
   for (const d of DIFFICULTY_LEVELS) {
@@ -92,6 +109,7 @@ export function getSimplePracticeFilters(
         : [],
     difficulties:
       difficultyOptions.length > 1 ? difficultyOptions : [],
+    hasNumericals,
   };
 }
 
@@ -103,7 +121,7 @@ export function defaultPracticeFilters(): Filters {
     difficulty: "All",
     year: "All",
     marks: "All",
-    type: "MCQ",
+    type: FILTER_TYPE_MCQ,
     reviewMode: false,
   };
 }
@@ -117,7 +135,7 @@ export function isDefaultPracticeFilters(filters: Filters): boolean {
     filters.difficulty === "All" &&
     filters.year === "All" &&
     filters.marks === "All" &&
-    filters.type === "MCQ" &&
+    filters.type === FILTER_TYPE_MCQ &&
     !filters.reviewMode
   );
 }
@@ -127,7 +145,12 @@ export function sanitizePracticeFilters(
   filters: Filters,
 ): Filters {
   const avail = getSimplePracticeFilters(bank, defaultPracticeFilters());
-  const next = { ...defaultPracticeFilters(), ...filters, type: "MCQ" as const };
+  const next = { ...defaultPracticeFilters(), ...filters };
+  if (!avail.hasNumericals) {
+    next.type = FILTER_TYPE_MCQ;
+  } else if (next.type !== FILTER_TYPE_NUMERICALS) {
+    next.type = FILTER_TYPE_MCQ;
+  }
 
   const pick = (opts: FilterOption[], current: string, fallback: string) =>
     opts.some((o) => o.value === current) ? current : fallback;

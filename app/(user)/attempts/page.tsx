@@ -6,7 +6,10 @@ import type { AttemptRecord, Question } from "@/lib/types";
 import { filterQuestions } from "@/lib/questions";
 import {
   defaultPracticeFilters,
+  FILTER_TYPE_MCQ,
+  FILTER_TYPE_NUMERICALS,
   getSimplePracticeFilters,
+  isNumericalsFilter,
   sanitizePracticeFilters,
 } from "@/lib/available-filters";
 import { getMergedAttemptsMap } from "@/lib/storage";
@@ -15,6 +18,7 @@ import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
 import { getSubjectShort } from "@/lib/constants";
 import { formatDateTime, formatDuration } from "@/lib/format-date";
+import SearchableSubjectSelect from "@/components/SearchableSubjectSelect";
 
 type StatusFilter = "all" | "correct" | "incorrect";
 type BankFilter = "all" | "ai" | "pyq";
@@ -68,7 +72,7 @@ export default function MyAttemptsPage() {
   );
 
   const rows = useMemo(() => {
-    const pool = filterQuestions(sourceBank, { ...sanitized, type: "MCQ" });
+    const pool = filterQuestions(sourceBank, sanitized);
     const out: Row[] = [];
     for (const question of pool) {
       const attempt = attemptsMap.get(question.id);
@@ -99,7 +103,7 @@ export default function MyAttemptsPage() {
   const rangeEnd = Math.min(page * PAGE_SIZE, rows.length);
 
   const summary = useMemo(() => {
-    const pool = filterQuestions(sourceBank, { ...sanitized, type: "MCQ" });
+    const pool = filterQuestions(sourceBank, sanitized);
     let attempted = 0;
     let correct = 0;
     for (const q of pool) {
@@ -133,7 +137,7 @@ export default function MyAttemptsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 text-study-ink">
+    <div className="mx-auto max-w-3xl px-3 py-6 pb-2 text-study-ink sm:px-4 sm:py-8">
       <div className="mb-6 text-center">
         <Link
           href="/me"
@@ -145,7 +149,7 @@ export default function MyAttemptsPage() {
           My attempts
         </h1>
         <p className="mt-1 text-sm text-study-muted">
-          Questions you have already attempted — filter by subject or difficulty
+          Questions you have already attempted — filter by subject, type, or difficulty
         </p>
       </div>
 
@@ -160,23 +164,40 @@ export default function MyAttemptsPage() {
         {/* Status filter — re-enable when needed (statusFilter: all | correct | incorrect) */}
 
         {available.subjects.length > 1 && (
+          <SearchableSubjectSelect
+            label="Subject"
+            options={available.subjects}
+            value={sanitized.subject}
+            onChange={(subject) => setFilters((f) => ({ ...f, subject }))}
+            accent={accent.accent}
+            className="mb-3"
+          />
+        )}
+
+        {available.hasNumericals && (
           <>
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-study-muted">
-              Subject
+              Question type
             </p>
-            <div className="mb-3 flex flex-wrap gap-2">
-              {available.subjects.map((s) => (
-                <FilterChip
-                  key={s.value}
-                  active={sanitized.subject === s.value}
-                  onClick={() =>
-                    setFilters((f) => ({ ...f, subject: s.value }))
-                  }
-                  accent={accent.accent}
-                >
-                  {s.label}
-                </FilterChip>
-              ))}
+            <div className="filter-scroll -mx-1 mb-3 flex gap-2 overflow-x-auto pb-1">
+              <FilterChip
+                active={!isNumericalsFilter(sanitized)}
+                onClick={() =>
+                  setFilters((f) => ({ ...f, type: FILTER_TYPE_MCQ }))
+                }
+                accent={accent.accent}
+              >
+                MCQ
+              </FilterChip>
+              <FilterChip
+                active={isNumericalsFilter(sanitized)}
+                onClick={() =>
+                  setFilters((f) => ({ ...f, type: FILTER_TYPE_NUMERICALS }))
+                }
+                accent={accent.accent}
+              >
+                Numericals
+              </FilterChip>
             </div>
           </>
         )}
@@ -186,7 +207,7 @@ export default function MyAttemptsPage() {
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-study-muted">
               Difficulty
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="filter-scroll -mx-1 flex gap-2 overflow-x-auto pb-1">
               {available.difficulties.map((d) => (
                 <FilterChip
                   key={d.value}
@@ -203,7 +224,9 @@ export default function MyAttemptsPage() {
           </>
         )}
 
-        {(sanitized.subject !== "All" || sanitized.difficulty !== "All") && (
+        {(sanitized.subject !== "All" ||
+          sanitized.difficulty !== "All" ||
+          isNumericalsFilter(sanitized)) && (
           <button
             type="button"
             onClick={() => setFilters(defaultPracticeFilters())}
@@ -275,7 +298,7 @@ export default function MyAttemptsPage() {
             type="button"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-lg border border-study-border px-4 py-2 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[44px] flex-1 rounded-lg border border-study-border px-4 py-2.5 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none sm:py-2"
           >
             Previous
           </button>
@@ -286,7 +309,7 @@ export default function MyAttemptsPage() {
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="rounded-lg border border-study-border px-4 py-2 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[44px] flex-1 rounded-lg border border-study-border px-4 py-2.5 text-sm font-medium text-study-ink transition hover:bg-study-raised/50 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none sm:py-2"
           >
             Next
           </button>
@@ -344,7 +367,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+      className={`shrink-0 rounded-lg px-3 py-2.5 text-xs font-semibold transition sm:py-1.5 ${
         active
           ? "text-white"
           : "border border-study-border/80 bg-study-raised/40 text-study-muted hover:text-study-ink"

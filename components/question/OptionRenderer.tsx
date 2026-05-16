@@ -60,7 +60,7 @@ export default function OptionRenderer({
 
   let cls =
 
-    "option-renderer w-full rounded-2xl border-2 px-4 py-3.5 text-left text-study-ink transition-all duration-150 ";
+    "option-renderer w-full min-h-[3rem] rounded-2xl border-2 px-4 py-4 text-left text-base text-study-ink transition-all duration-150 active:scale-[0.99] sm:min-h-0 sm:py-3.5 ";
 
   if (!disabled && !showResult) {
     if (selected) {

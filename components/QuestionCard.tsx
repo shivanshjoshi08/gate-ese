@@ -150,7 +150,7 @@ export default function QuestionCard({
   };
 
   const submitBtnClass =
-    "w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50";
+    "w-full min-h-[3rem] rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 text-base font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 sm:min-h-0 sm:text-sm";
 
   const handleNatCheck = () => {
     if (answered || !natInput.trim()) return;
@@ -200,7 +200,7 @@ export default function QuestionCard({
 
   const getOptionClass = (index: number) => {
     const base =
-      "w-full rounded-2xl border-2 px-4 py-3.5 text-left text-base font-medium transition-all duration-200 ";
+      "w-full min-h-[3rem] rounded-2xl border-2 px-4 py-4 text-left text-base font-medium transition-all duration-200 active:scale-[0.99] sm:min-h-0 sm:py-3.5 ";
     if (!answered) {
       if (selected === index) {
         return (
@@ -311,7 +311,7 @@ export default function QuestionCard({
 
   return (
     <div
-      className={`mx-auto w-full max-w-2xl px-4 py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
+      className={`mx-auto w-full max-w-2xl px-3 py-5 pb-8 sm:px-4 sm:py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
       onAnimationEnd={() => setShake(false)}
     >
       {(numberLabel || levelNumber != null) && (
@@ -327,7 +327,7 @@ export default function QuestionCard({
             </p>
           )}
           <p
-            className="text-[11px] font-mono text-study-muted/90"
+            className="hidden text-[11px] font-mono text-study-muted/90 sm:inline"
             title="Question ID for support or admin updates"
           >
             ID: {question.id}
@@ -335,8 +335,8 @@ export default function QuestionCard({
         </div>
       )}
 
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 gap-y-2 text-xs text-study-muted sm:text-sm">
-        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 leading-relaxed">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-y-2 text-xs text-study-muted sm:text-sm">
+        <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 leading-relaxed max-sm:line-clamp-3">
           {question.questionBank === "pyq" ? (
             <span
               title="Previous-year question (official paper track)"
@@ -372,12 +372,12 @@ export default function QuestionCard({
           <span aria-hidden className="mx-1.5 text-study-border">
             ·
           </span>
-          <span>{question.topic}</span>
-          <span aria-hidden className="mx-1.5 text-study-border">
+          <span className="hidden sm:inline">{question.topic}</span>
+          <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
             ·
           </span>
-          <span>{question.year}</span>
-          <span aria-hidden className="mx-1.5 text-study-border">
+          <span className="hidden sm:inline">{question.year}</span>
+          <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
             ·
           </span>
           <span>
@@ -406,7 +406,7 @@ export default function QuestionCard({
           <button
             type="button"
             onClick={handleBookmark}
-            className="text-xl text-study-muted transition hover:text-amber-400/95"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-xl text-study-muted transition hover:text-amber-400/95"
             aria-label="Bookmark"
           >
             {bookmarked || isBookmarked(question.id) ? "⭐" : "☆"}
@@ -662,7 +662,7 @@ export default function QuestionCard({
         <button
           type="button"
           onClick={onNext}
-          className="mt-6 w-full rounded-2xl bg-white py-3.5 font-semibold text-study-page shadow-lg shadow-black/25 ring-1 ring-white/30 transition hover:bg-zinc-50 hover:shadow-xl hover:brightness-105"
+          className="mt-6 w-full min-h-[3rem] rounded-2xl bg-white py-3.5 text-base font-semibold text-study-page shadow-lg shadow-black/25 ring-1 ring-white/30 transition hover:bg-zinc-50 hover:shadow-xl hover:brightness-105 active:scale-[0.99] sm:min-h-0 sm:text-sm"
         >
           Next Question →
         </button>

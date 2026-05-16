@@ -8,9 +8,12 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply min-h-screen bg-study-page text-study-ink antialiased;
+    @apply min-h-screen overflow-x-hidden bg-study-page text-study-ink antialiased;
+    -webkit-tap-highlight-color: transparent;
     background-image: radial-gradient(
         ellipse 100% 60% at 50% -15%,
         rgba(147, 112, 219, 0.09),
@@ -37,6 +40,18 @@
 @layer utilities {
   .focus-mode .hide-in-focus {
     @apply hidden;
+  }
+
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .filter-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-scroll::-webkit-scrollbar {
+    display: none;
   }
 }
 

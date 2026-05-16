@@ -6,7 +6,10 @@ import {
   slicePracticeQuestionsForLevel,
   type PracticeBankKind,
 } from "@/lib/questions";
-import { isDefaultPracticeFilters } from "@/lib/available-filters";
+import {
+  isDefaultPracticeFilters,
+  practiceTypeFilter,
+} from "@/lib/available-filters";
 
 export type PracticeLevelsManifest = {
   version: number;
@@ -76,7 +79,7 @@ function sortedMcqsForFilters(
 ): Question[] {
   const pool = filterQuestions(
     bank,
-    { ...filters, type: "MCQ" },
+    { ...filters, type: practiceTypeFilter(filters) },
     excludeAttemptedIds,
   );
   return [...pool].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
