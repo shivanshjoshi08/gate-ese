@@ -129,7 +129,7 @@ export default function BuildingMaterialsPage() {
           key={current.id}
           question={current}
           questionNumber={index + 1}
-          questionTotal={questions.length}
+          questionTotal={TOTAL}
           onAnswered={handleAnswered}
           onNext={handleNext}
         />

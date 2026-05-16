@@ -7,22 +7,31 @@ const dateTimeFmt = new Intl.DateTimeFormat("en-IN", {
   timeZone: APP_TIME_ZONE,
 });
 
-export function formatDateTime(
-  iso: string | Date | null | undefined,
-  fallback = "—",
-): string {
-  if (!iso) return fallback;
-  const d = iso instanceof Date ? iso : new Date(iso);
+export type DateInput = string | number | Date | null | undefined;
+
+export function formatDateTime(value: DateInput, fallback = "—"): string {
+  if (value == null || value === "") return fallback;
+  const d =
+    value instanceof Date
+      ? value
+      : typeof value === "number"
+        ? new Date(value)
+        : new Date(value);
   if (Number.isNaN(d.getTime())) return fallback;
   return dateTimeFmt.format(d);
 }
 
-export function formatRelative(iso: string | null | undefined): string {
-  if (!iso) return "Never";
-  const then = new Date(iso).getTime();
+export function formatRelative(value: DateInput): string {
+  if (value == null || value === "") return "Never";
+  const then =
+    value instanceof Date
+      ? value.getTime()
+      : typeof value === "number"
+        ? value
+        : new Date(value).getTime();
   if (Number.isNaN(then)) return "—";
   const ms = Date.now() - then;
-  if (ms < 0) return formatDateTime(iso);
+  if (ms < 0) return formatDateTime(value);
   const mins = Math.floor(ms / 60_000);
   if (mins < 1) return "Just now";
   if (mins < 60) return `${mins}m ago`;
@@ -30,5 +39,5 @@ export function formatRelative(iso: string | null | undefined): string {
   if (hours < 48) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   if (days < 14) return `${days}d ago`;
-  return formatDateTime(iso);
+  return formatDateTime(value);
 }
