@@ -16,12 +16,9 @@ export default function HomePage() {
         instant feedback and progress tracking.
       </p>
 
-      {/* PYQ PDFs + PYQ practice cards — re-enable with USER_PYQ_ENABLED
-      <section className="mt-10" aria-label="Previous year PDF papers">...</section>
-      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">...</div>
-      */}
+      {USER_PYQ_PDFS_ENABLED ? <PyqPdfsHomeSection /> : null}
 
-      <div className="mt-10">
+      <div className={USER_PYQ_PDFS_ENABLED ? "mt-8" : "mt-10"}>
         <Link
           href="/practice?bank=ai"
           className="group relative flex min-h-[200px] flex-col overflow-hidden rounded-2xl border border-sky-500/35 bg-gradient-to-br from-sky-500/[0.12] via-study-surface/80 to-study-surface/60 p-5 shadow-lg shadow-black/15 ring-1 ring-inset ring-white/[0.04] transition duration-300 active:scale-[0.99] sm:min-h-[240px] sm:p-6 sm:hover:-translate-y-1 sm:hover:border-sky-400/50 sm:hover:shadow-xl sm:hover:shadow-sky-500/10 sm:hover:ring-sky-400/15"
@@ -52,6 +49,16 @@ export default function HomePage() {
         <span aria-hidden className="mx-2 text-study-border">
           ·
         </span>
+        {USER_PYQ_PDFS_ENABLED ? (
+          <>
+            <Link href="/pyq-pdfs" className="hover:text-study-soft">
+              PYQ PDFs
+            </Link>
+            <span aria-hidden className="mx-2 text-study-border">
+              ·
+            </span>
+          </>
+        ) : null}
         <Link
           href="/admin"
           className="underline decoration-study-border underline-offset-2 hover:text-study-soft"

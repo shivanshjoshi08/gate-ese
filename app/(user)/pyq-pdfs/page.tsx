@@ -4,7 +4,7 @@ import {
   PYQ_PDF_ENTRIES,
   pyqPdfDownloadUrl,
 } from "@/lib/pyq-pdfs";
-import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
+import { USER_PYQ_PDFS_ENABLED, USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 export const metadata = {
   title: "PYQ papers (PDF) | ESE CE Practice",
@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 export default function PyqPdfsPage() {
-  if (!USER_PYQ_ENABLED) redirect("/");
+  if (!USER_PYQ_PDFS_ENABLED) redirect("/");
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 text-study-ink sm:py-14">
@@ -57,12 +57,26 @@ export default function PyqPdfsPage() {
       </div>
 
       <p className="mt-8 text-center text-xs leading-relaxed text-study-muted">
-        Use these papers alongside{" "}
-        <Link href="/practice?bank=pyq" className="text-emerald-300/90 underline-offset-2 hover:underline">
-          PYQ practice
-        </Link>{" "}
-        in the app. Copyright belongs to the exam authority; use for personal
-        preparation only.
+        Use alongside{" "}
+        <Link
+          href="/practice?bank=ai"
+          className="text-emerald-300/90 underline-offset-2 hover:underline"
+        >
+          Practice
+        </Link>
+        {USER_PYQ_ENABLED ? (
+          <>
+            {" "}
+            or{" "}
+            <Link
+              href="/practice?bank=pyq"
+              className="text-emerald-300/90 underline-offset-2 hover:underline"
+            >
+              PYQ practice
+            </Link>
+          </>
+        ) : null}
+        . Copyright belongs to the exam authority; personal preparation only.
       </p>
     </div>
   );

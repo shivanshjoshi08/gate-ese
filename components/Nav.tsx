@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { EXAM_COLORS } from "@/lib/exam";
-import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
+import { USER_PYQ_ENABLED, USER_PYQ_PDFS_ENABLED } from "@/lib/feature-flags";
 
 const accent = EXAM_COLORS.ESE;
 
@@ -34,6 +34,16 @@ export default function Nav() {
         </Link>
 
         <div className="flex items-center gap-1 md:hidden">
+          {USER_PYQ_PDFS_ENABLED && (
+            <Link
+              href="/pyq-pdfs"
+              className={`min-h-[44px] rounded-lg px-3 py-2 text-sm font-medium ${
+                pdfsActive ? "text-emerald-300" : "text-study-muted"
+              }`}
+            >
+              PDFs
+            </Link>
+          )}
           {status === "loading" ? (
             <span className="px-2 text-xs text-study-muted">…</span>
           ) : authedLearnerNav || authedAsAdminLearnerGate ? (
@@ -66,7 +76,7 @@ export default function Nav() {
           >
             Home
           </Link>
-          {USER_PYQ_ENABLED && (
+          {USER_PYQ_PDFS_ENABLED && (
             <Link
               href="/pyq-pdfs"
               className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition ${

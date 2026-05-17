@@ -14,7 +14,7 @@ import {
 } from "@/lib/storage";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
-import { USER_PYQ_ENABLED } from "@/lib/feature-flags";
+import { USER_PYQ_ENABLED, USER_PYQ_PDFS_ENABLED } from "@/lib/feature-flags";
 
 export default function MyProgressPage() {
   const { exam } = useExam();
@@ -258,6 +258,14 @@ export default function MyProgressPage() {
             className="flex w-full items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/20 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-600/30"
           >
             Continue PYQ
+          </Link>
+        )}
+        {USER_PYQ_PDFS_ENABLED && (
+          <Link
+            href="/pyq-pdfs"
+            className="flex w-full items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/15 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-600/25"
+          >
+            Download PYQ PDFs
           </Link>
         )}
         <Link
