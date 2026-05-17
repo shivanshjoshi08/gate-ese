@@ -37,11 +37,13 @@ export type QuestionStyleTag =
   | "graph-based"
   | "diagram-based";
 
-export const QUESTION_STYLE_LABELS: Record<QuestionStyleTag, string> = {
+export const QUESTION_STYLE_LABELS: Record<string, string> = {
   conceptual: "Conceptual",
   "formula-based": "Formula-based",
+  "numerical-calculation": "Numerical",
   "statement-trap": "Statement trap",
   "code-based": "Code / IS",
+  practical: "Practical",
   "practical-application": "Practical / Application",
   "graph-based": "Graph-based",
   "diagram-based": "Diagram-based",

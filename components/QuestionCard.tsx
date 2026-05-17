@@ -12,17 +12,16 @@ import { checkAnswer } from "@/lib/questions";
 import { EXAM_COLORS } from "@/lib/exam";
 import ImageBlock from "@/components/question/ImageBlock";
 import QuestionRenderer from "@/components/question/QuestionRenderer";
-import RichContentRenderer from "@/components/question/RichContentRenderer";
 import OptionRenderer from "@/components/question/OptionRenderer";
 import QuestionSourcePanel from "@/components/question/QuestionSourcePanel";
+import QuestionInsightPanel from "@/components/question/QuestionInsightPanel";
+import { shouldFetchAiRecap } from "@/lib/question-insights";
 import "@/components/question/question-renderer.css";
 import {
   recordAttempt,
   toggleBookmark,
   isBookmarked,
 } from "@/lib/storage";
-import { shouldShowAnsweredSolutionPanel } from "@/lib/learner-solution";
-
 const LABELS = ["A", "B", "C", "D"];
 
 interface QuestionCardProps {
@@ -239,6 +238,12 @@ export default function QuestionCard({
 
   useEffect(() => {
     if (!answered) return;
+    if (!shouldFetchAiRecap(question)) {
+      setAiSummary(null);
+      setAiError(null);
+      setAiLoading(false);
+      return;
+    }
 
     const local = getClientAiSummary(question.id);
     if (local) {
@@ -621,14 +626,22 @@ export default function QuestionCard({
         </div>
       )}
 
-      {answered && (
+      <QuestionInsightPanel
+        question={question}
+        answered={answered}
+        selected={selected}
+        isCorrect={isCorrect}
+        hasAnswerKey={hasAnswerKey}
+      />
+
+      {answered && shouldFetchAiRecap(question) && (
         <div
-          className="mt-6 animate-slide-up rounded-2xl border border-teal-400/35 bg-teal-500/[0.07] px-4 py-3.5 shadow-inner shadow-black/[0.06]"
+          className="mt-4 animate-slide-up rounded-2xl border border-teal-400/35 bg-teal-500/[0.07] px-4 py-3.5 shadow-inner shadow-black/[0.06]"
           aria-live="polite"
           aria-busy={aiLoading}
         >
           <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-teal-200/95">
-            AI brief recap
+            AI extra recap
           </h3>
           {aiLoading && (
             <p className="text-sm italic text-teal-100/80">Generating takeaway…</p>
@@ -639,23 +652,6 @@ export default function QuestionCard({
           {!aiLoading && aiSummary && (
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
               {aiSummary}
-            </p>
-          )}
-        </div>
-      )}
-
-      {answered && shouldShowAnsweredSolutionPanel(question) && (
-        <div className="mt-6 animate-slide-up rounded-2xl border border-study-border/80 bg-study-surface/90 p-5 shadow-inner shadow-black/10">
-          <h3 className="mb-2 font-semibold text-study-soft">
-            {hasAnswerKey ? "Solution" : "Your selection"}
-          </h3>
-          {question.richSolution && hasAnswerKey ? (
-            <RichContentRenderer content={question.richSolution} />
-          ) : (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
-              {hasAnswerKey
-                ? question.solution
-                : `Your choice: ${selected != null ? LABELS[selected] : "—"}.`}
             </p>
           )}
         </div>

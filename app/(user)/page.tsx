@@ -1,6 +1,6 @@
-"use client";
-
 import Link from "next/link";
+import PyqPdfsHomeSection from "@/components/PyqPdfsHomeSection";
+import { USER_PYQ_PDFS_ENABLED } from "@/lib/feature-flags";
 
 const EXAM_LABEL = "ESE" as const;
 

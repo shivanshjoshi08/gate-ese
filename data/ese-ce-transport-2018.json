@@ -1,0 +1,59 @@
+[
+  {
+    "id": "ese_ce_2018_trans_01",
+    "question": "A railway track has a superelevation of 150 mm. If the permissible rate of introduction of superelevation is 1 in 480, the minimum length of transition curve required is:",
+    "type": "mcq",
+    "options": ["72.0 m", "65.0 m", "80.0 m", "54.0 m"],
+    "correct": 0,
+    "numerical": true,
+    "unit": "m",
+    "answerRange": null,
+    "exam": "ESE",
+    "year": 2018,
+    "paper": "PRE",
+    "qno": 116,
+    "marks": 2,
+    "negativeMarking": 0.67,
+    "branch": "CE",
+    "subject": "Transportation Engineering",
+    "topic": "Railway Engineering",
+    "subtopic": "Geometric Design",
+    "difficulty": "Moderate",
+    "questionStyle": "numerical-calculation",
+    "solution": "L = e × N = 0.150 m × 480 = 72.0 m. (e = superelevation in metres, N = rate of introduction = 1 in 480 → multiply factor = 480).",
+    "solutionSteps": [
+      {
+        "step": 1,
+        "heading": "Identify Formula",
+        "content": "L = e × N, where e = superelevation (in metres), N = rate of introduction (1 in N)."
+      },
+      {
+        "step": 2,
+        "heading": "Calculate",
+        "content": "e = 150 mm = 0.150 m. N = 480. L = 0.150 × 480 = 72.0 m."
+      }
+    ],
+    "conceptUsed": "Transition curve length in railways based on rate of superelevation introduction",
+    "formulaUsed": ["L = e × N"],
+    "whyWrongOptions": {
+      "1": "Wrong rate of change multiplier used.",
+      "2": "Highway transition curve formula applied incorrectly.",
+      "3": "Mathematical error — possibly used e in mm instead of m."
+    },
+    "keyTakeaway": "Railway transition curve length = e (metres) × N (rate). Convert superelevation to metres before multiplying.",
+    "appearances": [{ "exam": "ESE", "year": 2018, "paper": "PRE", "qno": 116 }],
+    "references": [],
+    "repeatCount": 1,
+    "isHighRepeat": false,
+    "trendNote": "Railway geometric design is heavily favored in ESE Prelims compared to GATE.",
+    "tags": ["Transition Curve", "Superelevation", "Railway"],
+    "mainsRelevant": false,
+    "selfEvalChecklist": [],
+    "diagramRequired": false,
+    "images": [],
+    "diagramUrl": null,
+    "addedBy": "admin",
+    "verified": true,
+    "source": "ai-generated"
+  }
+]

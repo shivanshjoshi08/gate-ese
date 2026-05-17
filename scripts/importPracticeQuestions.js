@@ -3,6 +3,7 @@
  *
  * Usage (from repo root):
  *   node scripts/importPracticeQuestions.js
+ *   node scripts/importPracticeQuestions.js data/environmental-questions.json
  *
  * Requires MONGODB_URI in .env.local (loaded via dotenv).
  */
@@ -67,18 +68,41 @@ const questionSchema = new mongoose.Schema(
     paper: { type: String, default: null },
     type: { type: String, enum: ["mcq", "numerical"], required: true },
     numerical: { type: Boolean, default: false },
+    unit: { type: String, default: null },
+    answerRange: { type: mongoose.Schema.Types.Mixed, default: null },
     appearances: { type: Array, default: [] },
     references: { type: Array, default: [] },
     questionStyle: { type: String, default: null },
+    section: { type: String, default: null },
+    qno: { type: Number, default: null },
+    conceptUsed: { type: String, default: "" },
+    formulaUsed: { type: [String], default: [] },
+    solutionSteps: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    whyWrongOptions: { type: mongoose.Schema.Types.Mixed, default: {} },
+    keyTakeaway: { type: String, default: "" },
+    repeatCount: { type: Number, default: 0 },
+    isHighRepeat: { type: Boolean, default: false },
+    trendNote: { type: String, default: "" },
+    mainsRelevant: { type: Boolean, default: false },
+    selfEvalChecklist: { type: [String], default: [] },
+    diagramRequired: { type: Boolean, default: false },
+    diagramUrl: { type: String, default: null },
+    addedBy: { type: String, default: "admin" },
+    verified: { type: Boolean, default: false },
+    source: { type: String, default: "official-pdf" },
     question: { type: String, required: true },
     options: [optionSchema],
     correctOption: String,
     solution: solutionSchema,
-    difficulty: { type: String, enum: ["Easy", "Medium", "Hard"] },
+    difficulty: {
+      type: String,
+      enum: ["Easy", "Moderate", "Medium", "Hard"],
+      required: true,
+    },
     marks: { type: Number, default: 1 },
     negativeMarks: { type: Number, default: 0 },
     tags: [String],
-    images: [String],
+    images: { type: [String], default: [] },
     status: { type: String, enum: ["approved", "draft"], default: "approved" },
   },
   { timestamps: true },
@@ -101,6 +125,27 @@ function slugify(parts) {
     .slice(0, 120);
 }
 
+function normalizeDifficulty(raw) {
+  if (raw === "Easy" || raw === "Hard") return raw;
+  if (raw === "Moderate" || raw === "Medium") return "Moderate";
+  return "Moderate";
+}
+
+function buildAppearances(raw, exam, year) {
+  if (Array.isArray(raw.appearances) && raw.appearances.length > 0) {
+    return raw.appearances;
+  }
+  return [
+    {
+      exam,
+      year,
+      paper: raw.paper ? String(raw.paper) : null,
+      qno: typeof raw.qno === "number" ? raw.qno : null,
+      session: raw.session ? String(raw.session) : "",
+    },
+  ];
+}
+
 function transform(raw) {
   const id = String(raw.id || "");
   if (!id || !raw.question) return null;
@@ -112,9 +157,7 @@ function transform(raw) {
     typeRaw === "nat" ||
     typeRaw === "numerical";
   const type =
-    typeRaw === "nat" || typeRaw === "numerical"
-      ? "numerical"
-      : "mcq";
+    typeRaw === "nat" || typeRaw === "numerical" ? "numerical" : "mcq";
   const optionsArr = Array.isArray(raw.options) ? raw.options : [];
   const options = optionsArr.map((text, i) => ({
     id: String.fromCharCode(65 + i),
@@ -123,7 +166,9 @@ function transform(raw) {
   }));
 
   const correctIdx =
-    typeof raw.correct === "number" ? raw.correct : parseInt(String(raw.correct), 10);
+    typeof raw.correct === "number"
+      ? raw.correct
+      : parseInt(String(raw.correct), 10);
   const correctOption =
     type === "numerical"
       ? String(raw.correct ?? "")
@@ -131,31 +176,31 @@ function transform(raw) {
 
   const exam = raw.exam === "ESE" ? "ESE" : "GATE";
   const year = typeof raw.year === "number" ? raw.year : 2024;
-  let difficulty = raw.difficulty;
-  if (!["Easy", "Medium", "Hard"].includes(difficulty)) difficulty = "Medium";
+  const sourceType =
+    raw.sourceType === "pyq" || raw.sourceType === "practice"
+      ? raw.sourceType
+      : "practice";
+  const status =
+    raw.status === "draft" ? "draft" : raw.verified === false ? "draft" : "approved";
 
   return {
     importKey: id,
     slug: slugify([id, raw.subject, year]),
-    sourceType: "practice",
+    sourceType,
     exam,
-    branch: "CE",
+    branch: String(raw.branch || "CE"),
     subject: String(raw.subject || "General"),
     topic: String(raw.topic || ""),
-    subtopic: "",
+    subtopic: String(raw.subtopic || ""),
     year,
     paper: raw.paper ? String(raw.paper) : null,
+    section: raw.section ? String(raw.section) : null,
+    qno: typeof raw.qno === "number" ? raw.qno : null,
     type,
     numerical,
-    appearances: Array.isArray(raw.appearances)
-      ? raw.appearances
-      : [
-          {
-            exam,
-            year,
-            paper: raw.paper ? String(raw.paper) : null,
-          },
-        ],
+    unit: raw.unit != null && raw.unit !== "" ? String(raw.unit) : null,
+    answerRange: raw.answerRange ?? null,
+    appearances: buildAppearances(raw, exam, year),
     references: Array.isArray(raw.references) ? raw.references : [],
     questionStyle:
       typeof raw.questionStyle === "string" ? raw.questionStyle : null,
@@ -163,12 +208,48 @@ function transform(raw) {
     options,
     correctOption,
     solution: { text: String(raw.solution || ""), latex: "", images: [] },
-    difficulty,
+    difficulty: normalizeDifficulty(raw.difficulty),
     marks: raw.marks === 2 ? 2 : 1,
-    negativeMarks: 0,
+    negativeMarks:
+      typeof raw.negativeMarking === "number"
+        ? raw.negativeMarking
+        : typeof raw.negativeMarks === "number"
+          ? raw.negativeMarks
+          : 0,
+    conceptUsed: raw.conceptUsed ? String(raw.conceptUsed) : "",
+    formulaUsed: Array.isArray(raw.formulaUsed)
+      ? raw.formulaUsed.map(String)
+      : [],
+    solutionSteps: Array.isArray(raw.solutionSteps) ? raw.solutionSteps : [],
+    whyWrongOptions:
+      raw.whyWrongOptions && typeof raw.whyWrongOptions === "object"
+        ? raw.whyWrongOptions
+        : {},
+    keyTakeaway: raw.keyTakeaway ? String(raw.keyTakeaway) : "",
+    repeatCount:
+      typeof raw.repeatCount === "number" ? raw.repeatCount : 0,
+    isHighRepeat: raw.isHighRepeat === true,
+    trendNote: raw.trendNote ? String(raw.trendNote) : "",
+    mainsRelevant: raw.mainsRelevant === true,
+    selfEvalChecklist: Array.isArray(raw.selfEvalChecklist)
+      ? raw.selfEvalChecklist.map(String)
+      : [],
+    diagramRequired: raw.diagramRequired === true,
+    diagramUrl: raw.diagramUrl ? String(raw.diagramUrl) : null,
+    addedBy:
+      raw.addedBy === "community" || raw.addedBy === "ai-generated"
+        ? raw.addedBy
+        : "admin",
+    verified: raw.verified === true,
+    source:
+      typeof raw.source === "string" ? raw.source : "ai-generated",
     tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
-    images: raw.image ? [String(raw.image)] : [],
-    status: "approved",
+    images: Array.isArray(raw.images)
+      ? raw.images.map(String)
+      : raw.image
+        ? [String(raw.image)]
+        : [],
+    status,
   };
 }
 
@@ -211,7 +292,6 @@ async function main() {
 
   let inserted = 0;
   let updated = 0;
-  let skipped = 0;
   const failed = [];
 
   for (const item of raw) {
@@ -240,9 +320,7 @@ async function main() {
   }
 
   const total = await Question.countDocuments({ sourceType: "practice" });
-  console.log(
-    `Import done: +${inserted} inserted, ${updated} updated (numerical/type sync), ${skipped} skipped`,
-  );
+  console.log(`Import done: +${inserted} inserted, ${updated} updated`);
   console.log(`Practice questions in DB: ${total}`);
   if (failed.length) {
     console.log(`Failed (${failed.length}):`);
