@@ -1,59 +1,65 @@
 import Link from "next/link";
 import { PYQ_PDF_ENTRIES, pyqPdfDownloadUrl } from "@/lib/pyq-pdfs";
 
-const PREVIEW_COUNT = 4;
+const PREVIEW_YEARS = 6;
 
 export default function PyqPdfsHomeSection() {
-  const preview = PYQ_PDF_ENTRIES.slice(0, PREVIEW_COUNT);
+  const preview = PYQ_PDF_ENTRIES.slice(0, PREVIEW_YEARS);
+  const rest = PYQ_PDF_ENTRIES.length - PREVIEW_YEARS;
 
   return (
-    <section className="mt-10" aria-label="Previous year PDF papers">
-      <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+    <section
+      className="mt-8 border-t border-study-border/50 pt-8"
+      aria-label="Previous year PDF papers"
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-study-ink">
-            Download PYQ papers
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-study-muted">
+            Reference
+          </p>
+          <h2 className="mt-1 text-base font-semibold text-study-ink">
+            Previous year papers (PDF)
           </h2>
-          <p className="mt-1 text-sm text-study-muted">
-            ESE CE Prelims PDFs — read offline or save to your device.
+          <p className="mt-1 text-xs leading-relaxed text-study-muted">
+            ESE CE Prelims — download and read offline.
           </p>
         </div>
         <Link
           href="/pyq-pdfs"
-          className="text-sm font-semibold text-emerald-300/95 underline-offset-2 hover:underline"
+          className="shrink-0 rounded-lg border border-study-border/70 bg-study-raised/40 px-3 py-1.5 text-xs font-semibold text-study-soft transition hover:border-emerald-500/40 hover:text-emerald-200"
         >
-          View all {PYQ_PDF_ENTRIES.length} papers →
+          All papers
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.06] shadow-inner shadow-black/[0.06]">
-        <ul className="divide-y divide-study-border/60">
+      <div className="rounded-2xl border border-study-border/70 bg-study-surface/50 p-4 ring-1 ring-inset ring-white/[0.03]">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
           {preview.map((entry) => (
-            <li
+            <a
               key={entry.filename}
-              className="flex flex-col gap-2 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5"
+              href={pyqPdfDownloadUrl(entry.filename)}
+              className="group flex flex-col items-center rounded-xl border border-study-border/60 bg-study-raised/30 px-2 py-3 text-center transition hover:border-emerald-500/45 hover:bg-emerald-500/10 active:scale-[0.98]"
+              title={entry.title}
             >
-              <div className="min-w-0">
-                <p className="font-medium text-study-ink">{entry.title}</p>
-                <p className="text-xs text-study-muted">{entry.year}</p>
-              </div>
-              <a
-                href={pyqPdfDownloadUrl(entry.filename)}
-                className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-black/15 transition hover:brightness-110"
-              >
-                Download PDF
-              </a>
-            </li>
+              <span className="text-lg font-bold tabular-nums text-study-ink group-hover:text-emerald-100">
+                {entry.year}
+              </span>
+              <span className="mt-1 text-[10px] font-medium text-study-muted group-hover:text-emerald-200/90">
+                PDF ↓
+              </span>
+            </a>
           ))}
-        </ul>
-        {PYQ_PDF_ENTRIES.length > PREVIEW_COUNT ? (
-          <div className="border-t border-study-border/60 bg-study-raised/20 px-4 py-3 text-center sm:px-5">
+        </div>
+
+        {rest > 0 ? (
+          <p className="mt-3 text-center">
             <Link
               href="/pyq-pdfs"
-              className="text-sm font-medium text-study-soft hover:text-study-ink"
+              className="text-xs font-medium text-study-muted transition hover:text-emerald-300"
             >
-              + {PYQ_PDF_ENTRIES.length - PREVIEW_COUNT} more years
+              + {rest} older papers on the PDF page →
             </Link>
-          </div>
+          </p>
         ) : null}
       </div>
     </section>
