@@ -56,9 +56,9 @@ export default function AdminQuestionFilters() {
           className={selectCls}
           aria-label="Exam"
         >
-          <option value="">All exams</option>
+          <option value="">All tracks</option>
           <option value="GATE">GATE</option>
-          <option value="ESE">ESE</option>
+          <option value="PRE">PRE</option>
         </select>
         <select
           value={subject}

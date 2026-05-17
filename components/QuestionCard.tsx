@@ -9,7 +9,11 @@ import {
 } from "@/lib/ai-summary-client-cache";
 import { buildGroqQuestionContextString } from "@/lib/groq-question-context";
 import { checkAnswer } from "@/lib/questions";
-import { EXAM_COLORS } from "@/lib/exam";
+import {
+  getPracticeTrack,
+  practiceTrackColors,
+  practiceTrackLabel,
+} from "@/lib/practice-track";
 import ImageBlock from "@/components/question/ImageBlock";
 import QuestionRenderer from "@/components/question/QuestionRenderer";
 import OptionRenderer from "@/components/question/OptionRenderer";
@@ -315,6 +319,10 @@ export default function QuestionCard({
         : `Question ${questionNumber}`
       : null;
 
+  const isPyq = question.questionBank === "pyq";
+  const track = getPracticeTrack(question);
+  const trackTheme = practiceTrackColors(track);
+
   return (
     <div
       className={`mx-auto w-full max-w-2xl px-3 py-5 pb-8 sm:px-4 sm:py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
@@ -332,63 +340,37 @@ export default function QuestionCard({
               Level {levelNumber}
             </p>
           )}
-          <p
-            className="hidden text-[11px] font-mono text-study-muted/90 sm:inline"
-            title="Question ID for support or admin updates"
-          >
-            ID: {question.id}
-          </p>
         </div>
       )}
 
       <div className="mb-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-y-2 text-xs text-study-muted sm:text-sm">
         <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-2 leading-relaxed sm:gap-x-2 sm:gap-y-1">
-          {question.questionBank === "pyq" ? (
-            <span
-              title="Previous-year question (official paper track)"
-              className="shrink-0 rounded-md border border-emerald-400/45 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-200"
-            >
-              PYQ
-            </span>
-          ) : question.questionBank === "ai" ? (
-            <span
-              title="Practice bank question"
-              className="shrink-0 rounded-md border border-sky-400/45 bg-sky-500/12 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-sky-200"
-            >
-              Practice
-            </span>
-          ) : null}
           <span
-            className="inline-flex shrink-0 items-center rounded px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white sm:text-[11px]"
-            style={{ backgroundColor: EXAM_COLORS[question.exam].accent }}
+            className="inline-flex shrink-0 items-center rounded-md px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white sm:text-[11px]"
+            style={{ backgroundColor: trackTheme.accent }}
+            title={track === "PRE" ? "ESE Prelims track" : "GATE track"}
           >
-            {question.exam}
+            {practiceTrackLabel(track)}
           </span>
-          {question.paper && (
-            <>
-              <span className="font-medium text-study-soft">
-                Paper {question.paper}
-              </span>
-              <span aria-hidden className="mx-1.5 text-study-border">
-                ·
-              </span>
-            </>
-          )}
           <span className="font-medium text-study-ink">{question.subject}</span>
           <span aria-hidden className="mx-1.5 text-study-border">
             ·
           </span>
           <span className="hidden sm:inline">{question.topic}</span>
-          <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
-            ·
-          </span>
-          <span className="hidden sm:inline">{question.year}</span>
-          <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
-            ·
-          </span>
-          <span>
-            {question.marks} mark{question.marks !== 1 ? "s" : ""}
-          </span>
+          {isPyq ? (
+            <>
+              <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
+                ·
+              </span>
+              <span className="hidden sm:inline">{question.year}</span>
+              <span aria-hidden className="mx-1.5 hidden text-study-border sm:inline">
+                ·
+              </span>
+              <span>
+                {question.marks} mark{question.marks !== 1 ? "s" : ""}
+              </span>
+            </>
+          ) : null}
           <span aria-hidden className="mx-1.5 text-study-border">
             ·
           </span>

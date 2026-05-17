@@ -9,6 +9,7 @@ const links = [
   { href: "/admin/questions", label: "Questions" },
   { href: "/admin/questions/new", label: "New" },
   { href: "/admin/questions/import", label: "JSON import" },
+  { href: "/admin/pyq-pdfs", label: "PYQ PDFs" },
 ];
 
 export default function AdminNav() {

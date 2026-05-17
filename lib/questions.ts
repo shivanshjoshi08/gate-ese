@@ -6,6 +6,7 @@ import {
 } from "@/lib/practice-filters";
 import { isNumericalQuestion } from "@/lib/question-numerical";
 import { questionMatchesPracticeSubject } from "@/lib/practice-subjects";
+import { matchesPracticeExamFilter } from "@/lib/practice-track";
 
 /** @deprecated Use usePracticeBank().questions — legacy-only subset without DB. */
 export const allQuestions: Question[] = legacyQuestions;
@@ -51,7 +52,7 @@ export function filterQuestions(
   let result =
     filters.exam === "All"
       ? bank
-      : bank.filter((q) => q.exam === filters.exam);
+      : bank.filter((q) => matchesPracticeExamFilter(q, filters.exam));
 
   if (filters.paper !== "All") {
     result = result.filter((q) => q.paper === filters.paper);

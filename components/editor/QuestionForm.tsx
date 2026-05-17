@@ -120,35 +120,20 @@ export default function QuestionForm({
             Numericals filter
           </label>
           <select
-            value={doc.exam}
-            onChange={(e) =>
-              patch({
-                exam: e.target.value as QuestionDocument["exam"],
-                paper: e.target.value === "GATE" ? null : doc.paper ?? "PRE",
-              })
-            }
+            value={doc.exam === "GATE" ? "GATE" : "PRE"}
+            onChange={(e) => {
+              const track = e.target.value;
+              if (track === "GATE") {
+                patch({ exam: "GATE", paper: null });
+              } else {
+                patch({ exam: "ESE", paper: "PRE" });
+              }
+            }}
             className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-100"
           >
-            <option value="ESE">ESE</option>
-            {doc.exam === "GATE" && (
-              <option value="GATE">GATE (legacy)</option>
-            )}
+            <option value="PRE">PRE (ESE Prelims)</option>
+            <option value="GATE">GATE</option>
           </select>
-          {doc.exam === "ESE" && (
-            <select
-              value={doc.paper ?? "PRE"}
-              onChange={(e) =>
-                patch({
-                  paper: e.target.value as QuestionDocument["paper"],
-                })
-              }
-              className="rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm text-zinc-100"
-            >
-              <option value="PRE">PRE</option>
-              <option value="P1">P1</option>
-              <option value="P2">P2</option>
-            </select>
-          )}
           <select
             value={doc.difficulty}
             onChange={(e) =>

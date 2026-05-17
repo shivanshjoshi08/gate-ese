@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
-import { PYQ_PDF_ALLOWLIST } from "@/lib/pyq-pdfs";
+import { getPyqPdfAllowlist } from "@/lib/pyq-pdf-manifest";
 
 export const runtime = "nodejs";
 
@@ -15,7 +15,8 @@ export async function GET(
     return new NextResponse("Not found", { status: 404 });
   }
 
-  if (!PYQ_PDF_ALLOWLIST.has(segment)) {
+  const allowlist = await getPyqPdfAllowlist();
+  if (!allowlist.has(segment)) {
     return new NextResponse("Not found", { status: 404 });
   }
 

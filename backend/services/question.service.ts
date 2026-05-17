@@ -11,6 +11,7 @@ import { leanRowToDto } from "@/backend/mappers/question.mapper";
 import { slugify } from "@/backend/utils/slug";
 import { paginatedMeta } from "@/backend/utils/pagination";
 import { buildMongoSubjectFilter } from "@/lib/practice-subjects";
+import { adminExamFilterToDb } from "@/lib/admin-exam-filter";
 
 function buildFilter(query: QuestionListQuery): Record<string, unknown> {
   const and: Record<string, unknown>[] = [];
@@ -33,8 +34,9 @@ function buildFilter(query: QuestionListQuery): Record<string, unknown> {
   }
 
   if (query.exam) {
+    const dbExam = adminExamFilterToDb(query.exam) ?? query.exam;
     and.push({
-      $or: [{ exam: query.exam }, { examType: query.exam }],
+      $or: [{ exam: dbExam }, { examType: dbExam }],
     });
   }
   if (query.subject) {

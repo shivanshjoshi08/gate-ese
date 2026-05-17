@@ -2,6 +2,7 @@ import type { Filters, Question } from "@/lib/types";
 import { filterQuestions } from "@/lib/questions";
 import { getPracticeSubjectFilterOptions } from "@/lib/practice-subjects";
 import { isNumericalQuestion } from "@/lib/question-numerical";
+import { getPracticeTrack } from "@/lib/practice-track";
 import {
   FILTER_TYPE_MCQ,
   FILTER_TYPE_NUMERICALS,
@@ -49,20 +50,17 @@ export function getSimplePracticeFilters(
       ? bank.filter((q) => isNumericalQuestion(q))
       : bank.filter((q) => !isNumericalQuestion(q));
 
-  /* Exam filter — re-enable when needed
-  const examPool = practicePool(
-    typeScopedBank,
-    { ...filters, exam: "All", type: practiceTypeFilter(filters) },
-  );
-  const exams = new Set<ExamType>();
-  for (const q of examPool) exams.add(q.exam);
+  const examPool = practicePool(typeScopedBank, {
+    ...filters,
+    exam: "All",
+  });
+  const tracks = new Set(examPool.map((q) => getPracticeTrack(q)));
   const examOptions: FilterOption[] = [];
-  if (exams.size > 1) {
+  if (tracks.size > 1) {
     examOptions.push({ value: "All", label: "All" });
-    if (exams.has("GATE")) examOptions.push({ value: "GATE", label: "GATE" });
-    if (exams.has("ESE")) examOptions.push({ value: "ESE", label: "ESE" });
+    if (tracks.has("GATE")) examOptions.push({ value: "GATE", label: "GATE" });
+    if (tracks.has("PRE")) examOptions.push({ value: "PRE", label: "PRE" });
   }
-  */
 
   const subjectPool = practicePool(typeScopedBank, {
     ...filters,
@@ -83,7 +81,7 @@ export function getSimplePracticeFilters(
   }
 
   return {
-    exams: [],
+    exams: examOptions,
     subjects:
       subjectOptions.length > 1 ||
       (subjectOptions.length === 1 && subjectOptions[0]!.value !== "All")
@@ -137,10 +135,11 @@ export function sanitizePracticeFilters(
   const pick = (opts: FilterOption[], current: string, fallback: string) =>
     opts.some((o) => o.value === current) ? current : fallback;
 
-  // if (avail.exams.length) {
-  //   next.exam = pick(avail.exams, next.exam, "All") as Filters["exam"];
-  // }
-  next.exam = "All";
+  if (avail.exams.length) {
+    next.exam = pick(avail.exams, next.exam, "All") as Filters["exam"];
+  } else {
+    next.exam = "All";
+  }
   if (avail.subjects.length) {
     next.subject = pick(avail.subjects, next.subject, avail.subjects[0]!.value);
   } else {

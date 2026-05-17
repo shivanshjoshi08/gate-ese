@@ -4,6 +4,7 @@ import { listQuestions } from "@/backend/services/question.service";
 import AdminQuestionFilters from "@/components/admin/AdminQuestionFilters";
 import AdminQuestionRowActions from "@/components/admin/AdminQuestionRowActions";
 import AdminDbStats from "@/components/admin/AdminDbStats";
+import { adminExamFilterToDb } from "@/lib/admin-exam-filter";
 
 export default async function AdminQuestionsPage({
   searchParams,
@@ -50,10 +51,7 @@ export default async function AdminQuestionsPage({
         searchParams.difficulty === "Hard"
           ? searchParams.difficulty
           : undefined,
-      exam:
-        searchParams.exam === "GATE" || searchParams.exam === "ESE"
-          ? searchParams.exam
-          : undefined,
+      exam: adminExamFilterToDb(searchParams.exam) ?? undefined,
       search: searchParams.search,
     });
   } catch {

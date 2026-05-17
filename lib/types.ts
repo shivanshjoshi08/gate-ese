@@ -124,8 +124,8 @@ export interface ProgressData {
 }
 
 export interface Filters {
-  /** Learner PYQ pool can span GATE + ESE; `"All"` includes both when filtering. */
-  exam: ExamType | "All";
+  /** Practice filter: `PRE` = ESE Prelims track (`exam: ESE`). */
+  exam: ExamType | "All" | "PRE";
   paper: string;
   subject: string;
   difficulty: string;

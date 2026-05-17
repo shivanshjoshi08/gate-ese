@@ -49,13 +49,15 @@ export default function SimplePracticeFilters({
     [bank, filters],
   );
 
+  const showExam = available.exams.length > 1;
   const showSubject = available.subjects.length > 1;
   const showDifficulty = available.difficulties.length > 1;
   const showNumericals = available.hasNumericals;
 
-  if (!showSubject && !showDifficulty && !showNumericals) return null;
+  if (!showExam && !showSubject && !showDifficulty && !showNumericals) return null;
 
   const active =
+    filters.exam !== "All" ||
     filters.subject !== "All" ||
     filters.difficulty !== "All" ||
     isNumericalsFilter(filters);
@@ -74,6 +76,30 @@ export default function SimplePracticeFilters({
   return (
     <div className="hide-in-focus border-b border-study-border/60 bg-study-surface/50 px-4 py-2.5">
       <div className="mx-auto max-w-4xl space-y-3">
+        {showExam && (
+          <FilterChipRow label="Exam">
+            {available.exams.map((e) => {
+              const on = filters.exam === e.value;
+              const chipAccent =
+                e.value === "GATE"
+                  ? "#2563eb"
+                  : e.value === "PRE"
+                    ? "#9575ea"
+                    : accent;
+              return (
+                <button
+                  key={e.value}
+                  type="button"
+                  onClick={() => update("exam", e.value)}
+                  className={chipClass(on)}
+                  style={on ? { backgroundColor: chipAccent } : undefined}
+                >
+                  {e.label}
+                </button>
+              );
+            })}
+          </FilterChipRow>
+        )}
         {showSubject && (
           <SearchableSubjectSelect
             label="Subject"
