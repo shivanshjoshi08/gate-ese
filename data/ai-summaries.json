@@ -1,5 +1,7 @@
 {
   "version": 1,
   "summaryVersion": "en-v3",
-  "summaries": {}
+  "summaries": {
+    "6a08d8854e61a517ac33b443": "The core concept being tested is Terzaghi's bearing capacity theory for a square footing. The theory modifies the strip footing equation by applying shape factors to the cohesion and unit weight terms. The correct formula includes a shape factor of 1.3 for the cohesion term and 0.4 for the unit weight term, leading to the ultimate bearing capacity equation qu = 1.3cNc + γDfNq + 0.4γBNγ. This equation represents the ultimate bearing capacity of a square footing according to Terzaghi's theory."
+  }
 }
