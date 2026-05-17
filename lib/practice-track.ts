@@ -6,6 +6,15 @@ export type PracticeTrack = "GATE" | "PRE";
 
 export type PracticeExamFilter = "All" | PracticeTrack;
 
+/** Map legacy `Filters.exam` (`ESE` | `PRE` | `GATE` | `All`) to practice track filter. */
+export function normalizePracticeExamFilter(
+  exam: "GATE" | "ESE" | "PRE" | "All",
+): PracticeExamFilter {
+  if (exam === "All") return "All";
+  if (exam === "GATE") return "GATE";
+  return "PRE";
+}
+
 /** GATE vs ESE Prelims (PRE) — every practice row is one or the other. */
 export function getPracticeTrack(
   q: Pick<Question, "exam" | "paper">,

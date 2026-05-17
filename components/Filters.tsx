@@ -10,6 +10,11 @@ import {
 } from "@/lib/constants";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
+import {
+  matchesPracticeExamFilter,
+  normalizePracticeExamFilter,
+  practiceTrackColors,
+} from "@/lib/practice-track";
 
 interface FiltersProps {
   bank: Question[];
@@ -39,14 +44,19 @@ export default function Filters({
   suspendExamSync = false,
 }: FiltersProps) {
   const { exam } = useExam();
-  const listExam: ExamType | "All" = suspendExamSync ? filters.exam : exam;
+  const listExam = suspendExamSync ? filters.exam : exam;
   const years = getYears(bank, listExam);
 
   let subjects: string[];
   if (suspendExamSync) {
     let pool = bank;
     if (filters.exam !== "All") {
-      pool = pool.filter((q) => q.exam === filters.exam);
+      pool = pool.filter((q) =>
+        matchesPracticeExamFilter(
+          q,
+          normalizePracticeExamFilter(filters.exam),
+        ),
+      );
     }
     if (filters.paper !== "All") {
       pool = pool.filter((q) => q.paper === filters.paper);
@@ -58,10 +68,13 @@ export default function Filters({
     subjects = getSubjectsForExam(exam, paperForSubjects);
   }
 
+  const trackFilter = suspendExamSync
+    ? normalizePracticeExamFilter(filters.exam)
+    : null;
   const accentColor = suspendExamSync
-    ? filters.exam === "All"
+    ? trackFilter === "All"
       ? "#64748b"
-      : EXAM_COLORS[filters.exam].accent
+      : practiceTrackColors(trackFilter!).accent
     : EXAM_COLORS[exam].accent;
 
   useEffect(() => {

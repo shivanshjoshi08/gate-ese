@@ -6,7 +6,10 @@ import {
 } from "@/lib/practice-filters";
 import { isNumericalQuestion } from "@/lib/question-numerical";
 import { questionMatchesPracticeSubject } from "@/lib/practice-subjects";
-import { matchesPracticeExamFilter } from "@/lib/practice-track";
+import {
+  matchesPracticeExamFilter,
+  normalizePracticeExamFilter,
+} from "@/lib/practice-track";
 
 /** @deprecated Use usePracticeBank().questions — legacy-only subset without DB. */
 export const allQuestions: Question[] = legacyQuestions;
@@ -22,23 +25,29 @@ export function shuffle<T>(arr: T[]): T[] {
 
 export function getYears(
   bank: Question[],
-  exam: ExamType | "All",
+  exam: ExamType | "All" | "PRE",
 ): number[] {
   const slice =
-    exam === "All" ? bank : bank.filter((q) => q.exam === exam);
+    exam === "All"
+      ? bank
+      : bank.filter((q) =>
+          matchesPracticeExamFilter(q, normalizePracticeExamFilter(exam)),
+        );
   const years = new Set(slice.map((q) => q.year));
   return Array.from(years).sort((a, b) => b - a);
 }
 
 export function getYearBreakdown(
   bank: Question[],
-  exam: ExamType | "All",
+  exam: ExamType | "All" | "PRE",
 ) {
   const years = getYears(bank, exam);
   return years.map((year) => ({
     year,
     count: bank.filter((q) => {
-      const examOk = exam === "All" || q.exam === exam;
+      const examOk =
+        exam === "All" ||
+        matchesPracticeExamFilter(q, normalizePracticeExamFilter(exam));
       return examOk && q.year === year;
     }).length,
   }));
@@ -52,7 +61,12 @@ export function filterQuestions(
   let result =
     filters.exam === "All"
       ? bank
-      : bank.filter((q) => matchesPracticeExamFilter(q, filters.exam));
+      : bank.filter((q) =>
+          matchesPracticeExamFilter(
+            q,
+            normalizePracticeExamFilter(filters.exam),
+          ),
+        );
 
   if (filters.paper !== "All") {
     result = result.filter((q) => q.paper === filters.paper);
