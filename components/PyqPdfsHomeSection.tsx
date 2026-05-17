@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { PYQ_PDF_ENTRIES, pyqPdfDownloadUrl } from "@/lib/pyq-pdfs";
+import { readPyqPdfManifest } from "@/lib/pyq-pdf-manifest";
+import { pyqPdfDownloadUrl } from "@/lib/pyq-pdfs";
 
 const PREVIEW_YEARS = 6;
 
-export default function PyqPdfsHomeSection() {
-  const preview = PYQ_PDF_ENTRIES.slice(0, PREVIEW_YEARS);
-  const rest = PYQ_PDF_ENTRIES.length - PREVIEW_YEARS;
+export default async function PyqPdfsHomeSection() {
+  const all = await readPyqPdfManifest();
+  const preview = all.slice(0, PREVIEW_YEARS);
+  const rest = all.length - PREVIEW_YEARS;
 
   return (
     <section

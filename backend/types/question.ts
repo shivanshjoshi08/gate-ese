@@ -92,7 +92,8 @@ export interface QuestionListQuery {
   page?: number;
   limit?: number;
   sourceType?: SourceType;
-  exam?: ExamType;
+  /** `PRE` in admin UI maps to `ESE` in Mongo. */
+  exam?: ExamType | "PRE";
   subject?: string;
   topic?: string;
   year?: number;

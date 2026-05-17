@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  PYQ_PDF_ENTRIES,
-  pyqPdfDownloadUrl,
-} from "@/lib/pyq-pdfs";
+import { readPyqPdfManifest } from "@/lib/pyq-pdf-manifest";
+import { pyqPdfDownloadUrl } from "@/lib/pyq-pdfs";
 import { USER_PYQ_PDFS_ENABLED, USER_PYQ_ENABLED } from "@/lib/feature-flags";
 
 export const metadata = {
@@ -12,8 +10,10 @@ export const metadata = {
     "Download ESE Civil Engineering Prelims previous-year papers (PDF).",
 };
 
-export default function PyqPdfsPage() {
+export default async function PyqPdfsPage() {
   if (!USER_PYQ_PDFS_ENABLED) redirect("/");
+
+  const entries = await readPyqPdfManifest();
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 text-study-ink sm:py-14">
@@ -36,7 +36,7 @@ export default function PyqPdfsPage() {
 
       <div className="overflow-hidden rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.06] shadow-inner shadow-black/[0.06]">
         <ul className="divide-y divide-study-border/60">
-          {PYQ_PDF_ENTRIES.map((entry) => (
+          {entries.map((entry) => (
             <li
               key={entry.filename}
               className="flex flex-col gap-3 px-4 py-4 transition hover:bg-study-raised/30 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5"

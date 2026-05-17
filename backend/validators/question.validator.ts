@@ -101,7 +101,10 @@ export const questionListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
   limit: z.coerce.number().int().min(1).max(50).optional(),
   sourceType: z.enum(["pyq", "practice"]).optional(),
-  exam: z.enum(["GATE", "ESE"]).optional(),
+  exam: z
+    .enum(["GATE", "ESE", "PRE"])
+    .optional()
+    .transform((v) => (v === "PRE" ? "ESE" : v)),
   subject: z.string().optional(),
   topic: z.string().optional(),
   year: z.coerce.number().int().optional(),

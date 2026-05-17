@@ -4,7 +4,7 @@ import { listQuestions } from "@/backend/services/question.service";
 import AdminQuestionFilters from "@/components/admin/AdminQuestionFilters";
 import AdminQuestionRowActions from "@/components/admin/AdminQuestionRowActions";
 import AdminDbStats from "@/components/admin/AdminDbStats";
-import { adminExamFilterToDb } from "@/lib/admin-exam-filter";
+import { adminExamFilterToDb, dbExamToAdminFilter } from "@/lib/admin-exam-filter";
 
 export default async function AdminQuestionsPage({
   searchParams,
@@ -108,7 +108,8 @@ export default async function AdminQuestionsPage({
                   {q.topic || q.question.slice(0, 80) || "(no title)"}
                 </p>
                 <p className="text-sm text-zinc-500">
-                  {q.sourceType.toUpperCase()} | {q.subject} | {q.exam} |{" "}
+                  {q.sourceType.toUpperCase()} | {q.subject} |{" "}
+                  {dbExamToAdminFilter(q.exam) || q.exam} |{" "}
                   {q.year} | {q.difficulty}
                 </p>
               </Link>

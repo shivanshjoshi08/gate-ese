@@ -106,6 +106,12 @@ export default async function AdminDashboardPage() {
         >
           Browse practice
         </Link>
+        <Link
+          href="/admin/pyq-pdfs"
+          className="rounded-xl border border-zinc-600 px-5 py-2.5 font-semibold text-zinc-200 hover:bg-zinc-800"
+        >
+          PYQ PDFs
+        </Link>
       </div>
     </div>
   );
