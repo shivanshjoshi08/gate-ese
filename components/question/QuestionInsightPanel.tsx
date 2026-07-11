@@ -5,7 +5,6 @@ import type { Question } from "@/lib/types";
 import RichContentRenderer from "@/components/question/RichContentRenderer";
 import { shouldShowAnsweredSolutionPanel } from "@/lib/learner-solution";
 import {
-  formatCorrectAnswer,
   getWhyWrongForOption,
   listWhyWrongEntries,
   normalizeSolutionSteps,
@@ -34,7 +33,6 @@ export default function QuestionInsightPanel({
     question.type === "mcq" && hasAnswerKey
       ? (question.correct as number)
       : -1;
-  const correctLabel = formatCorrectAnswer(question);
   const wrongWhy =
     selected != null && !isCorrect && hasAnswerKey
       ? getWhyWrongForOption(question, selected)
@@ -46,7 +44,6 @@ export default function QuestionInsightPanel({
   const showSolution = shouldShowAnsweredSolutionPanel(question);
 
   const hasBody =
-    correctLabel ||
     wrongWhy ||
     question.conceptUsed?.trim() ||
     (question.formulaUsed && question.formulaUsed.length > 0) ||
@@ -65,32 +62,12 @@ export default function QuestionInsightPanel({
       className="mt-6 space-y-4 animate-slide-up"
       aria-label="Answer breakdown"
     >
-      {hasAnswerKey && (
-        <div
-          className={`rounded-2xl border px-4 py-3 ${
-            isCorrect
-              ? "border-correct/50 bg-correct/10"
-              : "border-wrong/50 bg-wrong/10"
-          }`}
-        >
-          <p
-            className={`text-sm font-semibold ${
-              isCorrect ? "text-correct" : "text-wrong"
-            }`}
-          >
-            {isCorrect ? "Correct" : "Incorrect"}
-            {correctLabel ? (
-              <span className="mt-1 block font-medium text-study-ink">
-                Answer: {correctLabel}
-              </span>
-            ) : null}
+      {wrongWhy && (
+        <div className="rounded-2xl border border-wrong/50 bg-wrong/10 px-4 py-3">
+          <p className="text-sm leading-relaxed text-study-soft">
+            <span className="font-semibold text-wrong">Why {LABELS[selected!]} is wrong: </span>
+            {wrongWhy}
           </p>
-          {wrongWhy ? (
-            <p className="mt-2 text-sm leading-relaxed text-study-soft">
-              <span className="font-medium text-wrong">Why {LABELS[selected!]} is wrong: </span>
-              {wrongWhy}
-            </p>
-          ) : null}
         </div>
       )}
 
