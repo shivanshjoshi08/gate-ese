@@ -76,6 +76,15 @@ export default function SimplePracticeFilters({
   return (
     <div className="hide-in-focus border-b border-study-border/60 bg-study-surface/50 px-4 py-2.5">
       <div className="mx-auto max-w-4xl space-y-3">
+        <FilterChipRow label="Search by ID">
+          <input
+            type="text"
+            placeholder="e.g. gate_math_10"
+            value={filters.searchId || ""}
+            onChange={(e) => update("searchId", e.target.value)}
+            className="w-full max-w-xs rounded-lg border border-study-border/80 bg-study-raised/50 px-3 py-2 text-sm text-study-ink placeholder-study-muted focus:outline-none"
+          />
+        </FilterChipRow>
         {showExam && (
           <FilterChipRow label="Exam">
             {available.exams.map((e) => {

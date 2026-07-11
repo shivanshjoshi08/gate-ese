@@ -133,4 +133,5 @@ export interface Filters {
   marks: string;
   type: string;
   reviewMode: boolean;
+  searchId?: string;
 }

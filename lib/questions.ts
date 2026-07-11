@@ -68,6 +68,11 @@ export function filterQuestions(
           ),
         );
 
+  if (filters.searchId && filters.searchId.trim() !== "") {
+    const term = filters.searchId.trim().toLowerCase();
+    result = result.filter((q) => q.id.toLowerCase().includes(term));
+  }
+
   if (filters.paper !== "All") {
     result = result.filter((q) => q.paper === filters.paper);
   }

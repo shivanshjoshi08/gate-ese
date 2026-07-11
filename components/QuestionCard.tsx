@@ -328,8 +328,8 @@ export default function QuestionCard({
       className={`mx-auto w-full max-w-2xl px-3 py-5 pb-8 sm:px-4 sm:py-6 ${shake && !isCorrect ? "animate-shake" : ""}`}
       onAnimationEnd={() => setShake(false)}
     >
-      {(numberLabel || levelNumber != null) && (
-        <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           {numberLabel && (
             <p className="text-base font-bold tabular-nums text-study-ink sm:text-lg">
               {numberLabel}
@@ -341,7 +341,10 @@ export default function QuestionCard({
             </p>
           )}
         </div>
-      )}
+        <div className="text-[11px] font-mono font-medium text-study-muted/60 tracking-tight select-all">
+          #{question.id}
+        </div>
+      </div>
 
       <div className="mb-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-y-2 text-xs text-study-muted sm:text-sm">
         <p className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-2 leading-relaxed sm:gap-x-2 sm:gap-y-1">
