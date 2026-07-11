@@ -9,6 +9,7 @@ import {
   listWhyWrongEntries,
   normalizeSolutionSteps,
 } from "@/lib/question-insights";
+import LatexText from "@/components/question/LatexText";
 
 const LABELS = ["A", "B", "C", "D"];
 
@@ -66,16 +67,16 @@ export default function QuestionInsightPanel({
         <div className="rounded-2xl border border-wrong/50 bg-wrong/10 px-4 py-3">
           <p className="text-sm leading-relaxed text-study-soft">
             <span className="font-semibold text-wrong">Why {LABELS[selected!]} is wrong: </span>
-            {wrongWhy}
+            <LatexText text={wrongWhy} />
           </p>
         </div>
       )}
 
       {question.conceptUsed?.trim() ? (
         <InsightBlock title="Concept tested" tone="violet">
-          <p className="text-sm leading-relaxed text-study-soft">
-            {question.conceptUsed}
-          </p>
+          <div className="text-sm leading-relaxed text-study-soft">
+            <LatexText text={question.conceptUsed} />
+          </div>
         </InsightBlock>
       ) : null}
 
@@ -87,7 +88,7 @@ export default function QuestionInsightPanel({
                 key={i}
                 className="rounded-lg border border-study-border/50 bg-study-surface/50 px-2.5 py-1.5"
               >
-                {f}
+                <LatexText text={f} />
               </li>
             ))}
           </ul>
@@ -108,9 +109,9 @@ export default function QuestionInsightPanel({
                       {s.heading}
                     </p>
                   ) : null}
-                  <p className="mt-0.5 text-sm leading-relaxed text-study-soft whitespace-pre-wrap">
-                    {s.content}
-                  </p>
+                  <div className="mt-0.5 text-sm leading-relaxed text-study-soft">
+                    <LatexText text={s.content} />
+                  </div>
                 </div>
               </li>
             ))}
@@ -122,9 +123,9 @@ export default function QuestionInsightPanel({
 
       {question.keyTakeaway?.trim() ? (
         <InsightBlock title="Key takeaway" tone="amber">
-          <p className="text-sm leading-relaxed text-amber-100/95">
-            {question.keyTakeaway}
-          </p>
+          <div className="text-sm leading-relaxed text-amber-100/95">
+            <LatexText text={question.keyTakeaway} />
+          </div>
         </InsightBlock>
       ) : null}
 
@@ -134,7 +135,7 @@ export default function QuestionInsightPanel({
             {otherWrong.map(({ label, text }) => (
               <li key={label}>
                 <span className="font-semibold text-study-muted">{label}: </span>
-                {text}
+                <LatexText text={text} />
               </li>
             ))}
           </ul>

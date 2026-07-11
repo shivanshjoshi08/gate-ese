@@ -14,16 +14,16 @@ const config: Config = {
       },
       colors: {
         study: {
-          page: "#161b26",
-          surface: "#1c2333",
-          raised: "#262f42",
-          border: "#3a4558",
-          muted: "#8b94a8",
-          soft: "#b4bdd1",
-          ink: "#e8eaf2",
+          page: "#f8f9fb",
+          surface: "#ffffff",
+          raised: "#f1f3f7",
+          border: "#e2e6eb",
+          muted: "#7b87a0",
+          soft: "#515b73",
+          ink: "#1f2937",
         },
-        correct: "#22c55e",
-        wrong: "#f87171",
+        correct: "#16a34a",
+        wrong: "#ef4444",
       },
       keyframes: {
         shake: {

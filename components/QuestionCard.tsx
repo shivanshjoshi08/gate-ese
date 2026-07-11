@@ -19,6 +19,7 @@ import QuestionRenderer from "@/components/question/QuestionRenderer";
 import OptionRenderer from "@/components/question/OptionRenderer";
 import QuestionSourcePanel from "@/components/question/QuestionSourcePanel";
 import QuestionInsightPanel from "@/components/question/QuestionInsightPanel";
+import LatexText from "@/components/question/LatexText";
 import { shouldFetchAiRecap } from "@/lib/question-insights";
 import "@/components/question/question-renderer.css";
 import {
@@ -431,9 +432,9 @@ export default function QuestionCard({
               ))}
             </div>
           )}
-          <p className="mb-6 text-lg leading-relaxed text-study-ink whitespace-pre-wrap">
-            {question.question}
-          </p>
+          <div className="mb-6 text-lg leading-relaxed text-study-ink">
+            <LatexText text={question.question} />
+          </div>
         </>
       )}
 
@@ -507,7 +508,7 @@ export default function QuestionCard({
               className={getOptionClass(i)}
             >
               <span className="mr-2 font-bold">{LABELS[i]}.</span>
-              {opt}
+              <LatexText text={opt} />
               {answered && hasAnswerKey && i === correctIndex && (
                 <span className="float-right">✓</span>
               )}
@@ -594,7 +595,7 @@ export default function QuestionCard({
                 className={cls}
               >
                 <span className="mr-2 font-bold">{LABELS[i]}.</span>
-                {opt}
+                <LatexText text={opt} />
               </button>
             );
           })}
@@ -646,7 +647,7 @@ export default function QuestionCard({
         <button
           type="button"
           onClick={onNext}
-          className="mt-6 w-full min-h-[3rem] rounded-2xl bg-white py-3.5 text-base font-semibold text-study-page shadow-lg shadow-black/25 ring-1 ring-white/30 transition hover:bg-zinc-50 hover:shadow-xl hover:brightness-105 active:scale-[0.99] sm:min-h-0 sm:text-sm"
+          className="mt-6 w-full min-h-[3rem] rounded-2xl bg-study-ink py-3.5 text-base font-semibold text-white shadow-lg shadow-black/10 ring-1 ring-study-border/30 transition hover:opacity-90 hover:shadow-xl active:scale-[0.99] sm:min-h-0 sm:text-sm"
         >
           Next Question →
         </button>

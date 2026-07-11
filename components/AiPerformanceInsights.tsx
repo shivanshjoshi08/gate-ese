@@ -104,13 +104,13 @@ export default function AiPerformanceInsights({
 
   if (snapshot.totals.attempted < minAttempts) {
     return (
-      <section className="mt-8 rounded-xl border border-zinc-700/80 bg-zinc-900/50 p-5">
-        <h2 className="text-lg font-semibold text-zinc-200">AI study coach</h2>
-        <p className="mt-2 text-sm text-zinc-400">
+      <section className="mt-8 rounded-xl border border-study-border bg-study-surface p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-study-ink">AI study coach</h2>
+        <p className="mt-2 text-sm text-study-soft">
           Attempt at least {minAttempts} questions to get a personalized analysis
           of strengths, weaknesses, and what to study next.
         </p>
-        <p className="mt-1 text-xs text-zinc-500">
+        <p className="mt-1 text-xs text-study-muted">
           {snapshot.totals.attempted} / {minAttempts} attempted so far
         </p>
       </section>
@@ -118,11 +118,11 @@ export default function AiPerformanceInsights({
   }
 
   return (
-    <section className="mt-8 rounded-xl border border-zinc-700/80 bg-zinc-900/50 p-5">
+    <section className="mt-8 rounded-xl border border-study-border bg-study-surface p-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-zinc-200">AI study coach</h2>
-          <p className="mt-0.5 text-xs text-zinc-500">
+          <h2 className="text-lg font-semibold text-study-ink">AI study coach</h2>
+          <p className="mt-0.5 text-xs text-study-muted">
             Powered by your practice stats{cached ? " · cached" : ""}
           </p>
         </div>
@@ -130,25 +130,25 @@ export default function AiPerformanceInsights({
           type="button"
           onClick={() => void load(true)}
           disabled={loading}
-          className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800 disabled:opacity-50"
+          className="rounded-lg border border-study-border px-3 py-1.5 text-xs font-medium text-study-soft hover:bg-study-raised hover:text-study-ink disabled:opacity-50"
         >
           {loading ? "Analyzing…" : "Refresh analysis"}
         </button>
       </div>
 
       {loading && !analysis && (
-        <p className="mt-4 text-sm text-zinc-400">Building your personalized report…</p>
+        <p className="mt-4 text-sm text-study-soft">Building your personalized report…</p>
       )}
 
       {error && (
-        <p className="mt-4 rounded-lg border border-amber-900/50 bg-amber-950/30 px-3 py-2 text-sm text-amber-200">
+        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
           {error}
         </p>
       )}
 
       {analysis && (
         <div className="mt-4 space-y-6">
-          <p className="text-sm leading-relaxed text-zinc-300">{analysis.overview}</p>
+          <p className="text-sm leading-relaxed text-study-soft">{analysis.overview}</p>
 
           {analysis.strengths.length > 0 && (
             <InsightBlock
@@ -185,17 +185,17 @@ export default function AiPerformanceInsights({
 
           {analysis.topicFocus.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-study-muted">
                 Topic focus
               </h3>
               <ul className="mt-2 space-y-2">
                 {analysis.topicFocus.map((t) => (
                   <li
                     key={t.topic}
-                    className="rounded-lg border border-zinc-700/60 bg-zinc-950/40 px-3 py-2.5"
+                    className="rounded-lg border border-study-border bg-study-raised/50 px-3 py-2.5"
                   >
-                    <p className="font-medium text-zinc-200">{t.topic}</p>
-                    <p className="mt-0.5 text-sm text-zinc-400">{t.action}</p>
+                    <p className="font-medium text-study-ink">{t.topic}</p>
+                    <p className="mt-0.5 text-sm text-study-soft">{t.action}</p>
                   </li>
                 ))}
               </ul>
@@ -203,9 +203,9 @@ export default function AiPerformanceInsights({
           )}
 
           {analysis.studyPlan && (
-            <div className="rounded-lg border border-zinc-700/60 bg-zinc-950/40 px-4 py-3">
-              <h3 className="text-sm font-semibold text-zinc-300">7-day focus</h3>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+            <div className="rounded-lg border border-study-border bg-study-raised/50 px-4 py-3">
+              <h3 className="text-sm font-semibold text-study-ink">7-day focus</h3>
+              <p className="mt-2 text-sm leading-relaxed text-study-soft">
                 {analysis.studyPlan}
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function AiPerformanceInsights({
       )}
 
       {!loading && !analysis && rawFallback && (
-        <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+        <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
           {rawFallback}
         </p>
       )}
@@ -233,16 +233,16 @@ function InsightBlock({
 }) {
   const border =
     variant === "strength"
-      ? "border-emerald-900/50"
+      ? "border-emerald-200 bg-emerald-50/50"
       : variant === "weakness"
-        ? "border-red-900/50"
-        : "border-violet-900/50";
+        ? "border-red-200 bg-red-50/50"
+        : "border-violet-200 bg-violet-50/50";
   const badge =
     variant === "strength"
-      ? "text-emerald-300"
+      ? "text-emerald-700"
       : variant === "weakness"
-        ? "text-red-300"
-        : "text-violet-300";
+        ? "text-red-700"
+        : "text-violet-700";
 
   return (
     <div>
@@ -253,10 +253,10 @@ function InsightBlock({
         {items.map((item) => (
           <li
             key={item.label}
-            className={`rounded-lg border bg-zinc-950/40 px-3 py-2.5 ${border}`}
+            className={`rounded-lg border px-3 py-2.5 ${border}`}
           >
-            <p className="font-medium text-zinc-200">{item.label}</p>
-            <p className="mt-0.5 text-sm text-zinc-400">{item.detail}</p>
+            <p className="font-medium text-study-ink">{item.label}</p>
+            <p className="mt-0.5 text-sm text-study-soft">{item.detail}</p>
           </li>
         ))}
       </ul>

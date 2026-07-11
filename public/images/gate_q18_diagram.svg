@@ -1,0 +1,59 @@
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flanges -->
+  <line x1="80" y1="100" x2="230" y2="100" stroke="black" stroke-width="4"/>
+  <line x1="80" y1="300" x2="230" y2="300" stroke="black" stroke-width="4"/>
+  <!-- Web -->
+  <line x1="180" y1="100" x2="180" y2="300" stroke="black" stroke-width="4"/>
+  
+  <!-- Axis X-X -->
+  <line x1="50" y1="200" x2="260" y2="200" stroke="black" stroke-width="1.5" stroke-dasharray="10,5,2,5"/>
+  <text x="50" y="215" font-family="serif" font-size="14">X</text>
+  <text x="250" y="215" font-family="serif" font-size="14">X</text>
+
+  <!-- Points -->
+  <circle cx="140" cy="200" r="4" fill="black"/>
+  <text x="140" y="190" font-family="serif" font-size="14" font-weight="bold" text-anchor="middle">P</text>
+  
+  <circle cx="180" cy="200" r="4" fill="black"/>
+  <text x="190" y="190" font-family="serif" font-size="14" font-weight="bold">Q</text>
+  
+  <circle cx="210" cy="200" r="4" fill="black"/>
+  <text x="210" y="190" font-family="serif" font-size="14" font-weight="bold" text-anchor="middle">R</text>
+
+  <circle cx="180" cy="100" r="4" fill="black"/>
+  <text x="190" y="115" font-family="serif" font-size="14" font-weight="bold">S</text>
+
+  <!-- Dimensions Top -->
+  <line x1="80" y1="90" x2="80" y2="50" stroke="black" stroke-width="1"/>
+  <line x1="180" y1="90" x2="180" y2="50" stroke="black" stroke-width="1"/>
+  <line x1="230" y1="90" x2="230" y2="50" stroke="black" stroke-width="1"/>
+  
+  <!-- Arrows Top -->
+  <line x1="80" y1="65" x2="180" y2="65" stroke="black" stroke-width="1"/>
+  <polygon points="80,65 90,62 90,68" fill="black"/>
+  <polygon points="180,65 170,62 170,68" fill="black"/>
+  <text x="130" y="60" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">6 cm</text>
+
+  <line x1="180" y1="65" x2="230" y2="65" stroke="black" stroke-width="1"/>
+  <polygon points="180,65 190,62 190,68" fill="black"/>
+  <polygon points="230,65 220,62 220,68" fill="black"/>
+  <text x="205" y="60" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">3 cm</text>
+
+  <!-- Dimensions Bottom -->
+  <line x1="80" y1="310" x2="80" y2="350" stroke="black" stroke-width="1"/>
+  <line x1="180" y1="310" x2="180" y2="350" stroke="black" stroke-width="1"/>
+  <line x1="230" y1="310" x2="230" y2="350" stroke="black" stroke-width="1"/>
+  
+  <!-- Arrows Bottom -->
+  <line x1="80" y1="335" x2="180" y2="335" stroke="black" stroke-width="1"/>
+  <polygon points="80,335 90,332 90,338" fill="black"/>
+  <polygon points="180,335 170,332 170,338" fill="black"/>
+  <text x="130" y="330" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">6 cm</text>
+
+  <line x1="180" y1="335" x2="230" y2="335" stroke="black" stroke-width="1"/>
+  <polygon points="180,335 190,332 190,338" fill="black"/>
+  <polygon points="230,335 220,332 220,338" fill="black"/>
+  <text x="205" y="330" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">3 cm</text>
+
+  <text x="155" y="375" font-family="sans-serif" font-size="12" text-anchor="middle">(Figure NOT to scale)</text>
+</svg>
