@@ -25,7 +25,9 @@ import {
 import {
   defaultPracticeFilters,
   sanitizePracticeFilters,
+  getSimplePracticeFilters,
 } from "@/lib/available-filters";
+import { normalizePracticeExamFilter } from "@/lib/practice-track";
 import {
   findFirstPracticeLevelWithQuestions,
   getActivePracticeLevel,
@@ -104,6 +106,16 @@ function PracticeContent() {
   const [stats, setStats] = useState(() => getStats(exam));
   const [focusMode, setFocusMode] = useState(false);
   const [initialized, setInitialized] = useState(false);
+
+  const avail = useMemo(() => {
+    if (!practiceBankFromUrl) return null;
+    const a = getSimplePracticeFilters(
+      practiceBankFromUrl === "pyq" ? pyqQuestions : aiQuestions,
+      filters,
+    );
+    a.exams = []; // Hide the exam dropdown since it's controlled by the homepage
+    return a;
+  }, [filters, practiceBankFromUrl, aiQuestions, pyqQuestions]);
 
   const activeBank = useMemo(() => {
     if (practiceBankFromUrl === "pyq") return pyqQuestions;
@@ -189,11 +201,12 @@ function PracticeContent() {
     (next: FiltersType) => {
       if (!practiceBankFromUrl) return;
       const bank = practiceBankFromUrl === "pyq" ? pyqQuestions : aiQuestions;
+      next.exam = normalizePracticeExamFilter(exam);
       const sanitized = sanitizePracticeFilters(bank, next);
       setFilters(sanitized);
       loadLevel(practiceBankFromUrl, 1, sanitized);
     },
-    [practiceBankFromUrl, aiQuestions, pyqQuestions, loadLevel],
+    [practiceBankFromUrl, aiQuestions, pyqQuestions, loadLevel, exam],
   );
 
   useEffect(() => {
@@ -269,11 +282,9 @@ function PracticeContent() {
 
     const bank =
       practiceBankFromUrl === "pyq" ? pyqQuestions : aiQuestions;
-    // const yearParam = searchParams.get("year");
-    let f = sanitizePracticeFilters(bank, defaultPracticeFilters());
-    // if (yearParam && /^\d{4}$/.test(yearParam)) {
-    //   f = { ...f, year: yearParam };
-    // }
+    const baseFilters = defaultPracticeFilters();
+    baseFilters.exam = normalizePracticeExamFilter(exam);
+    let f = sanitizePracticeFilters(bank, baseFilters);
     setFilters(f);
     startBankAtUserLevel(practiceBankFromUrl, f);
     setInitialized(true);

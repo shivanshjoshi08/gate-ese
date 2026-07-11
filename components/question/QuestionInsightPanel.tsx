@@ -141,22 +141,7 @@ export default function QuestionInsightPanel({
         </InsightBlock>
       ) : null}
 
-      {showSolution ? (
-        <InsightBlock
-          title={hasAnswerKey ? "Solution" : "Your selection"}
-          tone="neutral"
-        >
-          {question.richSolution && hasAnswerKey ? (
-            <RichContentRenderer content={question.richSolution} />
-          ) : (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
-              {hasAnswerKey
-                ? question.solution
-                : `Your choice: ${selected != null ? LABELS[selected] : "—"}.`}
-            </p>
-          )}
-        </InsightBlock>
-      ) : null}
+
 
       {question.keyTakeaway?.trim() ? (
         <InsightBlock title="Key takeaway" tone="amber">

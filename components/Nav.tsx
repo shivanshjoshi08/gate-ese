@@ -5,12 +5,14 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { EXAM_COLORS } from "@/lib/exam";
 import { USER_PYQ_ENABLED, USER_PYQ_PDFS_ENABLED } from "@/lib/feature-flags";
-
-const accent = EXAM_COLORS.ESE;
+import { useExam } from "@/hooks/useExam";
 
 export default function Nav() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
+  const { exam } = useExam();
+
+  const accent = EXAM_COLORS[exam];
 
   const homeActive = pathname === "/";
   const pdfsActive = pathname === "/pyq-pdfs";
@@ -27,9 +29,9 @@ export default function Nav() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-4">
         <Link
           href="/"
-          className="shrink-0 text-base font-semibold tracking-tight text-study-ink sm:text-lg"
+          className="shrink-0 text-base font-semibold tracking-tight text-study-ink sm:text-lg flex items-center gap-2"
         >
-          <span style={{ color: accent.accent }}>ESE</span>{" "}
+          <span style={{ color: accent.accent }}>{exam}</span>
           <span className="hidden text-study-muted sm:inline">CE</span>
         </Link>
 

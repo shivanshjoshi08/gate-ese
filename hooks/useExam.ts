@@ -17,9 +17,9 @@ export function useExam() {
     return () => window.removeEventListener("exam-changed", handler);
   }, []);
 
-  const setExam = useCallback((_e: ExamType) => {
-    setSelectedExam("ESE");
-    setExamState("ESE");
+  const setExam = useCallback((newExam: ExamType) => {
+    setSelectedExam(newExam);
+    setExamState(newExam);
   }, []);
 
   return { exam, setExam };

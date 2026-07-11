@@ -19,13 +19,16 @@ export const EXAM_COLORS = {
   },
 } as const;
 
-/** User app is ESE-only for now — always practise under ESE progress/filters. */
+/** Fetch the currently selected exam from localStorage. Fallback to ESE. */
 export function getSelectedExam(): ExamType {
+  if (typeof window === "undefined") return "ESE";
+  const stored = localStorage.getItem(EXAM_STORAGE_KEY);
+  if (stored === "GATE" || stored === "ESE") return stored;
   return "ESE";
 }
 
-export function setSelectedExam(_exam: ExamType): void {
+export function setSelectedExam(exam: ExamType): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(EXAM_STORAGE_KEY, "ESE");
-  window.dispatchEvent(new CustomEvent("exam-changed", { detail: "ESE" }));
+  localStorage.setItem(EXAM_STORAGE_KEY, exam);
+  window.dispatchEvent(new CustomEvent("exam-changed", { detail: exam }));
 }
