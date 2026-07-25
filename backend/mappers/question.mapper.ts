@@ -337,6 +337,7 @@ export function leanRowToPracticeQuestion(
     return {
       ...practice,
       id: rowId(row as MongoQuestionRow),
+      displayId: r.importKey as string ?? r.slug as string ?? undefined,
       questionBank: bank,
     };
   }

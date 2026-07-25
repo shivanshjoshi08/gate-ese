@@ -7,6 +7,7 @@ import EquationBlock from "./EquationBlock";
 import ImageBlock from "./ImageBlock";
 import TableBlock from "./TableBlock";
 import CodeBlock from "./CodeBlock";
+import LatexText from "./LatexText";
 
 interface RichContentRendererProps {
   content: RichContent | JSONContent;
@@ -124,11 +125,23 @@ export default function RichContentRenderer({
   className = "",
 }: RichContentRendererProps) {
   const doc = isRichContent(content) ? content.doc : content;
-  if (!doc?.content?.length) return null;
+  if (!doc?.content?.length) {
+    // Fallback for markdown-only payloads without Tiptap JSON
+    const anyContent = content as any;
+    const textContent = anyContent.text || anyContent.plainText;
+    if (textContent) {
+      return (
+        <div className={`qb-content ${className}`}>
+          <LatexText text={textContent} />
+        </div>
+      );
+    }
+    return null;
+  }
 
   return (
     <div className={`qb-content ${className}`}>
-      {doc.content.map((node, i) => renderNode(node, `root-${i}`))}
+      {doc.content.map((node: JSONContent, i: number) => renderNode(node, `root-${i}`))}
     </div>
   );
 }

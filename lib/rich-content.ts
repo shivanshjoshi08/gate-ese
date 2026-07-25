@@ -30,7 +30,8 @@ export function createParagraph(text: string): RichContent {
   return createRichContent(doc, text);
 }
 
-export function extractPlainText(node: JSONContent): string {
+export function extractPlainText(node: JSONContent | undefined | null): string {
+  if (!node) return "";
   if (node.text) return node.text;
   if (node.type === "inlineMath" || node.type === "blockMath") {
     const latex = (node.attrs as { latex?: string })?.latex ?? "";

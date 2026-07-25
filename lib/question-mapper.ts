@@ -45,13 +45,13 @@ function asIso(d: Date | string): string {
 
 function collectMediaFromLegacyRow(
   stem: QuestionDocument["stem"],
-  options: QuestionOption[],
-  solution: QuestionDocument["solution"],
+  options: QuestionOption[] | undefined,
+  solution: QuestionDocument["solution"] | undefined,
 ): QuestionDocument["media"] {
   const rawUrls = [
-    ...extractImageUrlsFromRichDoc(stem.doc),
-    ...options.flatMap((o) => extractImageUrlsFromRichDoc(o.body?.doc)),
-    ...extractImageUrlsFromRichDoc(solution.doc),
+    ...extractImageUrlsFromRichDoc(stem?.doc),
+    ...(options || []).flatMap((o) => extractImageUrlsFromRichDoc(o?.body?.doc)),
+    ...extractImageUrlsFromRichDoc(solution?.doc),
   ];
   return normalizeImageList(rawUrls).map((url, i) => ({
     id: `img-${i}`,
@@ -62,7 +62,7 @@ function collectMediaFromLegacyRow(
 
 export function mongoToQuestionDocument(row: MongoQuestionRow): QuestionDocument {
   const stem = parseJson<QuestionDocument["stem"]>(row.stem);
-  const options = parseJson<QuestionOption[]>(row.options);
+  const options = parseJson<QuestionOption[]>(row.options) || [];
   const solution = parseJson<QuestionDocument["solution"]>(row.solution);
   return {
     id: rowId(row),
@@ -129,8 +129,8 @@ export function questionDocumentToPractice(doc: QuestionDocument): PracticeQuest
   const stemPlain =
     doc.stem.plainText ?? extractPlainText(doc.stem.doc);
 
-  const optionsPlain = doc.options.map(
-    (o) => o.body.plainText ?? extractPlainText(o.body.doc)
+  const optionsPlain = (doc.options || []).map(
+    (o) => o.body?.plainText ?? extractPlainText(o.body?.doc)
   );
 
   let type: PracticeQuestion["type"] = "mcq";
@@ -167,7 +167,7 @@ export function questionDocumentToPractice(doc: QuestionDocument): PracticeQuest
       type,
       options: [],
       correct,
-      solution: doc.solution.plainText ?? extractPlainText(doc.solution.doc),
+      solution: doc.solution?.plainText ?? extractPlainText(doc.solution?.doc),
       subject: doc.subject,
       topic: doc.topic,
       marks: doc.marks,
@@ -196,7 +196,7 @@ export function questionDocumentToPractice(doc: QuestionDocument): PracticeQuest
     type,
     options: doc.type === "numerical" ? [] : optionsPlain,
     correct,
-    solution: doc.solution.plainText ?? extractPlainText(doc.solution.doc),
+    solution: doc.solution?.plainText ?? extractPlainText(doc.solution?.doc),
     subject: doc.subject,
     topic: doc.topic,
     marks: doc.marks,
