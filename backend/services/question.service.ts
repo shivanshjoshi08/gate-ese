@@ -52,6 +52,7 @@ function buildFilter(query: QuestionListQuery): Record<string, unknown> {
     const rx = new RegExp(s, "i");
     and.push({
       $or: [
+        { importKey: rx },
         { question: rx },
         { subject: rx },
         { topic: rx },

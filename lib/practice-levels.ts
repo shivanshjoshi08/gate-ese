@@ -80,12 +80,16 @@ function sortedMcqsForFilters(
   return [...pool].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 
+function shouldSkipAttemptedExclude(filters: Filters): boolean {
+  return isPracticeSubjectFilterActive(filters) || (!!filters.searchId && filters.searchId.trim() !== "");
+}
+
 export function getFilteredPracticeLevelCount(
   bank: Question[],
   filters: Filters,
   excludeAttemptedIds?: Set<string>,
 ): number {
-  const n = isPracticeSubjectFilterActive(filters)
+  const n = shouldSkipAttemptedExclude(filters)
     ? sortedMcqsForFilters(bank, filters).length
     : sortedMcqsForFilters(bank, filters, excludeAttemptedIds).length;
   return Math.max(0, Math.ceil(n / PRACTICE_LEVEL_BATCH_SIZE));
@@ -100,7 +104,7 @@ export function resolveFilteredPracticeLevel(
   const batch = PRACTICE_MCQ_BATCH_SIZE;
   const level = Math.max(1, levelNumber);
 
-  if (isPracticeSubjectFilterActive(filters)) {
+  if (shouldSkipAttemptedExclude(filters)) {
     const sorted = sortedMcqsForFilters(bank, filters);
     const start = (level - 1) * batch;
     return sorted.slice(start, start + batch);
@@ -220,7 +224,7 @@ export function findFirstPracticeLevelWithQuestions(
     getPracticeLevelCountForFilters(bank, filters, bankKind, excludeAttemptedIds),
     startLevel,
   );
-  const skipAttemptedExclude = isPracticeSubjectFilterActive(filters);
+  const skipAttemptedExclude = shouldSkipAttemptedExclude(filters);
 
   for (let level = Math.max(1, startLevel); level <= max; level++) {
     const questions = resolvePracticeLevelForFilters(

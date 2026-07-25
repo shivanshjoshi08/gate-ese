@@ -22,6 +22,7 @@ import type {
 
 export interface Question {
   id: string;
+  displayId?: string;
   question: string;
   type: QuestionType;
   options: string[];

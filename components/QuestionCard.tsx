@@ -343,7 +343,7 @@ export default function QuestionCard({
           )}
         </div>
         <div className="text-[11px] font-mono font-medium text-study-muted/60 tracking-tight select-all">
-          #{question.id}
+          #{question.displayId ?? question.id}
         </div>
       </div>
 

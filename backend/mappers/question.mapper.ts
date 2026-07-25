@@ -42,6 +42,7 @@ function rowId(row: { _id: { toString(): string } | string }): string {
 export function leanToDto(row: QuestionLean): QuestionDto {
   return {
     id: String(row._id),
+    importKey: row.importKey,
     slug: row.slug,
     sourceType: row.sourceType,
     exam: row.exam,
@@ -252,6 +253,7 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
 
   return {
     id: dto.id,
+    displayId: dto.importKey,
     question: dto.question,
     type: answerType,
     numerical: dto.numerical === true,

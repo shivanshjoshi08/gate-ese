@@ -20,6 +20,7 @@ export interface QuestionSolutionDto {
 
 export interface QuestionDto {
   id: string;
+  importKey?: string;
   slug: string;
   sourceType: SourceType;
   exam: ExamType;

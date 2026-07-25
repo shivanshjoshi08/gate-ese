@@ -1,0 +1,288 @@
+[
+  {
+    "id": "SOM_001",
+    "question": "A steel rod of 20 mm diameter and 2 m length is subjected to an axial tensile load of 50 kN. If E = 200 GPa, the elongation of the rod is:",
+    "options": [
+      "0.159 mm",
+      "0.318 mm",
+      "1.59 mm",
+      "3.18 mm"
+    ],
+    "solution": "ΔL = PL/(AE). A = π/4 × (20 mm)² = 314.16 mm². ΔL = (50×10³ N × 2000 mm) / (314.16 mm² × 200×10³ N/mm²) ≈ 1.59 mm."
+  },
+  {
+    "id": "SOM_002",
+    "question": "A bar of length L and uniform cross-section A is subjected to an axial pull P. The strain energy stored per unit volume is:",
+    "options": [
+      "P²/(2AE)",
+      "σ²/(2E)",
+      "Pσ/(2A)",
+      "σ²E/2"
+    ],
+    "solution": "Strain energy per unit volume = ½ × stress × strain = ½ × σ × (σ/E) = σ²/(2E)."
+  },
+  {
+    "id": "SOM_003",
+    "question": "The relationship between modulus of elasticity (E), modulus of rigidity (G), and bulk modulus (K) is given by:",
+    "options": [
+      "E = 9KG/(3K+G)",
+      "E = 9KG/(G+3K)",
+      "E = 3KG/(9K+G)",
+      "E = 3KG/(K+3G)"
+    ],
+    "solution": "Standard relation: E = 9KG/(3K + G), equivalently 1/E = 1/(3G) + 1/(9K)."
+  },
+  {
+    "id": "SOM_004",
+    "question": "A cantilever beam of length L carries a point load W at the free end. The bending moment at a distance x from the fixed end is:",
+    "options": [
+      "W(L-x)",
+      "Wx",
+      "W(L+x)",
+      "W(L/2 - x)"
+    ],
+    "solution": "For a cantilever with point load at the free end, BM at section x from fixed end = W × (lever arm) = W(L − x)."
+  },
+  {
+    "id": "SOM_005",
+    "question": "A solid circular shaft of diameter d transmits power P at N rpm. The maximum shear stress induced is τ. If the diameter is doubled and speed halved while power remains the same, the new maximum shear stress will be:",
+    "options": [
+      "τ/4",
+      "τ/8",
+      "τ/16",
+      "τ/2"
+    ],
+    "solution": "P = 2πNT/60 and τ ∝ T/d³. For constant P, T ∝ 1/N, so τ ∝ P/(N d³). New τ′ ∝ P/((N/2)(2d)³) = P/(4N d³) = τ/4."
+  },
+  {
+    "id": "SOM_006",
+    "question": "A simply supported beam of span L carries a uniformly distributed load w per unit length. The maximum bending moment occurs at:",
+    "options": [
+      "Supports",
+      "Mid-span",
+      "L/3 from left",
+      "L/4 from left"
+    ],
+    "solution": "For UDL on a simply supported beam, maximum bending moment occurs at mid-span: M_max = wL²/8."
+  },
+  {
+    "id": "SOM_007",
+    "question": "The ratio of Euler's buckling load for a column with both ends fixed to that of both ends hinged (same length and section) is:",
+    "options": [
+      "1",
+      "2",
+      "4",
+      "8"
+    ],
+    "solution": "P_cr = π²EI/L_e². For hinged ends L_e = L; for fixed ends L_e = L/2. Ratio = L²/(L/2)² = 4."
+  },
+  {
+    "id": "SOM_008",
+    "question": "A beam of rectangular cross-section (b × d) is subjected to a shear force F. The maximum shear stress developed is:",
+    "options": [
+      "1.5 F/(b d)",
+      "1.2 F/(b d)",
+      "0.5 F/(b d)",
+      "0.75 F/(b d)"
+    ],
+    "solution": "For a rectangular section, τ_max = 1.5 × (average shear stress) = 1.5 × F/(bd)."
+  },
+  {
+    "id": "SOM_009",
+    "question": "A steel bar of 400 mm² cross-section is subjected to an axial tensile load of 80 kN. If E = 200 GPa and Poisson's ratio = 0.3, the lateral strain is:",
+    "options": [
+      "300 × 10⁻⁶",
+      "200 × 10⁻⁶",
+      "150 × 10⁻⁶",
+      "100 × 10⁻⁶"
+    ],
+    "solution": "σ = P/A = 80×10³/400 = 200 MPa. ε_axial = σ/E = 10⁻³. Lateral strain magnitude = ν × ε_axial = 0.3 × 10⁻³ = 300×10⁻⁶."
+  },
+  {
+    "id": "SOM_010",
+    "question": "The principal stresses at a point in a stressed material are 120 MPa (tensile) and 80 MPa (compressive). The maximum shear stress at the point is:",
+    "options": [
+      "100 MPa",
+      "40 MPa",
+      "60 MPa",
+      "20 MPa"
+    ],
+    "solution": "τ_max = (σ₁ − σ₂)/2 = (120 − (−80))/2 = 200/2 = 100 MPa."
+  },
+  {
+    "id": "SOM_011",
+    "question": "A rod of length 1 m and diameter 20 mm is subjected to a tensile load. The extension measured is 0.5 mm. The modulus of elasticity is 200 GPa. The strain energy stored in the rod is:",
+    "options": [
+      "7.85 J",
+      "5.0 J",
+      "2.5 J",
+      "10 J"
+    ],
+    "solution": "U = ½ P ΔL. With A = π/4 × (0.02)² m², P = (ΔL × A × E)/L ≈ 31.42 kN, hence U = ½ × 31.42×10³ × 0.5×10⁻³ ≈ 7.85 J."
+  },
+  {
+    "id": "SOM_012",
+    "question": "A hollow circular shaft of outer diameter 100 mm and inner diameter 50 mm is subjected to a torque of 10 kN·m. The maximum shear stress (in MPa) is approximately:",
+    "options": [
+      "54.3",
+      "68.0",
+      "34.0",
+      "85.0"
+    ],
+    "solution": "τ_max = TR/J with J = π/32 (D⁴ − d⁴) = 9.20×10⁻⁶ m⁴, R = 50 mm. τ = (10×10³ × 0.05)/9.20×10⁻⁶ ≈ 54.3 MPa."
+  },
+  {
+    "id": "SOM_013",
+    "question": "A beam of uniform rectangular cross-section is subjected to a bending moment M. If the depth is doubled while keeping width constant, the bending stress will:",
+    "options": [
+      "Become half",
+      "Become one-fourth",
+      "Become double",
+      "Remain same"
+    ],
+    "solution": "σ = My/I. For rectangle I = bd³/12, y = d/2 ⇒ σ = 6M/(bd²). Doubling d reduces σ to one-fourth."
+  },
+  {
+    "id": "SOM_014",
+    "question": "A column of circular cross-section of diameter 40 mm and length 2 m is hinged at both ends. If E = 200 GPa, Euler's buckling load (in kN) is:",
+    "options": [
+      "62",
+      "124",
+      "248",
+      "496"
+    ],
+    "solution": "I = πd⁴/64 = 1.257×10⁻⁷ m⁴. P_cr = π²EI/L² = π² × 200×10⁹ × 1.257×10⁻⁷ / 4 ≈ 62 kN."
+  },
+  {
+    "id": "SOM_015",
+    "question": "A simply supported beam of span 4 m carries a point load of 15 kN at mid-span. The cross-section is rectangular 100 mm wide and 150 mm deep. The maximum bending stress (in MPa) is:",
+    "options": [
+      "40",
+      "80",
+      "120",
+      "160"
+    ],
+    "solution": "M_max = PL/4 = 15×4/4 = 15 kN·m. Z = bd²/6 = 375×10³ mm³. σ = M/Z = 15×10⁶/375×10³ = 40 MPa."
+  },
+  {
+    "id": "gate_ce_steel_09",
+    "question": "The density of steel used in structural design is generally taken as:",
+    "options": [
+      "7850 kg/m³",
+      "8000 kg/m³",
+      "7500 kg/m³",
+      "8500 kg/m³"
+    ],
+    "solution": "According to IS 800:2007, the mass density of structural steel is taken as 7850 kg/m³."
+  },
+  {
+    "id": "ese_ce_irrigation_12",
+    "question": "The relation between Duty (D) in hectares/cumec, Delta (Δ) in meters, and Base period (B) in days is:",
+    "options": [
+      "Δ = 8.64 B / D",
+      "Δ = 8.64 D / B",
+      "Δ = 8.64 B D",
+      "Δ = 864 B / D"
+    ],
+    "solution": "The fundamental relation is Δ = 8.64 B / D, where Δ is in meters, B is in days, and D is in ha/cumec."
+  },
+  {
+    "id": "gate_ce_steel_13",
+    "question": "The maximum slenderness ratio of a steel tension member in which a reversal of direct stress occurs due to loads other than wind or seismic forces is:",
+    "options": [
+      "180",
+      "250",
+      "300",
+      "350"
+    ],
+    "solution": "As per IS 800, the maximum effective slenderness ratio for a tension member with reversal of direct stress due to loads other than wind/seismic is 180."
+  },
+  {
+    "id": "gate_ce_env_15",
+    "question": "Biochemical Oxygen Demand (BOD) of safe drinking water must be:",
+    "options": [
+      "0 mg/L",
+      "5 mg/L",
+      "10 mg/L",
+      "20 mg/L"
+    ],
+    "solution": "Safe drinking water should be free of any organic biodegradable matter, hence its BOD must be strictly zero."
+  },
+  {
+    "id": "gate_ce_cpm_17",
+    "question": "In a PERT network, the expected time (te) of an activity is given by:",
+    "options": [
+      "(to + tm + tp) / 6",
+      "(to + 4tm + tp) / 6",
+      "(to + 2tm + tp) / 6",
+      "(to + 4tm + tp) / 4"
+    ],
+    "solution": "The expected time in PERT follows a Beta distribution and is calculated as te = (to + 4tm + tp) / 6, where to=optimistic, tm=most likely, tp=pessimistic time."
+  },
+  {
+    "id": "gate_aptitude_03",
+    "question": "A student was supposed to multiply a positive real number p with another positive real number q. Instead, the student divided p by q. If the percentage error in the student's answer is 80%, the value of q is",
+    "options": [
+      "5",
+      "√2",
+      "2",
+      "√5"
+    ],
+    "solution": "The correct answer should be pq. The student calculated p/q. The error is (pq - p/q). Percentage error = ((pq - p/q) / pq) * 100 = 80.\n1 - 1/q^2 = 0.8\n1/q^2 = 0.2\nq^2 = 5\nq = √5."
+  },
+  {
+    "id": "gate_aptitude_04",
+    "question": "If the sum of the first 20 consecutive positive odd numbers is divided by 20², the result is",
+    "options": [
+      "1",
+      "20",
+      "2",
+      "1/2"
+    ],
+    "solution": "The sum of the first n consecutive positive odd numbers is given by the formula n². Here, n = 20, so the sum is 20². When divided by 20², the result is 1."
+  },
+  {
+    "id": "gate_aptitude_05",
+    "question": "The ratio of the number of girls to boys in class VIII is the same as the ratio of the number of boys to girls in class IX. The total number of students (boys and girls) in classes VIII and IX is 450 and 360, respectively. If the number of girls in classes VIII and IX is the same, then the number of girls in each class is",
+    "options": [
+      "150",
+      "200",
+      "250",
+      "175"
+    ],
+    "solution": "Let the number of girls be g. Boys in VIII = 450 - g. Boys in IX = 360 - g.\nRatio in VIII: g / (450 - g). Ratio in IX: (360 - g) / g.\ng / (450 - g) = (360 - g) / g\ng² = 162000 - 450g - 360g + g²\n810g = 162000\ng = 200."
+  },
+  {
+    "id": "gate_aptitude_07",
+    "question": "Seven identical cylindrical chalk-sticks are fitted tightly in a cylindrical container. The figure below shows the arrangement of the chalk-sticks inside the cylinder.\n\nThe length of the container is equal to the length of the chalk-sticks. The ratio of the occupied space to the empty space of the container is",
+    "options": [
+      "5/2",
+      "7/2",
+      "9/2",
+      "3"
+    ],
+    "solution": "Let the radius of one chalk-stick be r and its length be h.\nThe volume of one chalk-stick is πr²h.\nSince there are 7 chalk-sticks, the total occupied volume is 7πr²h.\n\nFrom the figure, the container's radius (R) must accommodate the central chalk-stick and one chalk-stick on each side along the diameter. So, the diameter of the container is 3 times the diameter of a chalk-stick. Therefore, R = 3r.\n\nThe total volume of the container is πR²h = π(3r)²h = 9πr²h.\nThe empty space in the container = Total volume - Occupied volume = 9πr²h - 7πr²h = 2πr²h.\n\nThe ratio of the occupied space to the empty space = 7πr²h / 2πr²h = 7/2."
+  },
+  {
+    "id": "gate_aptitude_08",
+    "question": "The plot below shows the relationship between the mortality risk of cardiovascular disease and the number of steps a person walks per day. Based on the data, which one of the following options is true?",
+    "options": [
+      "The risk reduction on increasing the steps/day from 0 to 10000 is less than the risk reduction on increasing the steps/day from 10000 to 20000.",
+      "The risk reduction on increasing the steps/day from 0 to 5000 is less than the risk reduction on increasing the steps/day from 15000 to 20000.",
+      "For any 5000 increment in steps/day the largest risk reduction occurs on going from 0 to 5000.",
+      "For any 5000 increment in steps/day the largest risk reduction occurs on going from 15000 to 20000."
+    ],
+    "solution": "The curve is convex and steeply decreasing at the beginning. The drop in mortality risk from 0 to 5000 steps is the steepest segment of the curve (from 1.0 down to approximately 0.43, a reduction of ~0.57). Any subsequent 5000 step increment yields a much smaller reduction in risk. Therefore, the largest risk reduction for a 5000 increment occurs between 0 and 5000 steps/day."
+  },
+  {
+    "id": "gate_math_10",
+    "question": "Visualize a cube that is held with one of the four body diagonals aligned to the vertical axis. Rotate the cube about this axis such that its view remains unchanged. The magnitude of the minimum angle of rotation is",
+    "options": [
+      "120°",
+      "60°",
+      "90°",
+      "180°"
+    ],
+    "solution": "When a cube is rotated about its body diagonal, it possesses 3-fold rotational symmetry. This means that rotating the cube by 360°/3 = 120° brings it back to its original orientation."
+  }
+]
