@@ -636,9 +636,9 @@ export default function QuestionCard({
             <p className="text-sm text-amber-300/95">{aiError}</p>
           )}
           {!aiLoading && aiSummary && (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
-              {aiSummary}
-            </p>
+            <div className="whitespace-pre-wrap text-sm leading-relaxed text-study-soft">
+              <LatexText text={aiSummary} />
+            </div>
           )}
         </div>
       )}
