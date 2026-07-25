@@ -120,6 +120,7 @@ const questionSchema = new Schema(
     question: { type: String, required: true },
     options: { type: [optionSchema], default: [] },
     correctOption: { type: String, default: "" },
+    correctOptions: { type: [String], default: [] },
     solution: { type: solutionSchema, default: () => ({}) },
     difficulty: {
       type: String,
@@ -173,7 +174,7 @@ export type QuestionLean = {
   subtopic?: string;
   year: number;
   paper: string | null;
-  type: "mcq" | "numerical";
+  type: "mcq" | "numerical" | "msq";
   numerical: boolean;
   unit?: string | null;
   answerRange?: {
@@ -216,6 +217,7 @@ export type QuestionLean = {
   question: string;
   options: { id: string; text: string; image?: string | null }[];
   correctOption: string;
+  correctOptions?: string[];
   solution: { text: string; latex?: string; images?: string[] };
   difficulty: "Easy" | "Moderate" | "Medium" | "Hard";
   marks: number;

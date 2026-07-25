@@ -62,6 +62,7 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     question: row.question,
     options: row.options ?? [],
     correctOption: row.correctOption ?? "",
+    correctOptions: row.correctOptions ?? [],
     solution: {
       text: row.solution?.text ?? "",
       latex: row.solution?.latex ?? "",
@@ -237,6 +238,11 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
   if (dto.type === "numerical") {
     const n = parseFloat(dto.correctOption);
     correct = Number.isNaN(n) ? dto.correctOption : n;
+  } else if (dto.type === "msq") {
+    correct = dto.correctOptions ? dto.correctOptions.map(c => {
+      const idx = dto.options.findIndex(o => o.id === c);
+      return idx >= 0 ? idx : Math.max(0, c.charCodeAt(0) - 65);
+    }) : [];
   } else {
     const idx = dto.options.findIndex((o) => o.id === dto.correctOption);
     correct = idx >= 0 ? idx : Math.max(0, dto.correctOption.charCodeAt(0) - 65);
@@ -249,7 +255,7 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
   ]);
 
   const answerType: PracticeQuestion["type"] =
-    dto.type === "numerical" ? "nat" : "mcq";
+    dto.type === "numerical" ? "nat" : dto.type === "msq" ? "msq" : "mcq";
 
   return {
     id: dto.id,
@@ -340,8 +346,11 @@ export function legacyJsonToCreatePayload(
     image: null,
   }));
   let correctOption = "A";
+  let correctOptions: string[] = [];
   if (type === "numerical") {
     correctOption = String(q.correct ?? "");
+  } else if (type === "msq" && Array.isArray(q.correct)) {
+    correctOptions = q.correct.map(c => String.fromCharCode(65 + c));
   } else if (typeof q.correct === "number") {
     correctOption = String.fromCharCode(65 + q.correct);
   }
@@ -378,6 +387,7 @@ export function legacyJsonToCreatePayload(
     question: q.question,
     options,
     correctOption,
+    correctOptions,
     solution: {
       text: q.solution,
       latex: "",

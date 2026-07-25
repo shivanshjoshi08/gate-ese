@@ -3,7 +3,7 @@
 export type SourceType = "pyq" | "practice";
 export type ExamType = "GATE" | "ESE";
 export type QuestionStatus = "approved" | "draft";
-export type QuestionType = "mcq" | "numerical";
+export type QuestionType = "mcq" | "numerical" | "msq";
 export type Difficulty = "Easy" | "Moderate" | "Medium" | "Hard";
 
 export interface QuestionOptionDto {
@@ -78,6 +78,7 @@ export interface QuestionDto {
   question: string;
   options: QuestionOptionDto[];
   correctOption: string;
+  correctOptions?: string[];
   solution: QuestionSolutionDto;
   difficulty: Difficulty;
   marks: number;
