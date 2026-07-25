@@ -13,15 +13,18 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-    const sourceType =
-      url.searchParams.get("sourceType") === "practice" ? "practice" : "pyq";
+    const sourceType = url.searchParams.get("sourceType") === "practice" ? "practice" : "pyq";
     const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
-    const limit = Math.min(
-      50,
-      Math.max(1, Number(url.searchParams.get("limit")) || 50),
-    );
+    const limit = Math.min(50, Math.max(1, Number(url.searchParams.get("limit")) || 50));
+    const search = url.searchParams.get("search") || undefined;
+    const exam = (url.searchParams.get("exam") as import("@/lib/types").ExamType) || undefined;
+    const subject = url.searchParams.get("subject") || undefined;
+    const topic = url.searchParams.get("topic") || undefined;
+    const year = Number(url.searchParams.get("year")) || undefined;
 
-    const result = await listPracticeQuestionRows({ sourceType, page, limit });
+    const result = await listPracticeQuestionRows({ 
+      sourceType, page, limit, search, exam, subject, topic, year 
+    });
     const dbQuestions = result.items
       .map((row) =>
         leanRowToPracticeQuestion(

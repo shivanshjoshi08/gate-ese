@@ -230,6 +230,11 @@ export async function listPracticeQuestionRows(params: {
   sourceType?: "pyq" | "practice";
   page?: number;
   limit?: number;
+  search?: string;
+  exam?: import("@/lib/types").ExamType | "PRE";
+  subject?: string;
+  topic?: string;
+  year?: number;
 }): Promise<PaginatedResult<QuestionLean>> {
   await connectMongo();
   const page = params.page ?? 1;

@@ -27,6 +27,8 @@ export interface Question {
   type: QuestionType;
   options: string[];
   correct: number | string | number[];
+  /** For MSQ: multiple valid answer combos (each is an array of option indices). */
+  correctCombos?: number[][];
   solution: string;
   subject: string;
   topic: string;
@@ -50,6 +52,8 @@ export interface Question {
   unit?: string | null;
   /** Accepted answer span for NAT grading. `null` until configured. */
   answerRange?: import("@/lib/question-schema").AnswerRange;
+  /** Multiple valid NAT answer ranges (e.g. both 0.12-0.14 and 12-14 are correct). */
+  answerRanges?: number[][];
   /** Rich content (TipTap) — when set, QuestionRenderer is used */
   richStem?: import("@/lib/question-types").RichContent;
   richSolution?: import("@/lib/question-types").RichContent;

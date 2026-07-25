@@ -565,62 +565,102 @@ export default function QuestionCard({
             </button>
           )}
           {answered && (
-            <p className={`text-sm font-medium ${isCorrect ? "text-correct" : "text-wrong"}`}>
+            <div className={`text-sm font-medium ${isCorrect ? "text-correct" : "text-wrong"}`}>
               Correct answer: {
-                question.answerRange && question.answerRange.length === 2
-                  ? `${question.answerRange[0]} to ${question.answerRange[1]}`
-                  : (question.correct != null && String(question.correct) !== "" ? String(question.correct) : "Not available")
+                question.answerRanges && question.answerRanges.length > 0
+                  ? question.answerRanges.map(r => `${r[0]} to ${r[1]}`).join(" OR ")
+                  : Array.isArray(question.answerRange) && question.answerRange.length === 2
+                    ? `${question.answerRange[0]} to ${question.answerRange[1]}`
+                    : (question.correct != null && String(question.correct) !== "" ? String(question.correct) : "Not available")
               }
               {isCorrect ? " ✓" : " ✗"}
-            </p>
+            </div>
           )}
         </div>
       )}
 
-      {question.type === "msq" && (
-        <div className="space-y-3">
-          {question.options.map((opt, i) => {
-            const selectedMsq = msqSelected.includes(i);
-            const correctArr = (question.correct as number[]) ?? [];
-            const isCorrectOpt = correctArr.includes(i);
-            let cls =
-              "w-full rounded-2xl border-2 px-4 py-3.5 text-left transition-all duration-150 ";
-            if (!answered) {
-              cls += selectedMsq
-                ? "border-sky-500/80 bg-sky-500/12 text-study-ink cursor-pointer shadow-[0_0_0_1px_rgba(56,189,248,0.2)]"
-                : "border-study-border bg-study-raised/60 text-study-ink hover:border-sky-400/45 cursor-pointer";
-            } else if (isCorrectOpt) {
-              cls += "border-correct bg-correct text-white";
-            } else if (selectedMsq && !isCorrectOpt) {
-              cls += "border-wrong bg-wrong text-white";
-            } else {
-              cls += "border-study-border/60 bg-study-surface/35 text-study-muted opacity-65";
-            }
-            return (
+      {question.type === "msq" && (() => {
+        const LABELS_MSQ = ["A", "B", "C", "D"];
+        // Build set of all option indices that appear in ANY valid combo
+        const allCorrectIndices = new Set<number>();
+        if (question.correctCombos && question.correctCombos.length > 0) {
+          question.correctCombos.forEach(combo => combo.forEach(idx => allCorrectIndices.add(idx)));
+        } else {
+          ((question.correct as number[]) ?? []).forEach(idx => allCorrectIndices.add(idx));
+        }
+
+        // Build combo display strings for solution
+        const comboLabels: string[] = [];
+        if (question.correctCombos && question.correctCombos.length > 0) {
+          question.correctCombos.forEach(combo => {
+            comboLabels.push(combo.map(idx => LABELS_MSQ[idx]).join(", "));
+          });
+        } else {
+          comboLabels.push(((question.correct as number[]) ?? []).map(idx => LABELS_MSQ[idx]).join(", "));
+        }
+
+        return (
+          <div className="space-y-3">
+            {question.options.map((opt, i) => {
+              const selectedMsq = msqSelected.includes(i);
+              const isCorrectOpt = allCorrectIndices.has(i);
+              let cls =
+                "w-full rounded-2xl border-2 px-4 py-3.5 text-left transition-all duration-150 ";
+              if (!answered) {
+                cls += selectedMsq
+                  ? "border-sky-500/80 bg-sky-500/12 text-study-ink cursor-pointer shadow-[0_0_0_1px_rgba(56,189,248,0.2)]"
+                  : "border-study-border bg-study-raised/60 text-study-ink hover:border-sky-400/45 cursor-pointer";
+              } else if (isCorrectOpt) {
+                cls += "border-correct bg-correct text-white";
+              } else if (selectedMsq && !isCorrectOpt) {
+                cls += "border-wrong bg-wrong text-white";
+              } else {
+                cls += "border-study-border/60 bg-study-surface/35 text-study-muted opacity-65";
+              }
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  disabled={answered}
+                  onClick={() => handleMsqToggle(i)}
+                  className={cls}
+                >
+                  <span className="mr-2 font-bold">{LABELS[i]}.</span>
+                  <LatexText text={opt} />
+                </button>
+              );
+            })}
+            {!answered && (
               <button
-                key={i}
                 type="button"
-                disabled={answered}
-                onClick={() => handleMsqToggle(i)}
-                className={cls}
+                onClick={handleMsqSubmit}
+                disabled={msqSelected.length === 0}
+                className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50"
               >
-                <span className="mr-2 font-bold">{LABELS[i]}.</span>
-                <LatexText text={opt} />
+                Submit
               </button>
-            );
-          })}
-          {!answered && (
-            <button
-              type="button"
-              onClick={handleMsqSubmit}
-              disabled={msqSelected.length === 0}
-              className="w-full rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 py-3.5 font-semibold text-white shadow-md shadow-black/10 transition hover:brightness-105 disabled:opacity-50"
-            >
-              Submit
-            </button>
-          )}
-        </div>
-      )}
+            )}
+            {answered && (
+              <div className="mt-2 rounded-2xl border border-study-border/60 bg-study-raised/40 px-4 py-3.5">
+                <p className={`text-sm font-semibold ${isCorrect ? "text-correct" : "text-wrong"}`}>
+                  {isCorrect ? "✓ Correct!" : "✗ Incorrect"}
+                </p>
+                <p className="mt-1.5 text-sm text-study-soft">
+                  <span className="font-medium text-study-ink">Correct answer{comboLabels.length > 1 ? " combos" : ""}:</span>{" "}
+                  {comboLabels.length > 1
+                    ? comboLabels.map((label, ci) => (
+                        <span key={ci} className="inline-block mr-2 mt-1 rounded-lg border border-correct/40 bg-correct/10 px-2 py-0.5 text-xs font-bold text-correct">
+                          {label}
+                        </span>
+                      ))
+                    : <span className="font-bold text-correct">{comboLabels[0]}</span>
+                  }
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       <QuestionInsightPanel
         question={question}

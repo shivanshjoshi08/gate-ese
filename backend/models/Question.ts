@@ -47,6 +47,8 @@ const questionSchema = new Schema(
     unit: { type: String, default: null },
     /** NAT acceptable range / tolerance. Null until configured. */
     answerRange: { type: Schema.Types.Mixed, default: null },
+    /** Multiple NAT acceptable ranges. */
+    answerRanges: { type: [[Number]], default: null },
     appearances: {
       type: [
         {
@@ -121,6 +123,7 @@ const questionSchema = new Schema(
     options: { type: [optionSchema], default: [] },
     correctOption: { type: String, default: "" },
     correctOptions: { type: [String], default: [] },
+    correctCombos: { type: [[String]], default: [] },
     solution: { type: solutionSchema, default: () => ({}) },
     difficulty: {
       type: String,
@@ -183,6 +186,7 @@ export type QuestionLean = {
     exact?: number;
     tolerance?: number;
   } | null;
+  answerRanges?: number[][];
   appearances: {
     exam: "GATE" | "ESE";
     year: number;
@@ -218,6 +222,7 @@ export type QuestionLean = {
   options: { id: string; text: string; image?: string | null }[];
   correctOption: string;
   correctOptions?: string[];
+  correctCombos?: string[][];
   solution: { text: string; latex?: string; images?: string[] };
   difficulty: "Easy" | "Moderate" | "Medium" | "Hard";
   marks: number;

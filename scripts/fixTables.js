@@ -10,79 +10,80 @@ async function connectMongo() {
   if (mongoose.connection.readyState >= 1) return;
   const rawUri = process.env.MONGODB_URI;
   if (!rawUri) throw new Error("No MONGODB_URI");
-  
   const uri = await resolveMongoUriForScript(rawUri);
   return mongoose.connect(uri);
 }
 
-const q25Text = `What is the CORRECT match between the air pollutants and treatment techniques given in the table?
+const fixes = [
+  {
+    importKey: "gate_ce_2024_43",
+    question: `The consolidated data of a spot speed study for a certain stretch of a highway is given in the table.
 
 $$
-\\begin{array}{|l|l|}
+\\begin{array}{|c|c|}
 \\hline
-\\textbf{Air pollutants} & \\textbf{Treatment techniques} \\\\
+\\textbf{Speed range (kmph)} & \\textbf{Number of observations} \\\\
 \\hline
-\\text{P - NO}_2 & \\text{i - Flaring} \\\\
-\\text{Q - SO}_2 & \\text{ii - Cyclonic separator} \\\\
-\\text{R - CO} & \\text{iii - Lime scrubbing} \\\\
-\\text{S - Particles} & \\text{iv - NH}_3 \\text{ injection} \\\\
-\\hline
-\\end{array}
-$$`;
-
-const q27Text = `The longitudinal sections of a runway have gradients as shown in the table.
-
-$$
-\\begin{array}{|l|c|}
-\\hline
-\\textbf{End to end for sections of runway (m)} & \\textbf{Gradient (\\%)} \\\\
-\\hline
-0 \\text{ to } 200 & +1.0 \\\\
-200 \\text{ to } 600 & -1.0 \\\\
-600 \\text{ to } 1200 & +0.8 \\\\
-1200 \\text{ to } 1600 & +0.2 \\\\
-1600 \\text{ to } 2000 & -0.5 \\\\
+0 - 10 & 7 \\\\
+10 - 20 & 31 \\\\
+20 - 30 & 76 \\\\
+30 - 40 & 129 \\\\
+40 - 50 & 104 \\\\
+50 - 60 & 78 \\\\
+60 - 70 & 29 \\\\
+70 - 80 & 24 \\\\
+80 - 90 & 13 \\\\
+90 - 100 & 9 \\\\
 \\hline
 \\end{array}
 $$
 
-Consider the reduced level (RL) at the starting point of the runway as $100 \\text{ m}$.
-The effective gradient of the runway is`;
-
-const q31Text = `What is the CORRECT match between the survey instruments/parts of instruments shown in the table and the operations carried out with them?
+The "upper speed limit" (in kmph) for the traffic sign is`
+  },
+  {
+    importKey: "gate_ce_2024_52",
+    question: `The table shows the activities and their durations and dependencies in a project.
 
 $$
-\\begin{array}{|l|l|}
+\\begin{array}{|c|c|c|}
 \\hline
-\\textbf{Instruments/Parts of instruments} & \\textbf{Operations} \\\\
+\\textbf{Activity} & \\textbf{Duration (Days)} & \\textbf{Depends on} \\\\
 \\hline
-\\text{P - Bubble tube} & \\text{i - Tacheometry} \\\\
-\\text{Q - Plumb bob} & \\text{ii - Minor movements} \\\\
-\\text{R - Tangent screw} & \\text{iii - Centering} \\\\
-\\text{S - Stadia cross-wire} & \\text{iv - Levelling} \\\\
+\\text{A} & 8 & - \\\\
+\\text{B} & 4 & \\text{A} \\\\
+\\text{C} & 4 & \\text{B} \\\\
+\\text{D} & 4 & \\text{C, L} \\\\
+\\text{F} & 4 & \\text{A} \\\\
+\\text{G} & 4 & \\text{F} \\\\
+\\text{H} & 6 & \\text{G, L} \\\\
+\\text{K} & 10 & \\text{A} \\\\
+\\text{L} & 6 & \\text{F, K} \\\\
 \\hline
 \\end{array}
-$$`;
+$$
+
+The total duration (in days) of the project is _______ (in integer).`
+  }
+];
 
 async function run() {
   await connectMongo();
-  
-  await Question.updateOne(
-    { importKey: "gate_ce_2024_25" },
-    { $set: { question: q25Text } }
-  );
-  
-  await Question.updateOne(
-    { importKey: "gate_ce_2024_27" },
-    { $set: { question: q27Text } }
-  );
-  
-  await Question.updateOne(
-    { importKey: "gate_ce_2024_31" },
-    { $set: { question: q31Text } }
-  );
-  
-  console.log("Tables updated to LaTeX for Q25, Q27, Q31.");
+  let count = 0;
+
+  for (const fix of fixes) {
+    const result = await Question.updateOne(
+      { importKey: fix.importKey },
+      { $set: { question: fix.question } }
+    );
+    if (result.modifiedCount > 0) {
+      console.log(`Fixed table in ${fix.importKey}`);
+      count++;
+    } else {
+      console.log(`No change for ${fix.importKey} (not found or already correct)`);
+    }
+  }
+
+  console.log(`\nDone. Fixed ${count} question(s).`);
   process.exit(0);
 }
 

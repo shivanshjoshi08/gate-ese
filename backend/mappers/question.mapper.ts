@@ -15,6 +15,7 @@ import {
   normalizeQuestionImageUrl,
 } from "@/lib/question-images";
 import {
+  resolveLegacyAnswerType,
   resolveMongoAnswerType,
   resolveNumericalFlag,
 } from "@/lib/question-numerical";
@@ -56,6 +57,7 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     numerical: row.numerical === true,
     unit: row.unit ?? null,
     answerRange: row.answerRange ?? null,
+    answerRanges: row.answerRanges ?? undefined,
     appearances: row.appearances ?? [],
     references: row.references ?? [],
     questionStyle: row.questionStyle ?? null,
@@ -63,6 +65,7 @@ export function leanToDto(row: QuestionLean): QuestionDto {
     options: row.options ?? [],
     correctOption: row.correctOption ?? "",
     correctOptions: row.correctOptions ?? [],
+    correctCombos: row.correctCombos ?? [],
     solution: {
       text: row.solution?.text ?? "",
       latex: row.solution?.latex ?? "",
@@ -235,14 +238,19 @@ export function dtoToQuestionDocument(dto: QuestionDto): QuestionDocument {
 export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
   const optionsText = dto.options.map((o) => o.text);
   let correct: PracticeQuestion["correct"] = 0;
+  let correctCombos: number[][] | undefined;
   if (dto.type === "numerical") {
     const n = parseFloat(dto.correctOption);
     correct = Number.isNaN(n) ? dto.correctOption : n;
   } else if (dto.type === "msq") {
-    correct = dto.correctOptions ? dto.correctOptions.map(c => {
+    const letterToIdx = (c: string) => {
       const idx = dto.options.findIndex(o => o.id === c);
       return idx >= 0 ? idx : Math.max(0, c.charCodeAt(0) - 65);
-    }) : [];
+    };
+    correct = dto.correctOptions ? dto.correctOptions.map(letterToIdx) : [];
+    if (dto.correctCombos && dto.correctCombos.length > 0) {
+      correctCombos = dto.correctCombos.map(combo => combo.map(letterToIdx));
+    }
   } else {
     const idx = dto.options.findIndex((o) => o.id === dto.correctOption);
     correct = idx >= 0 ? idx : Math.max(0, dto.correctOption.charCodeAt(0) - 65);
@@ -265,6 +273,7 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
     numerical: dto.numerical === true,
     unit: dto.unit ?? null,
     answerRange: dto.answerRange ?? null,
+    answerRanges: dto.answerRanges,
     appearances: normalizeAppearances(
       dto.appearances?.length > 0
         ? dto.appearances
@@ -279,6 +288,7 @@ export function dtoToPracticeQuestion(dto: QuestionDto): PracticeQuestion {
       normalizeQuestionStyle(dto.questionStyle ?? undefined) ?? undefined,
     options: optionsText,
     correct,
+    correctCombos,
     solution: dto.solution.text,
     subject: dto.subject,
     topic: dto.topic,
@@ -339,6 +349,7 @@ export function legacyJsonToCreatePayload(
   const parsed = bundledQuestionSchema.parse(raw);
   const q = normalizeBundledQuestion(raw);
   const id = q.id;
+  const legacyType = resolveLegacyAnswerType(raw);
   const type = resolveMongoAnswerType(raw);
   const options = q.options.map((text, i) => ({
     id: String.fromCharCode(65 + i),
@@ -349,7 +360,7 @@ export function legacyJsonToCreatePayload(
   let correctOptions: string[] = [];
   if (type === "numerical") {
     correctOption = String(q.correct ?? "");
-  } else if (type === "msq" && Array.isArray(q.correct)) {
+  } else if (legacyType === "msq" && Array.isArray(q.correct)) {
     correctOptions = q.correct.map(c => String.fromCharCode(65 + c));
   } else if (typeof q.correct === "number") {
     correctOption = String.fromCharCode(65 + q.correct);
@@ -381,6 +392,7 @@ export function legacyJsonToCreatePayload(
     numerical: q.numerical === true,
     unit: q.unit ?? null,
     answerRange: q.answerRange ?? null,
+    answerRanges: q.answerRanges,
     appearances: q.appearances ?? [],
     references: q.references ?? [],
     questionStyle: q.questionStyle ?? parsed.questionStyle ?? null,

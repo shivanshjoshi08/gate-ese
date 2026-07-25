@@ -1,64 +1,81 @@
-<svg width="700" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400">
+<svg width="560" height="380" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 380">
+  <style>
+    text { font-family: 'Times New Roman', Times, serif; }
+  </style>
   <defs>
-    <!-- Arrowhead -->
-    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
+    <marker id="arrowR" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="black"/>
+    </marker>
+    <marker id="arrowL" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 10 1 L 0 5 L 10 9 z" fill="black"/>
     </marker>
   </defs>
 
-  <!-- Left: Column Section -->
-  <rect x="150" y="80" width="150" height="250" fill="white" stroke="black" stroke-width="3" />
-  
-  <!-- Rebar circles -->
-  <circle cx="180" cy="110" r="10" fill="black" />
-  <circle cx="225" cy="110" r="10" fill="black" />
-  <circle cx="270" cy="110" r="10" fill="black" />
-  
-  <circle cx="180" cy="300" r="10" fill="black" />
-  <circle cx="225" cy="300" r="10" fill="black" />
-  <circle cx="270" cy="300" r="10" fill="black" />
+  <!-- ===== LEFT: Column Section ===== -->
+  <!-- Rectangle -->
+  <rect x="120" y="60" width="150" height="250" fill="white" stroke="black" stroke-width="2.5"/>
 
-  <!-- Dimensions for B=300mm -->
-  <line x1="150" y1="70" x2="150" y2="40" stroke="black" stroke-width="1" />
-  <line x1="300" y1="70" x2="300" y2="40" stroke="black" stroke-width="1" />
-  <line x1="150" y1="50" x2="300" y2="50" stroke="black" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)" />
-  <text x="180" y="40" font-family="sans-serif" font-size="16">B = 300 mm</text>
+  <!-- Top rebar (3 dots) -->
+  <circle cx="155" cy="95" r="9" fill="black"/>
+  <circle cx="195" cy="95" r="9" fill="black"/>
+  <circle cx="235" cy="95" r="9" fill="black"/>
 
-  <!-- Dimensions for D=500mm -->
-  <line x1="140" y1="80" x2="100" y2="80" stroke="black" stroke-width="1" />
-  <line x1="140" y1="330" x2="100" y2="330" stroke="black" stroke-width="1" />
-  <line x1="120" y1="80" x2="120" y2="330" stroke="black" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)" />
-  <text x="30" y="210" font-family="sans-serif" font-size="16">D = 500 mm</text>
+  <!-- Bottom rebar (3 dots) -->
+  <circle cx="155" cy="275" r="9" fill="black"/>
+  <circle cx="195" cy="275" r="9" fill="black"/>
+  <circle cx="235" cy="275" r="9" fill="black"/>
 
-  <text x="180" y="370" font-family="sans-serif" font-size="16">Column section</text>
+  <!-- B = 300 mm dimension (top) -->
+  <line x1="120" y1="45" x2="120" y2="25" stroke="black" stroke-width="1"/>
+  <line x1="270" y1="45" x2="270" y2="25" stroke="black" stroke-width="1"/>
+  <line x1="120" y1="35" x2="270" y2="35" stroke="black" stroke-width="1" marker-start="url(#arrowL)" marker-end="url(#arrowR)"/>
+  <text x="155" y="25" font-size="16">B = 300 mm</text>
 
-  <!-- Right: Strain Distribution -->
-  <!-- Neutral Axis level -->
-  <line x1="320" y1="330" x2="580" y2="330" stroke="black" stroke-width="2" stroke-dasharray="5,5" />
-  
-  <!-- Strain triangle -->
-  <line x1="450" y1="80" x2="450" y2="380" stroke="black" stroke-width="3" />
-  
-  <line x1="450" y1="80" x2="550" y2="80" stroke="black" stroke-width="3" />
-  
-  <line x1="550" y1="80" x2="420" y2="380" stroke="black" stroke-width="3" />
+  <!-- D = 500 mm dimension (left) -->
+  <line x1="105" y1="60" x2="65" y2="60" stroke="black" stroke-width="1"/>
+  <line x1="105" y1="310" x2="65" y2="310" stroke="black" stroke-width="1"/>
+  <line x1="80" y1="60" x2="80" y2="310" stroke="black" stroke-width="1" marker-start="url(#arrowL)" marker-end="url(#arrowR)"/>
+  <text x="15" y="190" font-size="16">D = 500 mm</text>
 
-  <line x1="450" y1="380" x2="420" y2="380" stroke="black" stroke-width="2" stroke-dasharray="5,5" />
+  <!-- "Column section" label -->
+  <text x="135" y="345" font-size="16">Column section</text>
 
-  <!-- Dimensions for xu=1.1D -->
-  <line x1="440" y1="80" x2="400" y2="80" stroke="black" stroke-width="1" />
-  <line x1="440" y1="355" x2="400" y2="355" stroke="black" stroke-width="1" />
-  <line x1="420" y1="80" x2="420" y2="355" stroke="black" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)" />
-  <!-- Adjusted position for xu = 1.1D -->
-  <text x="330" y="220" font-family="sans-serif" font-size="16" font-style="italic">x<tspan dy="5" font-size="12">u</tspan><tspan dy="-5"> = 1.1D</tspan></text>
+  <!-- ===== RIGHT: Strain Distribution ===== -->
+  <!-- 
+    The column top is y=60, bottom is y=310.  D=250px.
+    x_u = 1.1D => 1.1*250 = 275px.  So triangle apex is at y = 60+275 = 335.
+    Triangle: top-right corner at (460, 60), vertical line down to (460, 335), 
+    then slanted line back to top at (395, 60).
+    The strain epsilon_c is the horizontal width at top = 460-395 = 65px.
+  -->
 
-  <!-- ec strain arrow -->
-  <line x1="450" y1="70" x2="450" y2="40" stroke="black" stroke-width="1" />
-  <line x1="550" y1="70" x2="550" y2="40" stroke="black" stroke-width="1" />
-  <line x1="450" y1="50" x2="550" y2="50" stroke="black" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)" />
-  <text x="490" y="40" font-family="sans-serif" font-size="16" font-style="italic">&#949;<tspan dy="5" font-size="12">c</tspan></text>
+  <!-- Vertical line of triangle (right edge) -->
+  <line x1="460" y1="60" x2="460" y2="335" stroke="black" stroke-width="2.5"/>
 
-  <text x="450" y="370" font-family="sans-serif" font-size="16">Strain distribution</text>
+  <!-- Top horizontal line of triangle -->
+  <line x1="395" y1="60" x2="460" y2="60" stroke="black" stroke-width="2.5"/>
 
-  <text x="280" y="395" font-family="sans-serif" font-size="12" fill="#0066cc" font-weight="bold">(Figure NOT to scale)</text>
+  <!-- Slanted hypotenuse -->
+  <line x1="395" y1="60" x2="460" y2="335" stroke="black" stroke-width="2.5"/>
+
+  <!-- Dashed neutral axis line at column bottom level (y=310) -->
+  <line x1="300" y1="310" x2="470" y2="310" stroke="black" stroke-width="1.5" stroke-dasharray="8,5"/>
+
+  <!-- x_u = 1.1D dimension (between triangle right edge, from top to apex) -->
+  <line x1="470" y1="60" x2="490" y2="60" stroke="black" stroke-width="1"/>
+  <line x1="470" y1="335" x2="490" y2="335" stroke="black" stroke-width="1"/>
+  <line x1="480" y1="60" x2="480" y2="335" stroke="black" stroke-width="1" marker-start="url(#arrowL)" marker-end="url(#arrowR)"/>
+  <text x="340" y="200" font-size="16" font-style="italic">x</text>
+  <text x="350" y="206" font-size="12" font-style="italic">u</text>
+  <text x="360" y="200" font-size="16"> = 1.1D</text>
+
+  <!-- ε_c dimension (top of triangle, horizontal) -->
+  <line x1="395" y1="45" x2="395" y2="25" stroke="black" stroke-width="1"/>
+  <line x1="460" y1="45" x2="460" y2="25" stroke="black" stroke-width="1"/>
+  <line x1="395" y1="35" x2="460" y2="35" stroke="black" stroke-width="1" marker-start="url(#arrowL)" marker-end="url(#arrowR)"/>
+  <text x="415" y="25" font-size="16" font-style="italic">ε</text>
+  <text x="426" y="30" font-size="12" font-style="italic">c</text>
+
+  <!-- "Strain distribution" label -->
+  <text x="370" y="365" font-size="16">Strain distribution</text>
 </svg>

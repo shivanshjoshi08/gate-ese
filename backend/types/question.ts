@@ -42,6 +42,7 @@ export interface QuestionDto {
     exact?: number;
     tolerance?: number;
   } | null;
+  answerRanges?: number[][];
   appearances: {
     exam: ExamType;
     year: number;
@@ -79,6 +80,8 @@ export interface QuestionDto {
   options: QuestionOptionDto[];
   correctOption: string;
   correctOptions?: string[];
+  /** MSQ: multiple valid answer combos, e.g. [["A","C","D"], ["A","C"]] */
+  correctCombos?: string[][];
   solution: QuestionSolutionDto;
   difficulty: Difficulty;
   marks: number;

@@ -372,7 +372,18 @@ export function checkAnswer(
     const given = String(userAnswer).trim();
     const gNum = parseFloat(given);
 
-    if (question.answerRange && question.answerRange.length === 2 && !Number.isNaN(gNum)) {
+    // Multiple valid ranges (e.g. 0.12-0.14 OR 12-14)
+    if (question.answerRanges && question.answerRanges.length > 0 && !Number.isNaN(gNum)) {
+      return question.answerRanges.some(range => {
+        if (range.length === 2) {
+          const [min, max] = range;
+          return gNum >= min && gNum <= max;
+        }
+        return false;
+      });
+    }
+
+    if (Array.isArray(question.answerRange) && question.answerRange.length === 2 && !Number.isNaN(gNum)) {
       const [min, max] = question.answerRange;
       if (gNum >= min && gNum <= max) return true;
       return false;
@@ -386,8 +397,16 @@ export function checkAnswer(
     return correct === given;
   }
   if (question.type === "msq") {
-    const correct = (question.correct as number[]).slice().sort();
     const given = (userAnswer as number[]).slice().sort();
+    // If there are multiple valid combos, check against each
+    if (question.correctCombos && question.correctCombos.length > 0) {
+      return question.correctCombos.some(combo => {
+        const sorted = combo.slice().sort();
+        return sorted.length === given.length && sorted.every((v, i) => v === given[i]);
+      });
+    }
+    // Fallback: single correct combo
+    const correct = (question.correct as number[]).slice().sort();
     return (
       correct.length === given.length &&
       correct.every((v, i) => v === given[i])
