@@ -192,7 +192,8 @@ function PracticeContent() {
   const startBankAtUserLevel = useCallback(
     (pb: PracticeBankKind, f: FiltersType) => {
       const completed = getPracticeLevelsCompleted(exam, pb);
-      loadLevel(pb, getActivePracticeLevel(completed), f);
+      const startLevel = f.searchId && f.searchId.trim() !== "" ? 1 : getActivePracticeLevel(completed);
+      loadLevel(pb, startLevel, f);
     },
     [exam, loadLevel],
   );
@@ -355,21 +356,22 @@ function PracticeContent() {
       );
 
     return (
-      <PracticeCompleteCard
-        title={allDone ? "All new questions done" : "No questions for this level"}
-        description={
-          allDone
-            ? "You have attempted every question in this set with the current filters."
-            : "No new questions match these filters."
-        }
-        showFilterReset
-        onClearFilters={() => {
-          const bank = questionsForBank(pb, aiQuestions, pyqQuestions);
-          handleFilterChange(
-            sanitizePracticeFilters(bank, defaultPracticeFilters()),
-          );
-        }}
-      />
+      <div className="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
+        <p className="text-lg font-medium text-study-muted">
+          No questions found matching your criteria.
+        </p>
+        <button
+          onClick={() => {
+            const bank = questionsForBank(pb, aiQuestions, pyqQuestions);
+            handleFilterChange(
+              sanitizePracticeFilters(bank, defaultPracticeFilters()),
+            );
+          }}
+          className="rounded-xl border border-study-border/60 bg-study-surface/50 px-4 py-2 text-sm text-study-muted hover:text-study-ink"
+        >
+          Clear Filters
+        </button>
+      </div>
     );
   }
 

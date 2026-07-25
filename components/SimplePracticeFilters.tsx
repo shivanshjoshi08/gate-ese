@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
 import type { Filters as FiltersType, Question } from "@/lib/types";
 import {
   defaultPracticeFilters,
@@ -44,6 +44,11 @@ export default function SimplePracticeFilters({
   onChange,
   accent = EXAM_COLORS.ESE.accent,
 }: Props) {
+  const [localSearch, setLocalSearch] = useState(filters.searchId || "");
+  useEffect(() => {
+    setLocalSearch(filters.searchId || "");
+  }, [filters.searchId]);
+
   const available = useMemo(
     () => getSimplePracticeFilters(bank, filters),
     [bank, filters],
@@ -80,10 +85,16 @@ export default function SimplePracticeFilters({
           <input
             type="text"
             placeholder="e.g. gate_math_10"
-            value={filters.searchId || ""}
-            onChange={(e) => update("searchId", e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                update("searchId", localSearch);
+              }
+            }}
             className="w-full max-w-xs rounded-lg border border-study-border/80 bg-study-raised/50 px-3 py-2 text-sm text-study-ink placeholder-study-muted focus:outline-none"
           />
+          <span className="text-[10px] text-study-muted ml-2">(Press Enter to search)</span>
         </FilterChipRow>
         {showExam && (
           <FilterChipRow label="Exam">

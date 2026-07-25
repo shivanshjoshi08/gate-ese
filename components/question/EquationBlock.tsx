@@ -27,8 +27,9 @@ export default function EquationBlock({
     }
   }, [latex, displayMode]);
 
+  const Tag = displayMode ? "div" : "span";
   return (
-    <div
+    <Tag
       className={`qb-equation ${displayMode ? "" : "qb-equation--inline"} ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
       aria-label={displayMode ? "Block equation" : "Inline equation"}

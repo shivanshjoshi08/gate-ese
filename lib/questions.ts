@@ -70,7 +70,10 @@ export function filterQuestions(
 
   if (filters.searchId && filters.searchId.trim() !== "") {
     const term = filters.searchId.trim().toLowerCase();
-    result = result.filter((q) => q.id.toLowerCase().includes(term));
+    result = result.filter((q) => 
+      q.id.toLowerCase().includes(term) || 
+      (q.displayId && q.displayId.toLowerCase().includes(term))
+    );
   }
 
   if (filters.paper !== "All") {

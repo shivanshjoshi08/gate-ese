@@ -64,7 +64,7 @@
 }
 
 .qb-equation--inline {
-  @apply my-0 inline-block align-middle;
+  @apply my-0 inline-block align-middle overflow-visible;
 }
 
 .qb-image {
