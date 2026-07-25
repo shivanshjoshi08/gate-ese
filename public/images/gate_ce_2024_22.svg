@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <!-- Soil surface line -->
+  <line x1="50" y1="150" x2="350" y2="150" stroke="black" stroke-width="2"/>
+  
+  <!-- Soil hatching -->
+  <path d="M 50 150 L 40 160 M 60 150 L 50 160 M 70 150 L 60 160 M 80 150 L 70 160 M 90 150 L 80 160" stroke="black" stroke-width="1"/>
+  <path d="M 310 150 L 300 160 M 320 150 L 310 160 M 330 150 L 320 160 M 340 150 L 330 160 M 350 150 L 340 160" stroke="black" stroke-width="1"/>
+  
+  <!-- Footing base -->
+  <rect x="100" y="120" width="200" height="30" fill="white" stroke="black" stroke-width="2"/>
+  <text x="200" y="140" font-family="Arial" font-size="14" text-anchor="middle">Footing</text>
+  
+  <!-- Column / Stem -->
+  <rect x="175" y="40" width="50" height="80" fill="white" stroke="black" stroke-width="2" stroke-dasharray="0 0 50 80 50 0"/>
+  <!-- Broken line top of column -->
+  <polyline points="175,40 185,35 195,45 205,35 215,45 225,40" fill="none" stroke="black" stroke-width="2"/>
+  <line x1="175" y1="40" x2="175" y2="120" stroke="black" stroke-width="2"/>
+  <line x1="225" y1="40" x2="225" y2="120" stroke="black" stroke-width="2"/>
+
+  <!-- Pressure Arrows (Upward, pointing to footing base) -->
+  <!-- Short at edges, long at center -->
+  <g stroke="black" stroke-width="1.5" marker-end="url(#arrow)">
+    <!-- Edge left -->
+    <line x1="100" y1="240" x2="100" y2="150" />
+    <line x1="110" y1="200" x2="110" y2="150" />
+    <line x1="120" y1="180" x2="120" y2="150" />
+    <line x1="130" y1="170" x2="130" y2="150" />
+    <line x1="140" y1="165" x2="140" y2="150" />
+    
+    <!-- Middle left -->
+    <line x1="150" y1="160" x2="150" y2="150" />
+    <line x1="160" y1="160" x2="160" y2="150" />
+    <line x1="170" y1="160" x2="170" y2="150" />
+    <line x1="180" y1="160" x2="180" y2="150" />
+    <line x1="190" y1="160" x2="190" y2="150" />
+    
+    <!-- Center -->
+    <line x1="200" y1="160" x2="200" y2="150" />
+    
+    <!-- Middle right -->
+    <line x1="210" y1="160" x2="210" y2="150" />
+    <line x1="220" y1="160" x2="220" y2="150" />
+    <line x1="230" y1="160" x2="230" y2="150" />
+    <line x1="240" y1="160" x2="240" y2="150" />
+    <line x1="250" y1="160" x2="250" y2="150" />
+    
+    <!-- Edge right -->
+    <line x1="260" y1="165" x2="260" y2="150" />
+    <line x1="270" y1="170" x2="270" y2="150" />
+    <line x1="280" y1="180" x2="280" y2="150" />
+    <line x1="290" y1="200" x2="290" y2="150" />
+    <line x1="300" y1="240" x2="300" y2="150" />
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" />
+    </marker>
+  </defs>
+</svg>

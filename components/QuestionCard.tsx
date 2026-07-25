@@ -560,7 +560,11 @@ export default function QuestionCard({
           )}
           {answered && (
             <p className={`text-sm font-medium ${isCorrect ? "text-correct" : "text-wrong"}`}>
-              Correct answer: {String(question.correct)}
+              Correct answer: {
+                question.answerRange && question.answerRange.length === 2
+                  ? `${question.answerRange[0]} to ${question.answerRange[1]}`
+                  : (question.correct != null && String(question.correct) !== "" ? String(question.correct) : "Not available")
+              }
               {isCorrect ? " ✓" : " ✗"}
             </p>
           )}

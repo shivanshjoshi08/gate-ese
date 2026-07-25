@@ -58,6 +58,14 @@ export function filterQuestions(
   filters: Filters,
   attemptedIds?: Set<string>
 ): Question[] {
+  if (filters.searchId && filters.searchId.trim() !== "") {
+    const term = filters.searchId.trim().toLowerCase().replace(/^#/, '');
+    return bank.filter((q) => 
+      q.id.toLowerCase().includes(term) || 
+      (q.displayId && q.displayId.toLowerCase().includes(term))
+    );
+  }
+
   let result =
     filters.exam === "All"
       ? bank
@@ -67,14 +75,6 @@ export function filterQuestions(
             normalizePracticeExamFilter(filters.exam),
           ),
         );
-
-  if (filters.searchId && filters.searchId.trim() !== "") {
-    const term = filters.searchId.trim().toLowerCase();
-    result = result.filter((q) => 
-      q.id.toLowerCase().includes(term) || 
-      (q.displayId && q.displayId.toLowerCase().includes(term))
-    );
-  }
 
   if (filters.paper !== "All") {
     result = result.filter((q) => q.paper === filters.paper);
@@ -369,10 +369,17 @@ export function checkAnswer(
     return userAnswer === question.correct;
   }
   if (question.type === "nat") {
-    const correct = String(question.correct).trim();
     const given = String(userAnswer).trim();
-    const cNum = parseFloat(correct);
     const gNum = parseFloat(given);
+
+    if (question.answerRange && question.answerRange.length === 2 && !Number.isNaN(gNum)) {
+      const [min, max] = question.answerRange;
+      if (gNum >= min && gNum <= max) return true;
+      return false;
+    }
+
+    const correct = String(question.correct).trim();
+    const cNum = parseFloat(correct);
     if (!Number.isNaN(cNum) && !Number.isNaN(gNum)) {
       return Math.abs(cNum - gNum) < 0.01 * Math.max(1, Math.abs(cNum));
     }

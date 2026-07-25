@@ -129,7 +129,7 @@ export default function SimplePracticeFilters({
             accent={accent}
           />
         )}
-        {showNumericals && (
+        {false && showNumericals && (
           <FilterChipRow label="Question type">
             <button
               type="button"

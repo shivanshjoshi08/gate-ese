@@ -101,7 +101,7 @@ export function defaultPracticeFilters(): Filters {
     difficulty: "All",
     year: "All",
     marks: "All",
-    type: FILTER_TYPE_MCQ,
+    type: "All",
     reviewMode: false,
   };
 }

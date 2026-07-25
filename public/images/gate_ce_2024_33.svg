@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <!-- Angle Section -->
+  <path d="M 150 100 L 180 100 L 180 250 L 270 250 L 270 280 L 150 280 Z" fill="none" stroke="black" stroke-width="4"/>
+  
+  <!-- Dimension Lines -->
+  <!-- Top thickness 3 cm -->
+  <line x1="150" y1="90" x2="180" y2="90" stroke="black" stroke-width="1.5"/>
+  <line x1="150" y1="85" x2="150" y2="100" stroke="black" stroke-width="1.5"/>
+  <line x1="180" y1="85" x2="180" y2="100" stroke="black" stroke-width="1.5"/>
+  <!-- Arrows for top dimension -->
+  <polygon points="150,90 155,87 155,93" fill="black" />
+  <polygon points="180,90 175,87 175,93" fill="black" />
+  <text x="165" y="80" font-family="Arial" font-size="14" text-anchor="middle">3 cm</text>
+  
+  <!-- Vertical dimension 15 cm -->
+  <line x1="140" y1="100" x2="140" y2="280" stroke="black" stroke-width="1.5"/>
+  <line x1="135" y1="100" x2="150" y2="100" stroke="black" stroke-width="1.5"/>
+  <line x1="135" y1="280" x2="150" y2="280" stroke="black" stroke-width="1.5"/>
+  <polygon points="140,100 137,105 143,105" fill="black" />
+  <polygon points="140,280 137,275 143,275" fill="black" />
+  <text x="130" y="195" font-family="Arial" font-size="14" text-anchor="end">15 cm</text>
+  
+  <!-- Horizontal dimension 12 cm -->
+  <line x1="150" y1="295" x2="270" y2="295" stroke="black" stroke-width="1.5"/>
+  <line x1="150" y1="280" x2="150" y2="300" stroke="black" stroke-width="1.5"/>
+  <line x1="270" y1="280" x2="270" y2="300" stroke="black" stroke-width="1.5"/>
+  <polygon points="150,295 155,292 155,298" fill="black" />
+  <polygon points="270,295 265,292 265,298" fill="black" />
+  <text x="210" y="315" font-family="Arial" font-size="14" text-anchor="middle">12 cm</text>
+  
+  <!-- Right thickness 3 cm -->
+  <line x1="285" y1="250" x2="285" y2="280" stroke="black" stroke-width="1.5"/>
+  <line x1="270" y1="250" x2="290" y2="250" stroke="black" stroke-width="1.5"/>
+  <line x1="270" y1="280" x2="290" y2="280" stroke="black" stroke-width="1.5"/>
+  <polygon points="285,250 282,255 288,255" fill="black" />
+  <polygon points="285,280 282,275 288,275" fill="black" />
+  <text x="295" y="270" font-family="Arial" font-size="14">3 cm</text>
+
+  <!-- X-X Axis -->
+  <!-- Assuming centroid is at roughly y = 230 -->
+  <line x1="100" y1="230" x2="320" y2="230" stroke="black" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <text x="90" y="235" font-family="Arial" font-size="14" text-anchor="end">X</text>
+  <text x="330" y="235" font-family="Arial" font-size="14">X</text>
+
+  <!-- Text -->
+  <text x="210" y="340" font-family="Arial" font-size="14" text-anchor="middle">(Figure NOT to scale)</text>
+</svg>
