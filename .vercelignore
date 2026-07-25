@@ -9,4 +9,4 @@ tsconfig.tsbuildinfo
 .next/
 
 # Duplicate of public/images (Next.js only serves public/)
-images/
+/images/
