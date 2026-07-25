@@ -60,6 +60,11 @@ export default function AnalysisPage() {
     [bank]
   );
 
+  const attemptsKey = useMemo(
+    () => attempts.map((a) => `${a.questionId}:${a.correct ? 1 : 0}`).join(","),
+    [attempts],
+  );
+
   const subjectData = useMemo(() => {
     const subjects = getSubjectsForExam(exam, "All");
     return subjects.map((subject) => {
@@ -71,7 +76,7 @@ export default function AnalysisPage() {
       };
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps -- getSubjectStats reads latest attempts from localStorage
-  }, [exam, attempts.length, mounted]);
+  }, [exam, attemptsKey, mounted]);
 
   const paperData = useMemo(() => {
     if (exam !== "ESE") return [];

@@ -7,18 +7,20 @@ import { loadProgress } from "@/lib/storage";
 import type { Question } from "@/lib/types";
 import { EXAM_COLORS } from "@/lib/exam";
 import { usePracticeBank } from "@/hooks/PracticeBankContext";
+import { useExam } from "@/hooks/useExam";
 
 export default function BookmarksPage() {
+  const { exam } = useExam();
   const { questions: bank } = usePracticeBank();
   const [bookmarked, setBookmarked] = useState<Question[]>([]);
 
   useEffect(() => {
-    const bookmarkIds = loadProgress("ESE").bookmarks;
-    const qs = getQuestionsByIds(bank, bookmarkIds).filter((q) => q.exam === "ESE");
+    const bookmarkIds = loadProgress(exam).bookmarks;
+    const qs = getQuestionsByIds(bank, bookmarkIds).filter((q) => q.exam === exam);
     setBookmarked(qs);
-  }, [bank]);
+  }, [bank, exam]);
 
-  const accent = EXAM_COLORS.ESE;
+  const accent = EXAM_COLORS[exam];
 
   if (bookmarked.length === 0) {
     return (
@@ -55,10 +57,10 @@ export default function BookmarksPage() {
               <span
                 className="rounded px-2 py-0.5 font-semibold text-white"
                 style={{
-                  backgroundColor: EXAM_COLORS.ESE.accent,
+                  backgroundColor: accent.accent,
                 }}
               >
-                ESE
+                {exam}
               </span>
               {q.paper && (
                 <span className="rounded bg-violet-400 px-2 py-0.5 text-white">
@@ -72,7 +74,7 @@ export default function BookmarksPage() {
             <Link
               href={`/practice?bank=ai&mode=random&subject=${encodeURIComponent(q.subject)}${q.paper ? `&paper=${q.paper}` : ""}`}
               className="mt-2 inline-block text-sm hover:underline"
-              style={{ color: EXAM_COLORS.ESE.accent }}
+              style={{ color: accent.accent }}
             >
               Similar →
             </Link>

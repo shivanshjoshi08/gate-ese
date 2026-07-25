@@ -84,13 +84,18 @@ export default function MockTestPage() {
 
   useEffect(() => {
     if (phase !== "test") return;
-    if (timeLeft <= 0) {
-      submitTest();
-      return;
-    }
-    const t = setInterval(() => setTimeLeft((s) => s - 1), 1000);
+    const t = setInterval(() => {
+      setTimeLeft((s) => {
+        if (s <= 1) {
+          clearInterval(t);
+          submitTest();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
     return () => clearInterval(t);
-  }, [phase, timeLeft, submitTest]);
+  }, [phase, submitTest]);
 
   const formatTime = (sec: number) => {
     const h = Math.floor(sec / 3600);
