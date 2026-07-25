@@ -356,6 +356,12 @@ export default function QuestionCard({
           >
             {practiceTrackLabel(track)}
           </span>
+          <span
+            className="inline-flex shrink-0 items-center rounded-md border border-study-border/60 bg-study-raised/50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-study-soft sm:text-[11px]"
+            title={`Question Type: ${question.type.toUpperCase()}`}
+          >
+            {question.type.toUpperCase()}
+          </span>
           <span className="font-medium text-study-ink">{question.subject}</span>
           <span aria-hidden className="mx-1.5 text-study-border">
             ·
