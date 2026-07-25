@@ -8,7 +8,6 @@ import {
 } from "@/lib/questions";
 import { isDefaultPracticeFilters } from "@/lib/available-filters";
 import { isTheoryQuestion } from "@/lib/question-numerical";
-import { isPracticeSubjectFilterActive } from "@/lib/practice-subjects";
 
 export type PracticeLevelsManifest = {
   version: number;
@@ -81,7 +80,7 @@ function sortedMcqsForFilters(
 }
 
 function shouldSkipAttemptedExclude(filters: Filters): boolean {
-  return isPracticeSubjectFilterActive(filters) || (!!filters.searchId && filters.searchId.trim() !== "");
+  return !!filters.searchId && filters.searchId.trim() !== "";
 }
 
 export function getFilteredPracticeLevelCount(
