@@ -89,7 +89,7 @@ export async function POST(req: Request) {
         {
           role: "system",
           content:
-            "You help civil engineering students preparing for GATE and ESE. Using only the material in the user's message (stem, options, solution, referenced correct answer), write a brief recap of 2–4 short sentences total (about 120 words maximum). Mention the core concept or formula being tested and the reasoning that leads to the correct answer. Output must be entirely in clear technical English (Latin script only): no Hindi, no Hinglish, no other languages—even if the question text is in Hindi or bilingual, explain in English. Do not invent numbers, constants, or options that are absent from the text. No markdown, no headings, no lead-in like \"Here is\".",
+            "You help civil engineering students preparing for GATE and ESE. Using only the material in the user's message (stem, options, solution, referenced correct answer), write an exact short note to remember the actual concept of the question. If it is a numerical question, the main formula is important. If it is a theory question, the main exact concept is important. Keep it brief (about 3-4 sentences maximum). Output must be entirely in clear technical English (Latin script only): no Hindi, no Hinglish, no other languages. Do not invent numbers, constants, or options that are absent from the text. No markdown, no headings, no lead-in like \"Here is\".",
         },
         {
           role: "user",

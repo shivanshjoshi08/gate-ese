@@ -19,7 +19,8 @@ export type MongoQuestionRow = {
   subject: string;
   topic: string;
   difficulty: string;
-  examType: string;
+  examType?: string;
+  exam?: string;
   paper: string | null;
   marks: number;
   year: number;
@@ -77,7 +78,7 @@ export function mongoToQuestionDocument(row: MongoQuestionRow): QuestionDocument
     tags: row.tags ?? [],
     difficulty: row.difficulty as QuestionDocument["difficulty"],
     marks: row.marks === 2 ? 2 : 1,
-    exam: row.examType as QuestionDocument["exam"],
+    exam: (row.exam || row.examType) as QuestionDocument["exam"],
     paper: (row.paper as QuestionDocument["paper"]) ?? null,
     year: row.year,
     hasAnswerKey: row.hasAnswerKey,

@@ -3,7 +3,7 @@ import path from "path";
 import type { PyqPdfEntry, PyqPdfTrack } from "@/lib/pyq-pdfs";
 
 const MANIFEST_PATH = path.join(process.cwd(), "data", "pyq-pdfs-manifest.json");
-const PDF_DIR = path.join(process.cwd(), "pdfs");
+const PDF_DIR = path.join(process.cwd(), "public", "pdfs");
 
 export function pyqPdfStorageDir(): string {
   return PDF_DIR;

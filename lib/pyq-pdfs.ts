@@ -20,5 +20,5 @@ export const PYQ_PDF_ENTRIES: PyqPdfEntry[] = sorted;
 export const PYQ_PDF_ALLOWLIST = new Set(PYQ_PDF_ENTRIES.map((e) => e.filename));
 
 export function pyqPdfDownloadUrl(filename: string): string {
-  return `/api/pyq-pdf/${encodeURIComponent(filename)}`;
+  return `/pdfs/${encodeURIComponent(filename)}`;
 }

@@ -677,10 +677,10 @@ export default function QuestionCard({
           aria-busy={aiLoading}
         >
           <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-teal-200/95">
-            AI extra recap
+            Concept note
           </h3>
           {aiLoading && (
-            <p className="text-sm italic text-teal-100/80">Generating takeaway…</p>
+            <p className="text-sm italic text-teal-100/80">Generating concept note…</p>
           )}
           {!aiLoading && aiError && (
             <p className="text-sm text-amber-300/95">{aiError}</p>
