@@ -285,6 +285,18 @@ function PracticeContent() {
       practiceBankFromUrl === "pyq" ? pyqQuestions : aiQuestions;
     const baseFilters = defaultPracticeFilters();
     baseFilters.exam = normalizePracticeExamFilter(exam);
+    const searchParam = searchParams.get("searchId") ?? searchParams.get("id") ?? searchParams.get("search");
+    if (searchParam) {
+      baseFilters.searchId = searchParam;
+    }
+    const subjectParam = searchParams.get("subject");
+    if (subjectParam) {
+      baseFilters.subject = subjectParam;
+    }
+    const paperParam = searchParams.get("paper");
+    if (paperParam) {
+      baseFilters.paper = paperParam;
+    }
     let f = sanitizePracticeFilters(bank, baseFilters);
     setFilters(f);
     startBankAtUserLevel(practiceBankFromUrl, f);

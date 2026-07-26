@@ -8,6 +8,7 @@ import type { Question } from "@/lib/types";
 import { EXAM_COLORS } from "@/lib/exam";
 import { usePracticeBank } from "@/hooks/PracticeBankContext";
 import { useExam } from "@/hooks/useExam";
+import LatexText from "@/components/question/LatexText";
 
 export default function BookmarksPage() {
   const { exam } = useExam();
@@ -70,7 +71,7 @@ export default function BookmarksPage() {
               <span className="text-zinc-500">{q.subject}</span>
               <span className="text-zinc-500">· {q.year}</span>
             </div>
-            <p className="line-clamp-2 text-zinc-300">{q.question}</p>
+            <div className="line-clamp-2 text-zinc-300"><LatexText text={q.question} /></div>
             <Link
               href={`/practice?bank=ai&mode=random&subject=${encodeURIComponent(q.subject)}${q.paper ? `&paper=${q.paper}` : ""}`}
               className="mt-2 inline-block text-sm hover:underline"

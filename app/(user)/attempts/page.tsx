@@ -12,13 +12,14 @@ import {
   isNumericalsFilter,
   sanitizePracticeFilters,
 } from "@/lib/available-filters";
-import { getMergedAttemptsMap } from "@/lib/storage";
+import { loadProgress } from "@/lib/storage";
 import { usePracticeBank } from "@/hooks/PracticeBankContext";
 import { useExam } from "@/hooks/useExam";
 import { EXAM_COLORS } from "@/lib/exam";
 import { getSubjectShort } from "@/lib/constants";
 import { formatDateTime, formatDuration } from "@/lib/format-date";
 import SearchableSubjectSelect from "@/components/SearchableSubjectSelect";
+import LatexText from "@/components/question/LatexText";
 
 type StatusFilter = "all" | "correct" | "incorrect";
 type BankFilter = "all" | "ai" | "pyq";
@@ -52,8 +53,13 @@ export default function MyAttemptsPage() {
 
   const attemptsMap = useMemo(() => {
     void epoch;
-    return getMergedAttemptsMap();
-  }, [epoch]);
+    const progress = loadProgress(exam);
+    const map = new Map<string, AttemptRecord>();
+    for (const a of progress.attempts) {
+      map.set(a.questionId, a);
+    }
+    return map;
+  }, [epoch, exam]);
 
   const sourceBank = useMemo(() => {
     if (bankFilter === "ai") return aiQuestions;
@@ -125,7 +131,7 @@ export default function MyAttemptsPage() {
 
   const practiceHref = (q: Question) => {
     const bank = q.questionBank === "pyq" ? "pyq" : "ai";
-    return `/practice?bank=${bank}`;
+    return `/practice?bank=${bank}&id=${q.id}`;
   };
 
   if (loadingPyq && sourceBank.length === 0) {
@@ -263,7 +269,7 @@ export default function MyAttemptsPage() {
                 </span>
               </div>
               <p className="mt-2 line-clamp-2 text-sm font-medium text-study-ink">
-                {question.question}
+                <LatexText text={question.question} />
               </p>
               <p className="mt-1 text-xs text-study-muted">
                 {getSubjectShort(question.subject)} | {question.exam} |{" "}

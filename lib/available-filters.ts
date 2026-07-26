@@ -116,7 +116,8 @@ export function isDefaultPracticeFilters(filters: Filters): boolean {
     filters.year === "All" &&
     filters.marks === "All" &&
     filters.type === FILTER_TYPE_MCQ &&
-    !filters.reviewMode
+    !filters.reviewMode &&
+    (!filters.searchId || filters.searchId.trim() === "")
   );
 }
 

@@ -47,6 +47,7 @@ export default async function PyqPdfsPage() {
               </div>
               <a
                 href={pyqPdfDownloadUrl(entry.filename)}
+                download={entry.filename}
                 className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/15 transition hover:brightness-110"
               >
                 Download PDF

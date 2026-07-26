@@ -1,6 +1,6 @@
 # Local / dev-only — not needed on Vercel
 scripts/
-pdfs/
+/pdfs/
 docs/
 packages/
 eng.traineddata
