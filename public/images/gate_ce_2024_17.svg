@@ -1,0 +1,63 @@
+<svg viewBox="0 0 720 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ground Line -->
+  <line x1="40" y1="380" x2="680" y2="380" stroke="black" stroke-width="2"/>
+  <text x="360" y="415" text-anchor="middle" font-family="Times New Roman, serif" font-size="24">Compacted Ground</text>
+
+  <!-- Ground Hatching Left (under column) -->
+  <g stroke="black" stroke-width="1.5">
+    <line x1="60" y1="410" x2="90" y2="380"/>
+    <line x1="90" y1="410" x2="120" y2="380"/>
+    <line x1="120" y1="410" x2="150" y2="380"/>
+    
+    <line x1="60" y1="380" x2="90" y2="410"/>
+    <line x1="90" y1="380" x2="120" y2="410"/>
+    <line x1="120" y1="380" x2="150" y2="410"/>
+  </g>
+
+  <!-- Ground Hatching Right -->
+  <g stroke="black" stroke-width="1.5">
+    <line x1="560" y1="410" x2="590" y2="380"/>
+    <line x1="590" y1="410" x2="620" y2="380"/>
+    <line x1="620" y1="410" x2="650" y2="380"/>
+    
+    <line x1="560" y1="380" x2="590" y2="410"/>
+    <line x1="590" y1="380" x2="620" y2="410"/>
+    <line x1="620" y1="380" x2="650" y2="410"/>
+  </g>
+
+  <!-- Column -->
+  <!-- Top of column is around y=30, bottom is 380. -->
+  <rect x="90" y="30" width="70" height="350" fill="black"/>
+  <!-- RC Column Text, to the left of the column -->
+  <text x="65" y="200" font-family="Times New Roman, serif" font-size="24" transform="rotate(-90 65 200)" text-anchor="middle">RC Column</text>
+
+  <!-- Beam -->
+  <!-- Beam attaches to column, so x starts at 160. Height is 60. Top of beam at y=100. -->
+  <rect x="160" y="100" width="410" height="60" fill="black"/>
+  <!-- Cantilever RC Beam Text, on top of the beam -->
+  <text x="365" y="85" text-anchor="middle" font-family="Times New Roman, serif" font-size="24">Cantilever RC Beam</text>
+
+  <!-- Props -->
+  <g stroke="#778899" stroke-width="7">
+    <line x1="205" y1="160" x2="205" y2="380"/>
+    <line x1="295" y1="160" x2="295" y2="380"/>
+    <line x1="385" y1="160" x2="385" y2="380"/>
+    <line x1="475" y1="160" x2="475" y2="380"/>
+    <line x1="565" y1="160" x2="565" y2="380"/>
+  </g>
+
+  <!-- Prop Labels -->
+  <g font-family="Times New Roman, serif" font-size="24" fill="black">
+    <text x="215" y="270">S1</text>
+    <text x="305" y="270">S2</text>
+    <text x="395" y="270">S3</text>
+    <text x="485" y="270">S4</text>
+    <text x="575" y="270">S5</text>
+  </g>
+
+  <!-- Callout box -->
+  <rect x="540" y="285" width="170" height="65" fill="white" stroke="black" stroke-width="1"/>
+  <text x="548" y="310" font-family="Times New Roman, serif" font-size="20">S1, S2, S3, S4, S5</text>
+  <text x="548" y="335" font-family="Times New Roman, serif" font-size="20">are Shores/Props</text>
+
+</svg>
