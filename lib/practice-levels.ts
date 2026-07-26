@@ -88,10 +88,14 @@ export function getFilteredPracticeLevelCount(
   filters: Filters,
   excludeAttemptedIds?: Set<string>,
 ): number {
-  const n = shouldSkipAttemptedExclude(filters)
-    ? sortedMcqsForFilters(bank, filters).length
-    : sortedMcqsForFilters(bank, filters, excludeAttemptedIds).length;
-  return Math.max(0, Math.ceil(n / PRACTICE_LEVEL_BATCH_SIZE));
+  if (shouldSkipAttemptedExclude(filters)) {
+    return Math.max(0, Math.ceil(sortedMcqsForFilters(bank, filters).length / PRACTICE_MCQ_BATCH_SIZE));
+  }
+  let sorted = sortedMcqsForFilters(bank, filters, excludeAttemptedIds);
+  if (sorted.length === 0 && excludeAttemptedIds && excludeAttemptedIds.size > 0) {
+    sorted = sortedMcqsForFilters(bank, filters);
+  }
+  return Math.max(0, Math.ceil(sorted.length / PRACTICE_MCQ_BATCH_SIZE));
 }
 
 export function resolveFilteredPracticeLevel(
@@ -109,7 +113,10 @@ export function resolveFilteredPracticeLevel(
     return sorted.slice(start, start + batch);
   }
 
-  const sorted = sortedMcqsForFilters(bank, filters, excludeAttemptedIds);
+  let sorted = sortedMcqsForFilters(bank, filters, excludeAttemptedIds);
+  if (sorted.length === 0 && excludeAttemptedIds && excludeAttemptedIds.size > 0) {
+    sorted = sortedMcqsForFilters(bank, filters);
+  }
   return slicePracticeQuestionsForLevel(sorted, levelNumber);
 }
 
